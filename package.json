@@ -1,0 +1,15 @@
+{
+  "name": "vitosha-peak-explorer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "check:data": "python scripts/validate_data.py"
+  },
+  "dependencies": {
+    "vite": "^6.0.7"
+  }
+}

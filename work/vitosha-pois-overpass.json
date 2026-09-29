@@ -1,0 +1,7273 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-07-28T02:16:18Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 26862677,
+  "lat": 42.5630927,
+  "lon": 23.2793407,
+  "tags": {
+    "alt_name:de": "Tscherni Wrach",
+    "ele": "2290",
+    "importance": "Bulgarian 100",
+    "int_name": "Cherni vrah",
+    "name": "Черни връх",
+    "name:bg": "Черни връх",
+    "name:de": "Schwarzer Gipfel",
+    "name:en": "Cherni vrah",
+    "name:fr": "Tcherni Vrakh",
+    "name:pl": "Czarny Wierch",
+    "natural": "peak",
+    "prominence": "1259",
+    "wikidata": "Q849657",
+    "wikipedia": "bg:Черни връх"
+  }
+},
+{
+  "type": "node",
+  "id": 274078072,
+  "lat": 42.5120636,
+  "lon": 23.2996059,
+  "tags": {
+    "ele": "1875",
+    "name": "Войчинов рид",
+    "natural": "peak",
+    "source": "bgtopomaps"
+  }
+},
+{
+  "type": "node",
+  "id": 274078085,
+  "lat": 42.5507576,
+  "lon": 23.2937747,
+  "tags": {
+    "alt_name": "SKOPARNIK",
+    "ele": "2226.5",
+    "int_name": "Skoparnika",
+    "man_made": "survey_point",
+    "name": "Скопарника",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q7536275"
+  }
+},
+{
+  "type": "node",
+  "id": 274078108,
+  "lat": 42.5363392,
+  "lon": 23.2969540,
+  "tags": {
+    "alt_name": "KARA_SIVRI",
+    "ele": "2195.8",
+    "man_made": "survey_point",
+    "name": "Купена",
+    "natural": "peak",
+    "source": "bgtopomaps"
+  }
+},
+{
+  "type": "node",
+  "id": 274078118,
+  "lat": 42.5509365,
+  "lon": 23.3187547,
+  "tags": {
+    "ele": "1942",
+    "int_name": "Goliam Kupen",
+    "name": "Голям Купен",
+    "name:en": "Golyam Kupen",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q5581024"
+  }
+},
+{
+  "type": "node",
+  "id": 274078133,
+  "lat": 42.6068241,
+  "lon": 23.2743482,
+  "tags": {
+    "alt_name": "USHITE",
+    "ele": "1901.4",
+    "int_name": "Ushite",
+    "man_made": "survey_point",
+    "name": "Ушите",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q7901964",
+    "wikipedia": "en:Ushite Peak"
+  }
+},
+{
+  "type": "node",
+  "id": 274078145,
+  "lat": 42.5213255,
+  "lon": 23.2987725,
+  "tags": {
+    "ele": "2003",
+    "int_name": "Siva Gramada",
+    "name": "Сива Грамада",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q9337332"
+  }
+},
+{
+  "type": "node",
+  "id": 274078176,
+  "lat": 42.5727353,
+  "lon": 23.2886901,
+  "tags": {
+    "ele": "2182.4",
+    "int_name": "Malak Resen",
+    "name": "Малък Резен",
+    "name:de": "Malak Resen",
+    "name:en": "Malak Resen",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q1236922",
+    "wikipedia": "bg:Малък Резен"
+  }
+},
+{
+  "type": "node",
+  "id": 274078190,
+  "lat": 42.6058188,
+  "lon": 23.2587400,
+  "tags": {
+    "ele": "1868.7",
+    "int_name": "Chernata skala",
+    "name": "Черната скала",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q11692110"
+  }
+},
+{
+  "type": "node",
+  "id": 274078203,
+  "lat": 42.5287131,
+  "lon": 23.3195301,
+  "tags": {
+    "alt_name": "BACHEVA_SKALA",
+    "ele": "1832.6",
+    "man_made": "survey_point",
+    "name": "Белчева Скала",
+    "natural": "peak",
+    "source": "bgtopomaps"
+  }
+},
+{
+  "type": "node",
+  "id": 274078326,
+  "lat": 42.6646580,
+  "lon": 23.1134770,
+  "tags": {
+    "alt_name": "Райлово градище",
+    "alt_name:en": "Railovo gradishte",
+    "ele": "1199.3",
+    "name": "Райловско градище",
+    "name:bg": "Райловско градище",
+    "name:en": "Railovsko gradishte",
+    "natural": "peak",
+    "source": "bgtopomaps"
+  }
+},
+{
+  "type": "node",
+  "id": 274090337,
+  "lat": 42.5948516,
+  "lon": 23.2248564,
+  "tags": {
+    "ele": "1631",
+    "name": "х. Трендафила",
+    "name:en": "Trendafila cottage",
+    "source": "bgtopomaps",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 274090342,
+  "lat": 42.5873953,
+  "lon": 23.3184336,
+  "tags": {
+    "ele": "1438",
+    "name": "х.Северина",
+    "source": "bgtopomaps",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 380580029,
+  "lat": 42.5820201,
+  "lon": 23.5220671,
+  "tags": {
+    "alt_name": "Полувраг",
+    "ele": "1182",
+    "int_name": "Polоvrak",
+    "name": "Половрак",
+    "name:en": "Polovrak",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 401462082,
+  "lat": 42.6499244,
+  "lon": 23.1920194,
+  "tags": {
+    "ele": "980",
+    "name": "х. Бонсови поляни",
+    "phone": "+359888166601",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 445067700,
+  "lat": 42.6385072,
+  "lon": 23.2368046,
+  "tags": {
+    "name": "Малкото Копито",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 454583217,
+  "lat": 42.6133336,
+  "lon": 23.2488207,
+  "tags": {
+    "amenity": "shelter",
+    "disused:tourism": "picnic_site",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 459464748,
+  "lat": 42.5798040,
+  "lon": 23.5184294,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон Половраг"
+  }
+},
+{
+  "type": "node",
+  "id": 499994121,
+  "lat": 42.6524593,
+  "lon": 23.1714198,
+  "tags": {
+    "ele": "1256",
+    "int_name": "Dupevitsa",
+    "man_made": "flagpole",
+    "name": "Дупевица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 499996634,
+  "lat": 42.5648610,
+  "lon": 23.2900520,
+  "tags": {
+    "alt_name": "GOLYAM_REZEN",
+    "ele": "2278.2",
+    "int_name": "Goliam Rezen",
+    "man_made": "survey_point",
+    "name": "Голям Резен;TT16A",
+    "name:en": "Golyam Rezen",
+    "natural": "peak",
+    "wikidata": "Q3656009"
+  }
+},
+{
+  "type": "node",
+  "id": 662489386,
+  "lat": 42.5711981,
+  "lon": 23.2405183,
+  "tags": {
+    "ele": "2048.8",
+    "int_name": "Selimitsa",
+    "name": "Селимица",
+    "natural": "peak",
+    "wikidata": "Q7448434"
+  }
+},
+{
+  "type": "node",
+  "id": 693128970,
+  "lat": 42.5912884,
+  "lon": 23.4380402,
+  "tags": {
+    "amenity": "shelter",
+    "description": "ловна хижа"
+  }
+},
+{
+  "type": "node",
+  "id": 727218541,
+  "lat": 42.5124766,
+  "lon": 23.4083631,
+  "tags": {
+    "ele": "1338",
+    "name": "Манастирище",
+    "name:en": "Manastirishte",
+    "natural": "peak",
+    "wikidata": "Q12285797"
+  }
+},
+{
+  "type": "node",
+  "id": 824105721,
+  "lat": 42.6182390,
+  "lon": 23.2122931,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 935677986,
+  "lat": 42.5566109,
+  "lon": 23.4443185,
+  "tags": {
+    "amenity": "shelter",
+    "name": "заслон Синаница"
+  }
+},
+{
+  "type": "node",
+  "id": 1241039390,
+  "lat": 42.4961784,
+  "lon": 23.2504829,
+  "tags": {
+    "amenity": "shelter",
+    "ele": "1360",
+    "name": "з.Смильо",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 1241046039,
+  "lat": 42.4790338,
+  "lon": 23.2305031,
+  "tags": {
+    "ele": "1454",
+    "name": "Петрус",
+    "natural": "peak",
+    "wikidata": "Q21779353"
+  }
+},
+{
+  "type": "node",
+  "id": 1263734000,
+  "lat": 42.5855364,
+  "lon": 23.2116228,
+  "tags": {
+    "ele": "1695",
+    "name": "Острица",
+    "name:en": "Ostritsa",
+    "natural": "peak",
+    "tourism": "viewpoint"
+  }
+},
+{
+  "type": "node",
+  "id": 1263739522,
+  "lat": 42.6640108,
+  "lon": 23.1642206,
+  "tags": {
+    "alt_name": "KOLA_BLAGOTO",
+    "ele": "1148.8",
+    "man_made": "survey_point",
+    "name": "Благото",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 1263755214,
+  "lat": 42.5762080,
+  "lon": 23.2783570,
+  "tags": {
+    "alt_name": "LAVCHETO",
+    "ele": "2057.3",
+    "name": "Лъвчето",
+    "natural": "peak",
+    "ref": "Лъвчето",
+    "wikidata": "Q9394977"
+  }
+},
+{
+  "type": "node",
+  "id": 1263760905,
+  "lat": 42.5449417,
+  "lon": 23.2994953,
+  "tags": {
+    "alt_name": "KARA_CHAIR",
+    "ele": "2208.1",
+    "man_made": "survey_point",
+    "name": "Кара чаир",
+    "natural": "peak",
+    "source": "bgtopomaps"
+  }
+},
+{
+  "type": "node",
+  "id": 1263763912,
+  "lat": 42.5944830,
+  "lon": 23.2897630,
+  "tags": {
+    "ele": "1823",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 1629202989,
+  "lat": 42.5548304,
+  "lon": 23.1989107,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон 1",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 1906562254,
+  "lat": 42.6031973,
+  "lon": 23.2321731,
+  "tags": {
+    "name": "х. Артистите",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 1940268297,
+  "lat": 42.5371317,
+  "lon": 23.2393833,
+  "tags": {
+    "amenity": "shelter",
+    "name": "заслон Меча чешма",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 2570351939,
+  "lat": 42.6160027,
+  "lon": 23.2208589,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 2570450275,
+  "lat": 42.6035780,
+  "lon": 23.2328341,
+  "tags": {
+    "name": "ПД Радио",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2628270475,
+  "lat": 42.5245559,
+  "lon": 23.3248838,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Синята стрела нов",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2634897704,
+  "lat": 42.4715685,
+  "lon": 23.2413622,
+  "tags": {
+    "ele": "1325.3",
+    "name": "Тепето",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2634897705,
+  "lat": 42.4654884,
+  "lon": 23.2381624,
+  "tags": {
+    "ele": "1280.4",
+    "name": "Чуката",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2828486661,
+  "lat": 42.5251849,
+  "lon": 23.3251934,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Синята стрела стар",
+    "name:bg": "Синята стрела",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2833539135,
+  "lat": 42.5657014,
+  "lon": 23.2580230,
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "name": "Самара",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2833539142,
+  "lat": 42.5637309,
+  "lon": 23.2588459,
+  "tags": {
+    "ele": "2103.6",
+    "name": "Самара",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835183902,
+  "lat": 42.5098018,
+  "lon": 23.3272705,
+  "tags": {
+    "ele": "1375.2",
+    "name": "Кашова могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835222354,
+  "lat": 42.5425372,
+  "lon": 23.3688918,
+  "tags": {
+    "ele": "1074.1",
+    "name": "Свети Илия",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835222355,
+  "lat": 42.5438283,
+  "lon": 23.3750311,
+  "tags": {
+    "ele": "1060.1",
+    "name": "Свети Спас",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835272600,
+  "lat": 42.4953430,
+  "lon": 23.3268690,
+  "tags": {
+    "ele": "1285.6",
+    "name": "Градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835272601,
+  "lat": 42.4934335,
+  "lon": 23.3202179,
+  "tags": {
+    "ele": "1266.4",
+    "name": "Ненкова могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835272602,
+  "lat": 42.4745773,
+  "lon": 23.2825892,
+  "tags": {
+    "ele": "1188.9",
+    "name": "Погледец",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835344577,
+  "lat": 42.4974040,
+  "lon": 23.2915374,
+  "tags": {
+    "ele": "1628.6",
+    "name": "Ветрен",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835344578,
+  "lat": 42.4890180,
+  "lon": 23.3001792,
+  "tags": {
+    "ele": "1346.6",
+    "name": "Голема Чикевица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835344579,
+  "lat": 42.4915330,
+  "lon": 23.2864627,
+  "tags": {
+    "ele": "1446.4",
+    "name": "Малък Ветрен",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2835344580,
+  "lat": 42.5050465,
+  "lon": 23.3064464,
+  "tags": {
+    "ele": "1722.2",
+    "name": "Острица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2837329337,
+  "lat": 42.4776930,
+  "lon": 23.2253793,
+  "tags": {
+    "name": "Тънка могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2837681572,
+  "lat": 42.5606268,
+  "lon": 23.2225718,
+  "tags": {
+    "ele": "1562.8",
+    "name": "Гола могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2837681575,
+  "lat": 42.5458347,
+  "lon": 23.2669346,
+  "tags": {
+    "ele": "1902",
+    "name": "Меча дупка",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2837681576,
+  "lat": 42.5577728,
+  "lon": 23.2262100,
+  "tags": {
+    "ele": "1520.6",
+    "name": "Накев камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2837696011,
+  "lat": 42.5279978,
+  "lon": 23.3491099,
+  "tags": {
+    "amenity": "shelter",
+    "int_name": "Kopcheliyski zaslon",
+    "name": "Копчелийски заслон",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2837747081,
+  "lat": 42.5355054,
+  "lon": 23.2494251,
+  "tags": {
+    "ele": "1547.6",
+    "name": "Минковица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2848780801,
+  "lat": 42.5707525,
+  "lon": 23.3544482,
+  "tags": {
+    "ele": "1030.6",
+    "name": "Голям Капрал",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2848780802,
+  "lat": 42.5570193,
+  "lon": 23.3409708,
+  "tags": {
+    "ele": "1360.4",
+    "name": "Кукуля",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2848780803,
+  "lat": 42.5732680,
+  "lon": 23.3512321,
+  "tags": {
+    "ele": "1025.5",
+    "name": "Малък Капрал",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2848780804,
+  "lat": 42.5610577,
+  "lon": 23.3552849,
+  "tags": {
+    "ele": "1069.8",
+    "name": "Малък Лъгатор",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2885252059,
+  "lat": 42.5483448,
+  "lon": 23.3180664,
+  "tags": {
+    "ele": "1860",
+    "name": "х. Физкултурник",
+    "name:bg": "Проф. Ив. Стайков",
+    "old_name": "x. Купена",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 2889692127,
+  "lat": 42.7025899,
+  "lon": 23.2472799,
+  "tags": {
+    "ele": "634.2",
+    "name": "Малка Коньовица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2889697329,
+  "lat": 42.6988746,
+  "lon": 23.2555227,
+  "tags": {
+    "alt_name": "Голема Коньовица",
+    "alt_name:en": "Golema Konovitsa",
+    "ele": "653.1",
+    "name": "Голяма Коньовица",
+    "name:bg": "Голяма Коньовица",
+    "name:en": "Golyama Konovitsa",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 2919098203,
+  "lat": 42.4928862,
+  "lon": 23.3133626,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 3001855289,
+  "lat": 42.5754448,
+  "lon": 23.2788912,
+  "tags": {
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3001939533,
+  "lat": 42.6119848,
+  "lon": 23.2765863,
+  "tags": {
+    "alt_name": "Гледка към София",
+    "ele": "1860.3",
+    "int_name": "Kamen del",
+    "man_made": "survey_point",
+    "name": "Камен дел",
+    "name:en": "Kamen del",
+    "natural": "peak",
+    "tourism": "viewpoint",
+    "wikidata": "Q6356657",
+    "wikipedia": "en:Kamen Del"
+  }
+},
+{
+  "type": "node",
+  "id": 3062609612,
+  "lat": 42.7483240,
+  "lon": 23.1435396,
+  "tags": {
+    "ele": "695.8",
+    "name": "Малка могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3147164325,
+  "lat": 42.5336167,
+  "lon": 23.4513787,
+  "tags": {
+    "ele": "1138",
+    "name": "Белия камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3170027087,
+  "lat": 42.5834879,
+  "lon": 23.3140596,
+  "tags": {
+    "amenity": "shelter",
+    "fireplace": "no"
+  }
+},
+{
+  "type": "node",
+  "id": 3171741727,
+  "lat": 42.5853585,
+  "lon": 23.3071271,
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 3352226704,
+  "lat": 42.7452566,
+  "lon": 23.1174655,
+  "tags": {
+    "ele": "734.6",
+    "name": "Кремик",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3400118350,
+  "lat": 42.6594318,
+  "lon": 23.1387593,
+  "tags": {
+    "ele": "936.3",
+    "name": "Църквище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3407649167,
+  "lat": 42.7406446,
+  "lon": 23.0897880,
+  "tags": {
+    "ele": "855.75",
+    "name": "Патерица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3407665783,
+  "lat": 42.7300253,
+  "lon": 23.1079351,
+  "tags": {
+    "ele": "722.2",
+    "name": "Гроба",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3495542148,
+  "lat": 42.5074652,
+  "lon": 23.3583880,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "node",
+  "id": 3560312074,
+  "lat": 42.5657882,
+  "lon": 23.4572775,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 3622960254,
+  "lat": 42.6904439,
+  "lon": 23.1160426,
+  "tags": {
+    "ele": "852.61",
+    "name": "Китката",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3622962807,
+  "lat": 42.6797401,
+  "lon": 23.1154191,
+  "tags": {
+    "ele": "975.6",
+    "name": "Голямо градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3725935769,
+  "lat": 42.5507606,
+  "lon": 23.2218075,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Чакало",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 3733283002,
+  "lat": 42.5243213,
+  "lon": 23.2017877,
+  "tags": {
+    "amenity": "shelter",
+    "name": "з. Живата вода"
+  }
+},
+{
+  "type": "node",
+  "id": 3824691163,
+  "lat": 42.7154862,
+  "lon": 23.0899236,
+  "tags": {
+    "ele": "871.3",
+    "name": "Джергов връх",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3824691440,
+  "lat": 42.7132049,
+  "lon": 23.0860759,
+  "tags": {
+    "ele": "877.9",
+    "name": "Каменитица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3824701471,
+  "lat": 42.7090725,
+  "lon": 23.0971194,
+  "tags": {
+    "ele": "807.5",
+    "name": "Попова глава",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3911083559,
+  "lat": 42.6022753,
+  "lon": 23.2336167,
+  "tags": {
+    "name": "х. Панчо Томов",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 3958685556,
+  "lat": 42.5655315,
+  "lon": 23.2119516,
+  "tags": {
+    "amenity": "shelter",
+    "name": "з. Сопо"
+  }
+},
+{
+  "type": "node",
+  "id": 3959160191,
+  "lat": 42.6072343,
+  "lon": 23.2777224,
+  "tags": {
+    "amenity": "shelter",
+    "description": "Temp. closed as of Oct. 2021",
+    "name": "Ушите",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 3959502537,
+  "lat": 42.5880787,
+  "lon": 23.2653653,
+  "tags": {
+    "ele": "1968.4",
+    "name": "Средец",
+    "natural": "peak",
+    "wikidata": "Q9340890"
+  }
+},
+{
+  "type": "node",
+  "id": 3959778921,
+  "lat": 42.5002200,
+  "lon": 23.2454179,
+  "tags": {
+    "ele": "1388",
+    "name": "Остро бърдо",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3960073757,
+  "lat": 42.5326373,
+  "lon": 23.2899517,
+  "tags": {
+    "ele": "2164.2",
+    "name": "Ярловски Купен",
+    "natural": "peak",
+    "source": "bgtopomaps",
+    "wikidata": "Q16562287"
+  }
+},
+{
+  "type": "node",
+  "id": 3960198554,
+  "lat": 42.4982923,
+  "lon": 23.2549057,
+  "tags": {
+    "ele": "1458.6",
+    "name": "Големия рид (Смильо)",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3961972263,
+  "lat": 42.4314118,
+  "lon": 23.2226965,
+  "tags": {
+    "ele": "1120.8",
+    "name": "Пупулькята",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3962425431,
+  "lat": 42.5130086,
+  "lon": 23.1773181,
+  "tags": {
+    "ele": "1081.1",
+    "name": "Езерище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 3962425432,
+  "lat": 42.4991245,
+  "lon": 23.1697627,
+  "tags": {
+    "ele": "1051.0",
+    "name": "Кръста",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4029040909,
+  "lat": 42.6112075,
+  "lon": 23.2600422,
+  "tags": {
+    "name": "Каменно здание",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 4198383930,
+  "lat": 42.6575480,
+  "lon": 23.1683321,
+  "tags": {
+    "ele": "1228.5",
+    "name": "Добринова скала",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4307862595,
+  "lat": 42.5296192,
+  "lon": 23.4479437,
+  "tags": {
+    "ele": "1150",
+    "name": "Чепина чука",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4498830924,
+  "lat": 42.5812991,
+  "lon": 23.5578397,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968932,
+  "lat": 42.6381877,
+  "lon": 23.1509253,
+  "tags": {
+    "ele": "1092",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968941,
+  "lat": 42.6394317,
+  "lon": 23.1853100,
+  "tags": {
+    "ele": "945.4",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968954,
+  "lat": 42.6411702,
+  "lon": 23.1438855,
+  "tags": {
+    "ele": "1070",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968960,
+  "lat": 42.6419649,
+  "lon": 23.1529226,
+  "tags": {
+    "ele": "1201",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968967,
+  "lat": 42.6432262,
+  "lon": 23.1642727,
+  "tags": {
+    "ele": "1203",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535968978,
+  "lat": 42.6474785,
+  "lon": 23.1797817,
+  "tags": {
+    "ele": "1175",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969047,
+  "lat": 42.6561950,
+  "lon": 23.1149515,
+  "tags": {
+    "ele": "1021.6",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969107,
+  "lat": 42.6587413,
+  "lon": 23.1058933,
+  "tags": {
+    "ele": "1037.5",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969756,
+  "lat": 42.6611489,
+  "lon": 23.1718356,
+  "tags": {
+    "ele": "1122",
+    "name": "Голяк",
+    "name:bg": "Голяк",
+    "name:en": "Golyak",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969758,
+  "lat": 42.6393983,
+  "lon": 23.1182268,
+  "tags": {
+    "ele": "860.8",
+    "name": "Градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969769,
+  "lat": 42.6491917,
+  "lon": 23.1534847,
+  "tags": {
+    "ele": "1107.7",
+    "name": "Еленска глава",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969780,
+  "lat": 42.6524644,
+  "lon": 23.1447969,
+  "tags": {
+    "ele": "1020.5",
+    "name": "Кърневец",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969991,
+  "lat": 42.6685489,
+  "lon": 23.1045089,
+  "tags": {
+    "ele": "1102",
+    "name": "Острушка",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4535969999,
+  "lat": 42.6701605,
+  "lon": 23.1130003,
+  "tags": {
+    "alt_name:bg": "Меличe",
+    "alt_name:en": "Meliche",
+    "ele": "1170",
+    "name": "Мелича",
+    "name:bg": "Мелича",
+    "name:en": "Melicha",
+    "natural": "peak",
+    "old_name": "Райловско градище"
+  }
+},
+{
+  "type": "node",
+  "id": 4641743876,
+  "lat": 42.5915413,
+  "lon": 23.2218007,
+  "tags": {
+    "name": "х. Филхармония",
+    "name:en": "Philharmonic hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 4641744542,
+  "lat": 42.5935722,
+  "lon": 23.2193341,
+  "tags": {
+    "name": "х. \"Адвокат\"",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 4681956119,
+  "lat": 42.5862464,
+  "lon": 23.3262755,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 4693900696,
+  "lat": 42.5288091,
+  "lon": 23.2988719,
+  "tags": {
+    "ele": "2113",
+    "name": "Голям Котор (Сиврикая)",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4695958299,
+  "lat": 42.5279716,
+  "lon": 23.3136967,
+  "tags": {
+    "ele": "1877",
+    "name": "Малък котор",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4775002826,
+  "lat": 42.5928399,
+  "lon": 23.2888990,
+  "tags": {
+    "ele": "1830",
+    "name": "Голи връх",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4779848795,
+  "lat": 42.4943374,
+  "lon": 23.4255794,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Ловна хижа"
+  }
+},
+{
+  "type": "node",
+  "id": 4799349088,
+  "lat": 42.5823062,
+  "lon": 23.4777644,
+  "tags": {
+    "ele": "1083.1",
+    "name": "Мала Ракочвичка могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799365014,
+  "lat": 42.5822318,
+  "lon": 23.4927169,
+  "tags": {
+    "ele": "1176.9",
+    "name": "Лалина могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799365015,
+  "lat": 42.5818608,
+  "lon": 23.4665595,
+  "tags": {
+    "ele": "1164.0",
+    "name": "Раковичка могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799379537,
+  "lat": 42.5732530,
+  "lon": 23.5076308,
+  "tags": {
+    "ele": "991.3",
+    "name": "Гола могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799407767,
+  "lat": 42.5858299,
+  "lon": 23.4643453,
+  "tags": {
+    "ele": "1149.7",
+    "name": "Бачун",
+    "name:bg": "Бачун",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799407768,
+  "lat": 42.5850735,
+  "lon": 23.4632563,
+  "tags": {
+    "ele": "1155.8",
+    "name": "Среден Бачун",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4799407769,
+  "lat": 42.5844495,
+  "lon": 23.4656006,
+  "tags": {
+    "ele": "1135.2",
+    "name": "Малък Бачун",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4965809064,
+  "lat": 42.6041926,
+  "lon": 23.2832629,
+  "tags": {
+    "name": "Орлово гнездо",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4965889349,
+  "lat": 42.6181090,
+  "lon": 23.2860870,
+  "tags": {
+    "alt_name": "M",
+    "ele": "1434",
+    "man_made": "survey_point",
+    "name": "Кикиш;TT116",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4968286890,
+  "lat": 42.5732165,
+  "lon": 23.1920424,
+  "tags": {
+    "ele": "1236",
+    "name": "Смедовица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 4971692936,
+  "lat": 42.6147841,
+  "lon": 23.2981111,
+  "tags": {
+    "amenity": "shelter",
+    "fireplace": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 5188392416,
+  "lat": 42.6376770,
+  "lon": 23.2630892,
+  "tags": {
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 5198543770,
+  "lat": 42.5483260,
+  "lon": 23.2068037,
+  "tags": {
+    "amenity": "shelter",
+    "name": "заслон 2"
+  }
+},
+{
+  "type": "node",
+  "id": 5198543794,
+  "lat": 42.5644500,
+  "lon": 23.2007939,
+  "tags": {
+    "amenity": "shelter",
+    "name": "заслон"
+  }
+},
+{
+  "type": "node",
+  "id": 5248945395,
+  "lat": 42.6112465,
+  "lon": 23.3147378,
+  "tags": {
+    "amenity": "shelter",
+    "description:bg": "Заслон Долен Алеков водопад",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 5248948112,
+  "lat": 42.6090424,
+  "lon": 23.3229747,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 5258286761,
+  "lat": 42.6423664,
+  "lon": 23.2323980,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 5273135576,
+  "lat": 42.6331168,
+  "lon": 23.2873955,
+  "tags": {
+    "amenity": "shelter",
+    "fireplace": "yes",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/67/Shelter_in_Vitosa.jpeg",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "node",
+  "id": 5567056221,
+  "lat": 42.4437704,
+  "lon": 23.0920503,
+  "tags": {
+    "ele": "876",
+    "name": "Градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 5578633041,
+  "lat": 42.5343027,
+  "lon": 23.0933534,
+  "tags": {
+    "ele": "1138",
+    "name": "Братанчица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 5580910067,
+  "lat": 42.5189583,
+  "lon": 23.4589577,
+  "tags": {
+    "amenity": "shelter",
+    "name": "з. Рай",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 5713264705,
+  "lat": 42.6767849,
+  "lon": 23.3697879,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 5728562795,
+  "lat": 42.6910523,
+  "lon": 23.2792555,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 5966599780,
+  "lat": 42.7085058,
+  "lon": 23.3022461,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "pavilion"
+  }
+},
+{
+  "type": "node",
+  "id": 6128322725,
+  "lat": 42.6739185,
+  "lon": 23.3440369,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6187625295,
+  "lat": 42.4405279,
+  "lon": 23.2564648,
+  "tags": {
+    "amenity": "shelter",
+    "bin": "no",
+    "lit": "no",
+    "name": "Гърло",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6187721737,
+  "lat": 42.4663387,
+  "lon": 23.2721592,
+  "tags": {
+    "name": "Драганко",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 6269904718,
+  "lat": 42.5288121,
+  "lon": 23.5410183,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон"
+  }
+},
+{
+  "type": "node",
+  "id": 6285333854,
+  "lat": 42.5344877,
+  "lon": 23.3527513,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон"
+  }
+},
+{
+  "type": "node",
+  "id": 6285334477,
+  "lat": 42.5687909,
+  "lon": 23.3423370,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 6307614002,
+  "lat": 42.5975455,
+  "lon": 23.4207304,
+  "tags": {
+    "abandoned": "yes",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 6312250691,
+  "lat": 42.5990672,
+  "lon": 23.4135367,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон"
+  }
+},
+{
+  "type": "node",
+  "id": 6389061340,
+  "lat": 42.5913404,
+  "lon": 23.4912708,
+  "tags": {
+    "amenity": "shelter",
+    "bin": "no",
+    "lit": "no",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6405414178,
+  "lat": 42.6604669,
+  "lon": 23.2487316,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6435733393,
+  "lat": 42.6020205,
+  "lon": 23.2886873,
+  "tags": {
+    "ele": "1670",
+    "name": "Комини",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 6450878234,
+  "lat": 42.6779001,
+  "lon": 23.3462792,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6454770892,
+  "lat": 42.7096327,
+  "lon": 23.3101968,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 6564652121,
+  "lat": 42.6680275,
+  "lon": 23.3061881,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 6572209874,
+  "lat": 42.7105378,
+  "lon": 23.3094698,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 6572209878,
+  "lat": 42.7077872,
+  "lon": 23.3064986,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 6598256962,
+  "lat": 42.7086565,
+  "lon": 23.3108090,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6754110116,
+  "lat": 42.5888873,
+  "lon": 23.4199011,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6754110119,
+  "lat": 42.5895330,
+  "lon": 23.4195390,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 6988039864,
+  "lat": 42.4947813,
+  "lon": 23.5134244,
+  "tags": {
+    "ele": "1096",
+    "name": "Женска Могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 6988039865,
+  "lat": 42.5231903,
+  "lon": 23.5739511,
+  "tags": {
+    "ele": "1011",
+    "name": "Луко",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 7161075275,
+  "lat": 42.5560425,
+  "lon": 23.4292769,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 7453554480,
+  "lat": 42.7113008,
+  "lon": 23.2984929,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 7503525286,
+  "lat": 42.6520085,
+  "lon": 23.1870457,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 7526890742,
+  "lat": 42.6371163,
+  "lon": 23.2440095,
+  "tags": {
+    "ele": "1347",
+    "name": "Копитото",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 7640541386,
+  "lat": 42.4688032,
+  "lon": 23.2650557,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Беседка"
+  }
+},
+{
+  "type": "node",
+  "id": 7675814318,
+  "lat": 42.6359070,
+  "lon": 23.2250756,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 7837287485,
+  "lat": 42.5584974,
+  "lon": 23.3502875,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 7862291528,
+  "lat": 42.5787570,
+  "lon": 23.2473720,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Заслон 2050",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 7897657308,
+  "lat": 42.5883835,
+  "lon": 23.2786308,
+  "tags": {
+    "ele": "1957",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 7897657833,
+  "lat": 42.5856287,
+  "lon": 23.2781534,
+  "tags": {
+    "ele": "1964",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 7897681837,
+  "lat": 42.5907940,
+  "lon": 23.2769018,
+  "tags": {
+    "ele": "1955",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 8018989349,
+  "lat": 42.6775457,
+  "lon": 23.1761048,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8022929201,
+  "lat": 42.5901292,
+  "lon": 23.3874587,
+  "tags": {
+    "ele": "905",
+    "name": "Чипоровица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 8087588724,
+  "lat": 42.5787183,
+  "lon": 23.2473523,
+  "tags": {
+    "amenity": "shelter",
+    "name": "ЗАСЛОНЪТ"
+  }
+},
+{
+  "type": "node",
+  "id": 8140148190,
+  "lat": 42.6972043,
+  "lon": 23.3345442,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 8140148191,
+  "lat": 42.6974564,
+  "lon": 23.3343515,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 8151234818,
+  "lat": 42.5872943,
+  "lon": 23.1957514,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8176549217,
+  "lat": 42.5884197,
+  "lon": 23.1963489,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8223353475,
+  "lat": 42.5605324,
+  "lon": 23.5642487,
+  "tags": {
+    "alt_name:bg": "Попов дел",
+    "ele": "1190",
+    "name": "Попов дял",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 8234571452,
+  "lat": 42.5701704,
+  "lon": 23.5728493,
+  "tags": {
+    "alt_name:bg": "Мали Попов дел",
+    "ele": "1104",
+    "name": "Мали Попов дял",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 8240586642,
+  "lat": 42.5124183,
+  "lon": 23.5781001,
+  "tags": {
+    "ele": "1036",
+    "name": "Габрòвец",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 8554886800,
+  "lat": 42.6698449,
+  "lon": 23.3274816,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8779907627,
+  "lat": 42.6243002,
+  "lon": 23.2398157,
+  "tags": {
+    "currency:BCH": "yes",
+    "name": "х. Планинец",
+    "name:en": "Planinets",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/planinec1"
+  }
+},
+{
+  "type": "node",
+  "id": 8787082417,
+  "lat": 42.6106216,
+  "lon": 23.1808679,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8806758823,
+  "lat": 42.6020858,
+  "lon": 23.3054755,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8923228773,
+  "lat": 42.6102214,
+  "lon": 23.2376497,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8932031071,
+  "lat": 42.6260414,
+  "lon": 23.2045734,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 8933322680,
+  "lat": 42.6703486,
+  "lon": 23.3458457,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 9210048930,
+  "lat": 42.6371234,
+  "lon": 23.2439917,
+  "tags": {
+    "alt_name": "KOPITOTO",
+    "ele": "1348",
+    "man_made": "survey_point",
+    "name": "Копитото",
+    "name:bg": "Копитото",
+    "name:en": "\"Kopitoto\"",
+    "natural": "peak",
+    "tourism": "viewpoint"
+  }
+},
+{
+  "type": "node",
+  "id": 9215726590,
+  "lat": 42.7099318,
+  "lon": 23.3078662,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 9530705622,
+  "lat": 42.7071357,
+  "lon": 23.1129214,
+  "tags": {
+    "ele": "784",
+    "name": "Костини могили",
+    "name:bg": "Костини могили",
+    "name:en": "Kostini mogili",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9552182090,
+  "lat": 42.6660703,
+  "lon": 23.2489478,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 9590176413,
+  "lat": 42.7304473,
+  "lon": 23.2252568,
+  "tags": {
+    "ele": "571",
+    "name": "Голямата могила",
+    "name:bg": "Голямата могила",
+    "name:en": "Golyamata mogila",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9590180133,
+  "lat": 42.6779866,
+  "lon": 23.1254731,
+  "tags": {
+    "ele": "1030",
+    "name": "Остра чука",
+    "name:bg": "Остра чука",
+    "name:en": "Ostra chuka",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9590189165,
+  "lat": 42.7274663,
+  "lon": 23.2119046,
+  "tags": {
+    "ele": "580",
+    "name": "Ивана могила",
+    "name:bg": "Ивана могила",
+    "name:en": "Ivana mogila",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9605933907,
+  "lat": 42.6879832,
+  "lon": 23.3170229,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 9799323642,
+  "lat": 42.5059563,
+  "lon": 23.2363255,
+  "tags": {
+    "ele": "1340",
+    "name": "Св. Богородица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9799348836,
+  "lat": 42.5060697,
+  "lon": 23.2269807,
+  "tags": {
+    "ele": "1417",
+    "name": "Меча могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 9895802041,
+  "lat": 42.6045043,
+  "lon": 23.1900038,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 9919772091,
+  "lat": 42.6818850,
+  "lon": 23.2406297,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "lit": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 9944328793,
+  "lat": 42.6812487,
+  "lon": 23.2999948,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 9944328795,
+  "lat": 42.6821263,
+  "lon": 23.2987027,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 9968309447,
+  "lat": 42.7454118,
+  "lon": 23.4702330,
+  "tags": {
+    "name": "Ловна хижа кв. Челопечене",
+    "name:bg": "Ловна хижа кв. Челопечене",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 10083333439,
+  "lat": 42.6515068,
+  "lon": 23.3483062,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10271651801,
+  "lat": 42.6060896,
+  "lon": 23.2414884,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 10548407759,
+  "lat": 42.4428057,
+  "lon": 23.4194827,
+  "tags": {
+    "ele": "1190",
+    "name": "Калето",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548407760,
+  "lat": 42.4329543,
+  "lon": 23.4366827,
+  "tags": {
+    "ele": "1147",
+    "name": "Орлово гнездо",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548409330,
+  "lat": 42.4520737,
+  "lon": 23.4335284,
+  "tags": {
+    "ele": "1293",
+    "name": "Елхата",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548409331,
+  "lat": 42.4456708,
+  "lon": 23.4039168,
+  "tags": {
+    "ele": "1277",
+    "name": "Шумкова могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548409332,
+  "lat": 42.4553700,
+  "lon": 23.4001617,
+  "tags": {
+    "ele": "1307",
+    "name": "Кръсто",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548415787,
+  "lat": 42.4340085,
+  "lon": 23.3911173,
+  "tags": {
+    "ele": "1168",
+    "name": "Йовчина могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548415788,
+  "lat": 42.4394303,
+  "lon": 23.3634262,
+  "tags": {
+    "ele": "1140",
+    "name": "Кликач",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548416852,
+  "lat": 42.4304710,
+  "lon": 23.4264849,
+  "tags": {
+    "ele": "1165",
+    "name": "Иванова могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548470012,
+  "lat": 42.4273952,
+  "lon": 23.5032543,
+  "tags": {
+    "ele": "1081",
+    "name": "Могилски камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548470013,
+  "lat": 42.4377068,
+  "lon": 23.4910473,
+  "tags": {
+    "ele": "1185",
+    "name": "Свети дух",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548499345,
+  "lat": 42.4746230,
+  "lon": 23.4638503,
+  "tags": {
+    "ele": "1252",
+    "name": "Вечерина",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548513467,
+  "lat": 42.5234758,
+  "lon": 23.3711102,
+  "tags": {
+    "ele": "1175",
+    "name": "Гладни рид",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548513468,
+  "lat": 42.5271098,
+  "lon": 23.3760562,
+  "tags": {
+    "ele": "1125",
+    "name": "Свети Петър",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548519168,
+  "lat": 42.4630394,
+  "lon": 23.4447346,
+  "tags": {
+    "ele": "1255",
+    "name": "Гробът",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548519624,
+  "lat": 42.4869597,
+  "lon": 23.4667471,
+  "tags": {
+    "ele": "1325",
+    "name": "Мухчел",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548519625,
+  "lat": 42.4965992,
+  "lon": 23.4714463,
+  "tags": {
+    "ele": "1259",
+    "name": "Голям Гарван",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548519626,
+  "lat": 42.4945424,
+  "lon": 23.4717467,
+  "tags": {
+    "ele": "1260",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548519627,
+  "lat": 42.4972510,
+  "lon": 23.4899321,
+  "tags": {
+    "ele": "1172",
+    "name": "Кръста",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548536955,
+  "lat": 42.5922116,
+  "lon": 23.3565002,
+  "tags": {
+    "ele": "968",
+    "name": "Ушите",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548536956,
+  "lat": 42.6011320,
+  "lon": 23.3620900,
+  "tags": {
+    "ele": "952",
+    "name": "Църква",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548538058,
+  "lat": 42.5360561,
+  "lon": 23.3849417,
+  "tags": {
+    "ele": "1057",
+    "name": "Бегун",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548538059,
+  "lat": 42.5343643,
+  "lon": 23.3802210,
+  "tags": {
+    "ele": "1063",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548538060,
+  "lat": 42.5318903,
+  "lon": 23.3771097,
+  "tags": {
+    "ele": "1088",
+    "name": "Св. Троица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548543175,
+  "lat": 42.5695258,
+  "lon": 23.3665532,
+  "tags": {
+    "ele": "931",
+    "name": "Палилупа",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548543176,
+  "lat": 42.5779417,
+  "lon": 23.3518439,
+  "tags": {
+    "ele": "1026",
+    "name": "Богдана",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548548666,
+  "lat": 42.5269626,
+  "lon": 23.1783573,
+  "tags": {
+    "ele": "1100",
+    "name": "Лас",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548548667,
+  "lat": 42.5307819,
+  "lon": 23.1887750,
+  "tags": {
+    "ele": "1200",
+    "name": "Острица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549387,
+  "lat": 42.5441079,
+  "lon": 23.3867388,
+  "tags": {
+    "ele": "1041",
+    "name": "Лесичар",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549388,
+  "lat": 42.5439261,
+  "lon": 23.3828550,
+  "tags": {
+    "ele": "1032",
+    "name": "Свети Георги",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549389,
+  "lat": 42.5499686,
+  "lon": 23.3838742,
+  "tags": {
+    "ele": "1022",
+    "name": "Йованова глава",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549390,
+  "lat": 42.5552808,
+  "lon": 23.3943885,
+  "tags": {
+    "ele": "1070",
+    "name": "Овнарника",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549391,
+  "lat": 42.5579541,
+  "lon": 23.3789604,
+  "tags": {
+    "ele": "1009",
+    "name": "Градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548549392,
+  "lat": 42.5814083,
+  "lon": 23.4098273,
+  "tags": {
+    "ele": "790",
+    "name": "Св. Спас",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548555691,
+  "lat": 42.4794743,
+  "lon": 23.2540881,
+  "tags": {
+    "ele": "1329",
+    "name": "Еловица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548555692,
+  "lat": 42.4921503,
+  "lon": 23.2209575,
+  "tags": {
+    "ele": "1291",
+    "name": "Червени камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548555693,
+  "lat": 42.4934160,
+  "lon": 23.2119667,
+  "tags": {
+    "ele": "1222",
+    "name": "Цвилия",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548555694,
+  "lat": 42.4842576,
+  "lon": 23.1808102,
+  "tags": {
+    "ele": "1056",
+    "name": "Косматица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548560275,
+  "lat": 42.5049755,
+  "lon": 23.1762182,
+  "tags": {
+    "ele": "1047",
+    "name": "Мачище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548560276,
+  "lat": 42.5117942,
+  "lon": 23.1696307,
+  "tags": {
+    "ele": "1050",
+    "name": "Могилата",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548560277,
+  "lat": 42.5172034,
+  "lon": 23.1645238,
+  "tags": {
+    "ele": "1031",
+    "name": "Богово кале",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548560278,
+  "lat": 42.5172351,
+  "lon": 23.1833207,
+  "tags": {
+    "ele": "1177",
+    "name": "Круша",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548560279,
+  "lat": 42.5211425,
+  "lon": 23.1867862,
+  "tags": {
+    "ele": "1199",
+    "name": "Ридо",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548596446,
+  "lat": 42.5802436,
+  "lon": 23.4514848,
+  "tags": {
+    "ele": "1101",
+    "name": "Здравчов камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548607389,
+  "lat": 42.5946462,
+  "lon": 23.4322802,
+  "tags": {
+    "ele": "918",
+    "name": "Голия рид",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10548607390,
+  "lat": 42.6533194,
+  "lon": 23.2033412,
+  "tags": {
+    "ele": "955",
+    "name": "Кърлежа",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550528368,
+  "lat": 42.5256126,
+  "lon": 23.3549510,
+  "tags": {
+    "ele": "1250",
+    "name": "Буките",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550528369,
+  "lat": 42.5243298,
+  "lon": 23.2428722,
+  "tags": {
+    "ele": "1352",
+    "name": "Преслап",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550528370,
+  "lat": 42.5802745,
+  "lon": 23.2097308,
+  "tags": {
+    "ele": "1601",
+    "name": "Марков нож",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550528371,
+  "lat": 42.5626266,
+  "lon": 23.2453935,
+  "tags": {
+    "ele": "1908",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550528372,
+  "lat": 42.5828795,
+  "lon": 23.2245072,
+  "tags": {
+    "ele": "1835",
+    "name": "Острец",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550560139,
+  "lat": 42.5694231,
+  "lon": 23.3048166,
+  "tags": {
+    "ele": "1792",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550560140,
+  "lat": 42.5237182,
+  "lon": 23.3400394,
+  "tags": {
+    "ele": "1408",
+    "name": "Косматица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550562510,
+  "lat": 42.5709807,
+  "lon": 23.3037545,
+  "tags": {
+    "ele": "1820",
+    "name": "Пиперката",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583674,
+  "lat": 42.5394630,
+  "lon": 23.0819125,
+  "tags": {
+    "ele": "1088",
+    "name": "Голема кожушка",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583675,
+  "lat": 42.5348462,
+  "lon": 23.0853028,
+  "tags": {
+    "ele": "1021",
+    "name": "Малка кожушка",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583676,
+  "lat": 42.5310672,
+  "lon": 23.1012888,
+  "tags": {
+    "ele": "1120",
+    "name": "Бурковица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583678,
+  "lat": 42.5497833,
+  "lon": 23.0842027,
+  "tags": {
+    "ele": "1026",
+    "name": "Обесено дърво",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583679,
+  "lat": 42.5036823,
+  "lon": 23.1296179,
+  "tags": {
+    "ele": "1034",
+    "name": "Масорица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583680,
+  "lat": 42.5114151,
+  "lon": 23.1358271,
+  "tags": {
+    "ele": "974",
+    "name": "Ушите",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583681,
+  "lat": 42.5228724,
+  "lon": 23.1072160,
+  "tags": {
+    "ele": "1000",
+    "name": "Малка Стобленица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583682,
+  "lat": 42.5185707,
+  "lon": 23.1131384,
+  "tags": {
+    "ele": "1040",
+    "name": "Голема Стобленица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10550583683,
+  "lat": 42.5291504,
+  "lon": 23.1193825,
+  "tags": {
+    "ele": "987",
+    "name": "Старчина могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562073932,
+  "lat": 42.5052037,
+  "lon": 23.4042795,
+  "tags": {
+    "ele": "1300",
+    "name": "Дуралия",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562073933,
+  "lat": 42.5154497,
+  "lon": 23.3980480,
+  "tags": {
+    "ele": "1288",
+    "name": "Коилото",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562073934,
+  "lat": 42.5168415,
+  "lon": 23.3947006,
+  "tags": {
+    "ele": "1201",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562073935,
+  "lat": 42.5154655,
+  "lon": 23.4021035,
+  "tags": {
+    "ele": "1251",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562114431,
+  "lat": 42.5256789,
+  "lon": 23.4247265,
+  "tags": {
+    "ele": "1253",
+    "name": "Егеница",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562124561,
+  "lat": 42.5086112,
+  "lon": 23.3926662,
+  "tags": {
+    "ele": "1257",
+    "name": "Медна скала",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138415,
+  "lat": 42.5175794,
+  "lon": 23.3805212,
+  "tags": {
+    "ele": "1117",
+    "name": "Градище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138416,
+  "lat": 42.5051427,
+  "lon": 23.4294125,
+  "tags": {
+    "ele": "1218",
+    "name": "Синия камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138417,
+  "lat": 42.4991876,
+  "lon": 23.4201212,
+  "tags": {
+    "ele": "1223",
+    "name": "Андреев камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138418,
+  "lat": 42.4956927,
+  "lon": 23.4196170,
+  "tags": {
+    "ele": "1241",
+    "name": "Марчин камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138419,
+  "lat": 42.4912552,
+  "lon": 23.4213765,
+  "tags": {
+    "ele": "1230",
+    "name": "Самоковишки камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562138420,
+  "lat": 42.4853384,
+  "lon": 23.4367402,
+  "tags": {
+    "ele": "1169",
+    "name": "Говедарника",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562172250,
+  "lat": 42.5123176,
+  "lon": 23.4359803,
+  "tags": {
+    "ele": "1243",
+    "name": "Гарваница",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10562172251,
+  "lat": 42.5161610,
+  "lon": 23.4373536,
+  "tags": {
+    "ele": "1190",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10574536834,
+  "lat": 42.5771069,
+  "lon": 23.2582403,
+  "tags": {
+    "ele": "1972",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10574536835,
+  "lat": 42.5774230,
+  "lon": 23.2463313,
+  "tags": {
+    "ele": "1996",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10712442531,
+  "lat": 42.6121846,
+  "lon": 23.2378006,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10749947365,
+  "lat": 42.6279118,
+  "lon": 23.2222810,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 10757568500,
+  "lat": 42.6225939,
+  "lon": 23.2999686,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10768922868,
+  "lat": 42.5333451,
+  "lon": 23.5395204,
+  "tags": {
+    "ele": "1018",
+    "name": "Калето",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10768922960,
+  "lat": 42.5333583,
+  "lon": 23.5728978,
+  "tags": {
+    "ele": "976",
+    "name": "Белая",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10770456715,
+  "lat": 42.5174922,
+  "lon": 23.5450596,
+  "tags": {
+    "ele": "958",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10770456716,
+  "lat": 42.5090143,
+  "lon": 23.5578699,
+  "tags": {
+    "ele": "939",
+    "name": "Яловарника",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10770716940,
+  "lat": 42.4582251,
+  "lon": 23.5382775,
+  "tags": {
+    "ele": "997",
+    "name": "Жарков камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10770730069,
+  "lat": 42.4816715,
+  "lon": 23.5273389,
+  "tags": {
+    "ele": "1127",
+    "name": "Женска могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779120869,
+  "lat": 42.6385273,
+  "lon": 23.2572694,
+  "tags": {
+    "ele": "1067",
+    "name": "Момина скала",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779120870,
+  "lat": 42.6353274,
+  "lon": 23.2640420,
+  "tags": {
+    "ele": "1145",
+    "name": "Суи връх",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779501291,
+  "lat": 42.5501863,
+  "lon": 23.4766684,
+  "tags": {
+    "ele": "829",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779501292,
+  "lat": 42.5496172,
+  "lon": 23.4759281,
+  "tags": {
+    "ele": "827",
+    "name": "Асаница",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779523499,
+  "lat": 42.6003745,
+  "lon": 23.3739304,
+  "tags": {
+    "ele": "808",
+    "name": "Злия камък",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779548498,
+  "lat": 42.5739752,
+  "lon": 23.4130144,
+  "tags": {
+    "ele": "787",
+    "name": "Могилата",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779549641,
+  "lat": 42.5478772,
+  "lon": 23.4868850,
+  "tags": {
+    "ele": "857",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779549643,
+  "lat": 42.5472534,
+  "lon": 23.4937396,
+  "tags": {
+    "ele": "790",
+    "name": "Връшника",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779553915,
+  "lat": 42.5312888,
+  "lon": 23.4790501,
+  "tags": {
+    "ele": "1128",
+    "name": "Менгьов кръст",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10779578125,
+  "lat": 42.5756682,
+  "lon": 23.4993925,
+  "tags": {
+    "ele": "1022",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10807167326,
+  "lat": 42.6690377,
+  "lon": 23.2796947,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 10836777494,
+  "lat": 42.5171432,
+  "lon": 23.3518387,
+  "tags": {
+    "ele": "1228",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10836805082,
+  "lat": 42.5345709,
+  "lon": 23.3531330,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10836871399,
+  "lat": 42.5539971,
+  "lon": 23.3597366,
+  "tags": {
+    "ele": "1087",
+    "name": "Острица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582106,
+  "lat": 42.6373759,
+  "lon": 23.2214696,
+  "tags": {
+    "amenity": "shelter",
+    "fixme": "verify position",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582107,
+  "lat": 42.6095347,
+  "lon": 23.2376739,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582108,
+  "lat": 42.6020976,
+  "lon": 23.2336416,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582116,
+  "lat": 42.6033632,
+  "lon": 23.2413893,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582117,
+  "lat": 42.6034187,
+  "lon": 23.2412133,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582208,
+  "lat": 42.6094746,
+  "lon": 23.2386904,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582216,
+  "lat": 42.6023617,
+  "lon": 23.2335482,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582221,
+  "lat": 42.6032700,
+  "lon": 23.2411809,
+  "tags": {
+    "amenity": "shelter",
+    "name": "Беседка",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582224,
+  "lat": 42.6047407,
+  "lon": 23.2414735,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10894582605,
+  "lat": 42.6022523,
+  "lon": 23.2334746,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 10941177407,
+  "lat": 42.7104251,
+  "lon": 23.3116867,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "lit": "no",
+    "lockable": "no",
+    "shelter_type": "gazebo",
+    "wheelchair": "no"
+  }
+},
+{
+  "type": "node",
+  "id": 10944276503,
+  "lat": 42.5963998,
+  "lon": 23.2205767,
+  "tags": {
+    "ele": "1667",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10944276504,
+  "lat": 42.6002502,
+  "lon": 23.2214350,
+  "tags": {
+    "ele": "1442",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10944300986,
+  "lat": 42.6176917,
+  "lon": 23.2192893,
+  "tags": {
+    "ele": "1225",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10944312205,
+  "lat": 42.6008820,
+  "lon": 23.2218427,
+  "tags": {
+    "ele": "1641",
+    "name": "Владайски Черни връх",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10976721927,
+  "lat": 42.6877662,
+  "lon": 23.3571292,
+  "tags": {
+    "ele": "583.46",
+    "name": "Слатински редут",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10979103531,
+  "lat": 42.6678272,
+  "lon": 23.3113445,
+  "tags": {
+    "ele": "624.6",
+    "name": "Лозенски редут",
+    "name:de": "Lozenski-Redoute",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10979103532,
+  "lat": 42.6575108,
+  "lon": 23.2600104,
+  "tags": {
+    "ele": "683.16",
+    "name": "Гърдова глава",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10979103533,
+  "lat": 42.6593928,
+  "lon": 23.2617703,
+  "tags": {
+    "ele": "675.2",
+    "name": "Боянски редут",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10991348546,
+  "lat": 42.6488415,
+  "lon": 23.1472559,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 11118412523,
+  "lat": 42.6841244,
+  "lon": 23.3364548,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11162952234,
+  "lat": 42.5340257,
+  "lon": 23.1518735,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 11193031751,
+  "lat": 42.6716550,
+  "lon": 23.2908918,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11197984713,
+  "lat": 42.6641321,
+  "lon": 23.2755673,
+  "tags": {
+    "amenity": "shelter",
+    "fixme": "Възможно е да е по на югоизток",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11215613322,
+  "lat": 42.6651547,
+  "lon": 23.2923268,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11224706397,
+  "lat": 42.6723328,
+  "lon": 23.2761470,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11243154852,
+  "lat": 42.6951409,
+  "lon": 23.0933850,
+  "tags": {
+    "ele": "797",
+    "name": "Пладнище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11243173580,
+  "lat": 42.6728046,
+  "lon": 23.0854207,
+  "tags": {
+    "ele": "939",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11243173599,
+  "lat": 42.6759336,
+  "lon": 23.0811506,
+  "tags": {
+    "ele": "895",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11336816129,
+  "lat": 42.5802486,
+  "lon": 23.5430117,
+  "tags": {
+    "ele": "1092",
+    "name": "Роден",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11336816133,
+  "lat": 42.5866657,
+  "lon": 23.5543414,
+  "tags": {
+    "ele": "1068",
+    "name": "Голяма Асарица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11336816134,
+  "lat": 42.5842169,
+  "lon": 23.5608002,
+  "tags": {
+    "ele": "1041",
+    "name": "Малка Асарица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11336816135,
+  "lat": 42.5813335,
+  "lon": 23.5579785,
+  "tags": {
+    "ele": "1070",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11336840621,
+  "lat": 42.5818361,
+  "lon": 23.5034279,
+  "tags": {
+    "ele": "1129",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11366995448,
+  "lat": 42.6670034,
+  "lon": 23.3547575,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11390314548,
+  "lat": 42.6076318,
+  "lon": 23.1774563,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 11396176173,
+  "lat": 42.4786514,
+  "lon": 23.1181401,
+  "tags": {
+    "ele": "862",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396176174,
+  "lat": 42.4721572,
+  "lon": 23.1229037,
+  "tags": {
+    "ele": "881",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396176175,
+  "lat": 42.4722206,
+  "lon": 23.1297916,
+  "tags": {
+    "ele": "891",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396176176,
+  "lat": 42.4677413,
+  "lon": 23.1451338,
+  "tags": {
+    "ele": "975",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186740,
+  "lat": 42.5200819,
+  "lon": 23.1480723,
+  "tags": {
+    "ele": "944",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186741,
+  "lat": 42.5095771,
+  "lon": 23.1560331,
+  "tags": {
+    "ele": "1027",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186742,
+  "lat": 42.5061419,
+  "lon": 23.1619662,
+  "tags": {
+    "ele": "1026",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186743,
+  "lat": 42.5044176,
+  "lon": 23.1624383,
+  "tags": {
+    "ele": "1025",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186744,
+  "lat": 42.4962333,
+  "lon": 23.1599062,
+  "tags": {
+    "ele": "1015",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186745,
+  "lat": 42.4897147,
+  "lon": 23.1562799,
+  "tags": {
+    "ele": "1074",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186746,
+  "lat": 42.4934329,
+  "lon": 23.1470746,
+  "tags": {
+    "ele": "1020",
+    "name": "Кленска могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186747,
+  "lat": 42.4824674,
+  "lon": 23.1608718,
+  "tags": {
+    "ele": "1085",
+    "name": "Обуеница",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186748,
+  "lat": 42.4757046,
+  "lon": 23.1858057,
+  "tags": {
+    "ele": "1009",
+    "name": "Здравешки рид",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186749,
+  "lat": 42.4724997,
+  "lon": 23.1675559,
+  "tags": {
+    "ele": "1024",
+    "name": "Рувич",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186750,
+  "lat": 42.4759908,
+  "lon": 23.1579643,
+  "tags": {
+    "ele": "1076",
+    "name": "Черкатица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186751,
+  "lat": 42.4680362,
+  "lon": 23.1534368,
+  "tags": {
+    "ele": "998",
+    "name": "Острата чука",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396186752,
+  "lat": 42.4649496,
+  "lon": 23.1616443,
+  "tags": {
+    "ele": "1052",
+    "name": "Гола глава",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222224,
+  "lat": 42.4705859,
+  "lon": 23.1921706,
+  "tags": {
+    "ele": "1028",
+    "name": "Манговица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222225,
+  "lat": 42.4770907,
+  "lon": 23.1982002,
+  "tags": {
+    "ele": "1104",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222226,
+  "lat": 42.4744794,
+  "lon": 23.2121263,
+  "tags": {
+    "ele": "1232",
+    "name": "Градището",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222227,
+  "lat": 42.4590412,
+  "lon": 23.2265673,
+  "tags": {
+    "ele": "1225",
+    "name": "Ушек",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222228,
+  "lat": 42.4652306,
+  "lon": 23.2109032,
+  "tags": {
+    "ele": "1138",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222229,
+  "lat": 42.4583604,
+  "lon": 23.2139073,
+  "tags": {
+    "ele": "1173",
+    "name": "Солище",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222230,
+  "lat": 42.4573473,
+  "lon": 23.2004962,
+  "tags": {
+    "ele": "1058",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396222231,
+  "lat": 42.4430027,
+  "lon": 23.1840811,
+  "tags": {
+    "ele": "885",
+    "name": "Ралевица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11396237138,
+  "lat": 42.4810148,
+  "lon": 23.1460074,
+  "tags": {
+    "ele": "1037",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11400104139,
+  "lat": 42.4403884,
+  "lon": 23.1995553,
+  "tags": {
+    "ele": "986",
+    "name": "Кацарска могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11400104140,
+  "lat": 42.4390662,
+  "lon": 23.2014490,
+  "tags": {
+    "ele": "991",
+    "name": "Мартинова могила",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11403689290,
+  "lat": 42.5237624,
+  "lon": 23.1412136,
+  "tags": {
+    "ele": "1003",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11420283852,
+  "lat": 42.6632597,
+  "lon": 23.2106170,
+  "tags": {
+    "name": "Смилица",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11438496632,
+  "lat": 42.5013447,
+  "lon": 23.5596642,
+  "tags": {
+    "ele": "895",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11438496633,
+  "lat": 42.4988768,
+  "lon": 23.5645566,
+  "tags": {
+    "ele": "887",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11443190041,
+  "lat": 42.6714991,
+  "lon": 23.2811471,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11463440607,
+  "lat": 42.5638187,
+  "lon": 23.2785913,
+  "tags": {
+    "ele": "2280",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11637768089,
+  "lat": 42.5855882,
+  "lon": 23.1917392,
+  "tags": {
+    "ele": "1264",
+    "name": "Тепето",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11642257911,
+  "lat": 42.6628410,
+  "lon": 23.3759887,
+  "tags": {
+    "amenity": "shelter",
+    "departures_board": "realtime",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 11649475383,
+  "lat": 42.6820843,
+  "lon": 23.3039860,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11666272039,
+  "lat": 42.6701279,
+  "lon": 23.2718218,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11805629933,
+  "lat": 42.6619732,
+  "lon": 23.3063360,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11897230289,
+  "lat": 42.5628897,
+  "lon": 23.3429050,
+  "tags": {
+    "amenity": "shelter",
+    "int_name": "Dinova livada",
+    "name": "Динова ливада",
+    "name:bg": "Динова ливада",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 11966769454,
+  "lat": 42.6317175,
+  "lon": 23.2116267,
+  "tags": {
+    "alt_name:bg": "Рачов камък;Райчов камък",
+    "alt_name:en": "Rachov kamak",
+    "ele": "1076",
+    "int_name": "Rachkov kamak",
+    "name": "Рачков камък",
+    "name:bg": "Рачков камък",
+    "name:en": "Rachkov kamak",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11966792923,
+  "lat": 42.6165655,
+  "lon": 23.2270068,
+  "tags": {
+    "alt_name:bg": "Гробище",
+    "alt_name:en": "Grobishte",
+    "ele": "1341",
+    "int_name": "Grobishta",
+    "name": "Гробища",
+    "name:bg": "Гробища",
+    "name:en": "Grobishta",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11967089748,
+  "lat": 42.6120671,
+  "lon": 23.2544879,
+  "tags": {
+    "ele": "1728",
+    "int_name": "Balabana",
+    "name": "Балабана",
+    "name:bg": "Балабана",
+    "name:en": "Balabana",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 11970678101,
+  "lat": 42.6299708,
+  "lon": 23.2979229,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11970745537,
+  "lat": 42.6440413,
+  "lon": 23.2829886,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 11985204621,
+  "lat": 42.7417622,
+  "lon": 23.3046288,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12031808965,
+  "lat": 42.4769196,
+  "lon": 23.2496146,
+  "tags": {
+    "ele": "1303",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12031811442,
+  "lat": 42.4839513,
+  "lon": 23.2407312,
+  "tags": {
+    "ele": "1305",
+    "name": "Студенко",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12031830695,
+  "lat": 42.4860820,
+  "lon": 23.2279988,
+  "tags": {
+    "ele": "1373",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12031830708,
+  "lat": 42.4853280,
+  "lon": 23.2467393,
+  "tags": {
+    "ele": "1316",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12031840506,
+  "lat": 42.4887219,
+  "lon": 23.2085796,
+  "tags": {
+    "ele": "1193",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12052746990,
+  "lat": 42.5802841,
+  "lon": 23.2839729,
+  "tags": {
+    "ele": "2028",
+    "name": "Стената",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 12124528788,
+  "lat": 42.6673719,
+  "lon": 23.2983669,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12161551752,
+  "lat": 42.6464429,
+  "lon": 23.3705510,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12161558629,
+  "lat": 42.6464871,
+  "lon": 23.3705721,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12161559773,
+  "lat": 42.6457833,
+  "lon": 23.3693297,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12161586600,
+  "lat": 42.6464592,
+  "lon": 23.3705938,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12193216408,
+  "lat": 42.7391574,
+  "lon": 23.2909804,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 12205662661,
+  "lat": 42.6284545,
+  "lon": 23.2305479,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12278241462,
+  "lat": 42.6435827,
+  "lon": 23.2599367,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12280933562,
+  "lat": 42.6634833,
+  "lon": 23.1247927,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12280948390,
+  "lat": 42.6634921,
+  "lon": 23.1247099,
+  "tags": {
+    "tourism": "wilderness_hut"
+  }
+},
+{
+  "type": "node",
+  "id": 12304590036,
+  "lat": 42.7344485,
+  "lon": 23.2871305,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12328740119,
+  "lat": 42.7432580,
+  "lon": 23.2701419,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12420919317,
+  "lat": 42.6785825,
+  "lon": 23.2548775,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12578874300,
+  "lat": 42.6072290,
+  "lon": 23.2289045,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12728529228,
+  "lat": 42.6267298,
+  "lon": 23.3821344,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12806391319,
+  "lat": 42.6256961,
+  "lon": 23.2903695,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12826199062,
+  "lat": 42.6762927,
+  "lon": 23.2787294,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 12833791236,
+  "lat": 42.6625473,
+  "lon": 23.3407727,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 12894584893,
+  "lat": 42.5382676,
+  "lon": 23.5008183,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "weather_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13048079963,
+  "lat": 42.7019972,
+  "lon": 23.3078505,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13092221219,
+  "lat": 42.4861434,
+  "lon": 23.4994805,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13146835628,
+  "lat": 42.7124319,
+  "lon": 23.3203031,
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "description": "топла чакалня 08:30-19:00",
+    "lit": "yes",
+    "operator": "БЧК",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "node",
+  "id": 13191145727,
+  "lat": 42.6204835,
+  "lon": 23.2987686,
+  "tags": {
+    "amenity": "shelter",
+    "lit": "no",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13260788311,
+  "lat": 42.4496447,
+  "lon": 23.1810744,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13296608213,
+  "lat": 42.7487822,
+  "lon": 23.3192094,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13296608232,
+  "lat": 42.7490224,
+  "lon": 23.3190377,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13350819204,
+  "lat": 42.4959977,
+  "lon": 23.1827005,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13361081605,
+  "lat": 42.6540416,
+  "lon": 23.3785310,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13428586971,
+  "lat": 42.6972384,
+  "lon": 23.3069655,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13432624727,
+  "lat": 42.7131966,
+  "lon": 23.2626856,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "node",
+  "id": 13536775308,
+  "lat": 42.6825237,
+  "lon": 23.2903895,
+  "tags": {
+    "amenity": "shelter",
+    "fixme": "position",
+    "shelter_type": "gazebo",
+    "source": "Bing;survey"
+  }
+},
+{
+  "type": "node",
+  "id": 13659387995,
+  "lat": 42.7000094,
+  "lon": 23.3394960,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13727763401,
+  "lat": 42.5936151,
+  "lon": 23.4859586,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13961886049,
+  "lat": 42.6603558,
+  "lon": 23.3538793,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 13989094017,
+  "lat": 42.6610760,
+  "lon": 23.3121670,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 13989094018,
+  "lat": 42.6610572,
+  "lon": 23.3121975,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 14000798583,
+  "lat": 42.6657151,
+  "lon": 23.2436777,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo",
+    "source": "MAF;survey"
+  }
+},
+{
+  "type": "node",
+  "id": 14015096950,
+  "lat": 42.6766785,
+  "lon": 23.2372163,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 14024354303,
+  "lat": 42.6727839,
+  "lon": 23.3067398,
+  "tags": {
+    "access": "yes",
+    "amenity": "shelter",
+    "bench": "yes",
+    "capacity": "6",
+    "check_date": "2026-07-18",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "node",
+  "id": 14031696802,
+  "lat": 42.6528945,
+  "lon": 23.1889285,
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "node",
+  "id": 14040050329,
+  "lat": 42.6687355,
+  "lon": 23.3883769,
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 55188093,
+  "center": {
+    "lat": 42.5825921,
+    "lon": 23.2921287
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "check_date": "2022-12-11",
+    "description": "Собственик: БТС Състояние: Работи",
+    "ele": "1810",
+    "email": "info@motensport.com",
+    "image": "https://photos.app.goo.gl/ACLTVnKC3weabn3C7",
+    "importance": "Bulgarian 100",
+    "internet_access": "wlan",
+    "internet_access:fee": "no",
+    "internet_access:ssid": "Aleco WiFi",
+    "name": "хижа Алеко",
+    "name:en": "Aleko hut",
+    "opening_hours": "08:00-22:00",
+    "operator": "БТС",
+    "payment:mastercard": "yes",
+    "payment:visa": "yes",
+    "phone": "+359 2 967 1113",
+    "reservation": "yes",
+    "roof:shape": "gabled",
+    "source": "bgtopomaps;survey",
+    "toilets": "yes",
+    "tourism": "alpine_hut",
+    "website": "https://www.motensport.com/",
+    "wheelchair": "yes",
+    "wikidata": "Q4714733",
+    "wikipedia": "bg:Алеко (хижа)"
+  }
+},
+{
+  "type": "way",
+  "id": 56057967,
+  "center": {
+    "lat": 42.6275869,
+    "lon": 23.2590561
+  },
+  "tags": {
+    "abandoned:building": "yes",
+    "building": "yes",
+    "ele": "1420",
+    "fee": "no",
+    "internet_access": "no",
+    "name": "х. Есперанто",
+    "name:en": "Esperanto Hut",
+    "operator": "Ministry of Agriculture, Food and Forestry",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 56058809,
+  "center": {
+    "lat": 42.6189979,
+    "lon": 23.2826358
+  },
+  "tags": {
+    "building": "yes",
+    "ele": "1411",
+    "name": "Заслон Кикиш",
+    "name:en": "Kikish shelter",
+    "phone": "+359 88 592 8475",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/groups/194384884229251/"
+  }
+},
+{
+  "type": "way",
+  "id": 100210410,
+  "center": {
+    "lat": 42.5819927,
+    "lon": 23.3081776
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "4",
+    "building:material": "plaster",
+    "check_date": "2024-09-05",
+    "description": "Ползвател: “Аква Вива” (Румен Гайтански)Състояние: В ремонтЦена: Наем - 2700 лева на месец до 2029 г.",
+    "name": "Хижа Ведра",
+    "payment:cards": "no",
+    "payment:cash": "yes",
+    "payment:credit_cards": "no",
+    "payment:debit_cards": "no",
+    "roof:shape": "hipped",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 175034033,
+  "center": {
+    "lat": 42.6072336,
+    "lon": 23.2777242
+  },
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 175034034,
+  "center": {
+    "lat": 42.6230063,
+    "lon": 23.2513241
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "ele": "1486",
+    "name": "х. Момина скала",
+    "name:en": "Momina Skala Hut",
+    "phone": "+359 88 927 6647",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/pages/%D0%A5%D0%B8%D0%B6%D0%B0%20%22%D0%9C%D0%BE%D0%BC%D0%B8%D0%BD%D0%B0%20%D0%A1%D0%BA%D0%B0%D0%BB%D0%B0%22/122391761177570/"
+  }
+},
+{
+  "type": "way",
+  "id": 180212595,
+  "center": {
+    "lat": 42.6068732,
+    "lon": 23.2282741
+  },
+  "tags": {
+    "building": "yes",
+    "check_date": "2023-07-14",
+    "description": "Бивш почивен дом на Съюза на българските композитори (СБК), известен още като х. Композиторите.",
+    "ele": "1446",
+    "internet_access": "wlan",
+    "internet_access:fee": "no",
+    "internet_access:ssid": "Little Red Riding Hood",
+    "name": "х Червената шапчица (х. Композиторите)",
+    "name:en": "Chalet Red Riding Hut",
+    "old_name": "х. Композиторите",
+    "operator": "\"Червената шапчица\" ООД",
+    "payment:cash": "yes",
+    "payment:debit_cards": "yes",
+    "payment:mastercard": "yes",
+    "payment:visa": "yes",
+    "payment:visa_electron": "yes",
+    "phone": "+359 89 999 8775",
+    "reservation": "recommended",
+    "smoking": "outside",
+    "tourism": "alpine_hut",
+    "website": "https://lrrhut.com/",
+    "wheelchair": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 180212597,
+  "center": {
+    "lat": 42.6071159,
+    "lon": 23.2290370
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Вила Катеричка",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 180212600,
+  "center": {
+    "lat": 42.6032637,
+    "lon": 23.2321157
+  },
+  "tags": {
+    "building": "yes",
+    "ele": "1521",
+    "electrified": "yes",
+    "name": "Творчески дом на Съюза на Артистите",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 180212601,
+  "center": {
+    "lat": 42.6061089,
+    "lon": 23.2275473
+  },
+  "tags": {
+    "abandoned": "yes",
+    "alt_name": "х. Рай",
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1440",
+    "electrified": "no",
+    "name": "почивен дом Здравец",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 180212603,
+  "center": {
+    "lat": 42.6036394,
+    "lon": 23.2328246
+  },
+  "tags": {
+    "building": "yes",
+    "ele": "1466",
+    "electrified": "yes",
+    "name": "Творчески дом \"Витоша\" -БНР",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 266281246,
+  "center": {
+    "lat": 42.5880999,
+    "lon": 23.2477595
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "ele": "1784",
+    "name": "з. Конярника"
+  }
+},
+{
+  "type": "way",
+  "id": 266281250,
+  "center": {
+    "lat": 42.5944989,
+    "lon": 23.2506402
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "4",
+    "ele": "1734",
+    "name": "х. Кумата",
+    "name:en": "Kumata Hut",
+    "phone": "+359 88 986 6100",
+    "tourism": "alpine_hut",
+    "website": "https://kumata.bg/"
+  }
+},
+{
+  "type": "way",
+  "id": 278783212,
+  "center": {
+    "lat": 42.6222054,
+    "lon": 23.2600264
+  },
+  "tags": {
+    "abandoned:building": "yes",
+    "building": "yes",
+    "ele": "1561",
+    "name": "х. Средец",
+    "name:en": "Sredets Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 296397022,
+  "center": {
+    "lat": 42.6248522,
+    "lon": 23.2659046
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1470",
+    "name": "х. Камен дел",
+    "name:en": "Kamen Del Hut",
+    "phone": "+359 89 720 9797",
+    "tourism": "alpine_hut",
+    "website": "http://kamendel.info/"
+  }
+},
+{
+  "type": "way",
+  "id": 296417234,
+  "center": {
+    "lat": 42.5637652,
+    "lon": 23.2784055
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "capacity": "0",
+    "description": "Small Restaurant room with small choice of local Food. Pic Nic allowed.",
+    "drinking_water": "yes",
+    "ele": "2290",
+    "man_made": "monitoring_station",
+    "mattress": "no",
+    "monitoring:weather": "yes",
+    "name": "Метеорологична станция Черни връх",
+    "name:de": "Meteorologische Station Schwarzer Gipfel",
+    "name:en": "Metereological station of Cherni Vrah",
+    "phone": "+359879119457",
+    "shower": "no",
+    "toilets": "no",
+    "tourism": "alpine_hut",
+    "website": "https://www.btsbg.org/hizhi/zaslon-cherni-vrh"
+  }
+},
+{
+  "type": "way",
+  "id": 299130666,
+  "center": {
+    "lat": 42.6150786,
+    "lon": 23.2346193
+  },
+  "tags": {
+    "building": "yes",
+    "check_date": "2024-07-06",
+    "description": "Бивш туристически дом БАН",
+    "ele": "1405",
+    "internet_access": "wlan",
+    "internet_access:fee": "customers",
+    "name": "Хижа Балканити",
+    "name:bg": "Хижа Балканити",
+    "name:en": "Balkanity hut",
+    "phone": "+359 88 339 0699",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/balkanity.hut/",
+    "wheelchair": "limited"
+  }
+},
+{
+  "type": "way",
+  "id": 299130667,
+  "center": {
+    "lat": 42.6144218,
+    "lon": 23.2360400
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Вила на Кмета",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 299130673,
+  "center": {
+    "lat": 42.6119446,
+    "lon": 23.2395072
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "4",
+    "ele": "1415",
+    "name": "х. Кукер",
+    "name:en": "Kuker Hut",
+    "tourism": "alpine_hut",
+    "website": "https://kukerbg.com/hija/index.php"
+  }
+},
+{
+  "type": "way",
+  "id": 299130676,
+  "center": {
+    "lat": 42.6181821,
+    "lon": 23.2198707
+  },
+  "tags": {
+    "building": "yes",
+    "ele": "1220",
+    "name": "Металург",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 310927561,
+  "center": {
+    "lat": 42.5416786,
+    "lon": 23.4235729
+  },
+  "tags": {
+    "amenity": "shelter",
+    "name": "зас. Кръстатият дъб",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 326138927,
+  "center": {
+    "lat": 42.6242494,
+    "lon": 23.2398473
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "currency:BCH": "yes",
+    "ele": "1368",
+    "name": "х. Планинец",
+    "name:en": "Planinets Hut",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/planinec1"
+  }
+},
+{
+  "type": "way",
+  "id": 365405395,
+  "center": {
+    "lat": 42.5980531,
+    "lon": 23.2349204
+  },
+  "tags": {
+    "building": "yes",
+    "check_date": "2025-07-30",
+    "ele": "1550",
+    "name": "х. Офелиите",
+    "operator": "Мачирски спорт",
+    "tourism": "alpine_hut",
+    "wheelchair": "no"
+  }
+},
+{
+  "type": "way",
+  "id": 368748844,
+  "center": {
+    "lat": 42.5488864,
+    "lon": 23.2272358
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "ele": "1400",
+    "name": "Заслон „Дивия бик“",
+    "name:en": "Wild Bull Shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 392680123,
+  "center": {
+    "lat": 42.5729480,
+    "lon": 23.2035221
+  },
+  "tags": {
+    "addr:city": "Кладница",
+    "addr:postcode": "2347",
+    "building": "hut",
+    "name": "хижа Селимица",
+    "name:en": "hut \"Selimitsa\"",
+    "phone": "+359 87 625 6286",
+    "tourism": "alpine_hut",
+    "website": "https://hija.selimica.com/"
+  }
+},
+{
+  "type": "way",
+  "id": 392934200,
+  "center": {
+    "lat": 42.4771238,
+    "lon": 23.2410813
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 393035740,
+  "center": {
+    "lat": 42.5371295,
+    "lon": 23.2393855
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "name": "заслон Меча чешма"
+  }
+},
+{
+  "type": "way",
+  "id": 426994826,
+  "center": {
+    "lat": 42.6154405,
+    "lon": 23.2617374
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 430238360,
+  "center": {
+    "lat": 42.5884876,
+    "lon": 23.2302633
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "ele": "1679",
+    "facebook": "https://www.facebook.com/Hizha.Edelvais",
+    "heating": "fireplace",
+    "name": "х. Еделвайс",
+    "name:en": "Edelvays Hut",
+    "phone": "+359 88 851 2381",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 430238361,
+  "center": {
+    "lat": 42.5885876,
+    "lon": 23.2343461
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1710",
+    "name": "х. Звездица",
+    "name:en": "Zvezditsa Hut",
+    "phone": "+359 88 852 9049",
+    "tourism": "alpine_hut",
+    "website": "http://hijazvezdica.com/"
+  }
+},
+{
+  "type": "way",
+  "id": 431345017,
+  "center": {
+    "lat": 42.5172814,
+    "lon": 23.4907291
+  },
+  "tags": {
+    "building": "yes",
+    "name": "х. Пейова Бука",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 431346676,
+  "center": {
+    "lat": 42.5408488,
+    "lon": 23.4636342
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "elevation": "1020",
+    "name": "зас. Саво",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 432984612,
+  "center": {
+    "lat": 42.6019682,
+    "lon": 23.2530110
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1703",
+    "name": "х. Борова гора",
+    "name:en": "Borova Gora Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 432984634,
+  "center": {
+    "lat": 42.6024031,
+    "lon": 23.2532941
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1699",
+    "name": "х. Планинарска песен",
+    "name:en": "Planinarska Pesen Hut",
+    "phone": "+359 88 977 0759",
+    "tourism": "alpine_hut",
+    "website": "https://planinarska-pesen.com/"
+  }
+},
+{
+  "type": "way",
+  "id": 432984797,
+  "center": {
+    "lat": 42.6025998,
+    "lon": 23.2542235
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1710",
+    "name": "х. Боерица",
+    "name:en": "Boeritsa Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 441934897,
+  "center": {
+    "lat": 42.5947167,
+    "lon": 23.3118794
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Брезовица",
+    "name:en": "Brezovitsa",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 441934898,
+  "center": {
+    "lat": 42.5948788,
+    "lon": 23.3113979
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Брезовица",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 449206797,
+  "center": {
+    "lat": 42.5514120,
+    "lon": 23.5293401
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 469914851,
+  "center": {
+    "lat": 42.5915657,
+    "lon": 23.2218154
+  },
+  "tags": {
+    "name": "х. \"Пънчето\" (Софийска Филхармония)",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 474190455,
+  "center": {
+    "lat": 42.6193337,
+    "lon": 23.2585516
+  },
+  "tags": {
+    "building": "yes",
+    "ele": "1586",
+    "name": "Горски дом Тинтява",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 481427669,
+  "center": {
+    "lat": 42.6693644,
+    "lon": 23.1078980
+  },
+  "tags": {
+    "building": "construction",
+    "int_name": "h. Lyulin",
+    "name": "х. Люлин (ремонт)",
+    "name:bg": "х. Люлин (ремонт)",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 487390002,
+  "center": {
+    "lat": 42.6138306,
+    "lon": 23.2383171
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "ele": "1402"
+  }
+},
+{
+  "type": "way",
+  "id": 487390004,
+  "center": {
+    "lat": 42.6176484,
+    "lon": 23.2446723
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "ele": "1497",
+    "name": "х. Септември",
+    "name:en": "Septemvri Hut",
+    "phone": "+359 89 866 5267",
+    "tourism": "alpine_hut",
+    "website": "https://www.facebook.com/septemvrihut/",
+    "wikidata": "Q73091800",
+    "wikipedia": "bg:Септември (хижа)"
+  }
+},
+{
+  "type": "way",
+  "id": 488455276,
+  "center": {
+    "lat": 42.6180583,
+    "lon": 23.2279150
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "check_date": "2023-08-20",
+    "elevation": "1319",
+    "name": "х. Белите брези",
+    "name:en": "Belite Brezi Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 489835045,
+  "center": {
+    "lat": 42.5771823,
+    "lon": 23.3169068
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "ele": "1576",
+    "name": "х. Погледец",
+    "name:en": "Pogledets Hut",
+    "operator": "БТПП",
+    "tourism": "alpine_hut",
+    "wikidata": "Q12290891",
+    "wikipedia": "bg:Погледец (хижа)"
+  }
+},
+{
+  "type": "way",
+  "id": 494189373,
+  "center": {
+    "lat": 42.5958789,
+    "lon": 23.2929168
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "3",
+    "name": "х. Здравец",
+    "name:en": "Zdravets Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 494189375,
+  "center": {
+    "lat": 42.5945840,
+    "lon": 23.2939419
+  },
+  "tags": {
+    "building": "yes",
+    "name": "х. Сълзица",
+    "name:en": "Salzitsa Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 506733903,
+  "center": {
+    "lat": 42.5811749,
+    "lon": 23.2943922
+  },
+  "tags": {
+    "building": "yes",
+    "image": "https://photos.app.goo.gl/vBPbMNeLFJKoQNQX9",
+    "name": "Планинска база Мотен",
+    "operator": "Спортен клуб Мотен",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 506733904,
+  "center": {
+    "lat": 42.5813988,
+    "lon": 23.2947239
+  },
+  "tags": {
+    "building": "yes",
+    "description": "Собтвеник: “Гео Адвайзърс” (Красимир Гергов)\nСъстояние: Не работи\nГодина на придобиване: 2011 г. от Столична община\nЦена: 323 хил. лв.",
+    "name": "Горски дом",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 507013065,
+  "center": {
+    "lat": 42.5855903,
+    "lon": 23.3051731
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Станция на БФС",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 507957543,
+  "center": {
+    "lat": 42.5949253,
+    "lon": 23.2248565
+  },
+  "tags": {
+    "name": "Учебен център \"Трендафила\" на НСлС",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 507957546,
+  "center": {
+    "lat": 42.5935816,
+    "lon": 23.2193440
+  },
+  "tags": {
+    "name": "х. \"Адвокат\"",
+    "operator": "Соф. Адвокатска колегия",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 508175651,
+  "center": {
+    "lat": 42.5892654,
+    "lon": 23.2145970
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "name": "хижа \"Рудничар\"",
+    "name:en": "Rudnichar hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 508175655,
+  "center": {
+    "lat": 42.6006208,
+    "lon": 23.2334649
+  },
+  "tags": {
+    "building": "yes",
+    "building:levels": "2",
+    "ele": "1521",
+    "name": "х. Малинка",
+    "name:en": "Malinka Hut",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 509421145,
+  "center": {
+    "lat": 42.5985520,
+    "lon": 23.2373869
+  },
+  "tags": {
+    "building": "hotel",
+    "check_date": "2025-08-19",
+    "contact:facebook": "https://www.facebook.com/hutOfeliite/",
+    "name": "Х. Горски дом Офелиите",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 509434228,
+  "center": {
+    "lat": 42.6272068,
+    "lon": 23.2322264
+  },
+  "tags": {
+    "building": "yes",
+    "name": "хижа на Горско стопанство",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 509441036,
+  "center": {
+    "lat": 42.6356523,
+    "lon": 23.2118743
+  },
+  "tags": {
+    "building": "yes",
+    "name": "х. Минстрой",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 532799606,
+  "center": {
+    "lat": 42.4656968,
+    "lon": 23.4848364
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 536711178,
+  "center": {
+    "lat": 42.5474584,
+    "lon": 23.2312977
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "ele": "1400",
+    "name": "Заслон „Бохо“",
+    "name:en": "Boho Shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 536711186,
+  "center": {
+    "lat": 42.5548386,
+    "lon": 23.1988969
+  },
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 536711188,
+  "center": {
+    "lat": 42.5483254,
+    "lon": 23.2067940
+  },
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 536711193,
+  "center": {
+    "lat": 42.5644437,
+    "lon": 23.2007946
+  },
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 539891921,
+  "center": {
+    "lat": 42.5754915,
+    "lon": 23.4463351
+  },
+  "tags": {
+    "amenity": "shelter",
+    "name": "Ловната хижа",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 543961331,
+  "center": {
+    "lat": 42.6423673,
+    "lon": 23.2323956
+  },
+  "tags": {
+    "amenity": "shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 553553946,
+  "center": {
+    "lat": 42.6270843,
+    "lon": 23.2805573
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 576415910,
+  "center": {
+    "lat": 42.6465438,
+    "lon": 23.1951409
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "basic_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 578609814,
+  "center": {
+    "lat": 42.6334878,
+    "lon": 23.2180871
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 583516434,
+  "center": {
+    "lat": 42.5266726,
+    "lon": 23.1083843
+  },
+  "tags": {
+    "building": "yes",
+    "name": "Хижа Върбица",
+    "tourism": "alpine_hut"
+  }
+},
+{
+  "type": "way",
+  "id": 599470405,
+  "center": {
+    "lat": 42.7112339,
+    "lon": 23.3349185
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 631665508,
+  "center": {
+    "lat": 42.6061472,
+    "lon": 23.4074948
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 662916647,
+  "center": {
+    "lat": 42.5559825,
+    "lon": 23.3876099
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 669357287,
+  "center": {
+    "lat": 42.5561529,
+    "lon": 23.4906150
+  },
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 669368234,
+  "center": {
+    "lat": 42.5750623,
+    "lon": 23.4793109
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 672721205,
+  "center": {
+    "lat": 42.6032569,
+    "lon": 23.3258162
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "picnic_shelter"
+  }
+},
+{
+  "type": "way",
+  "id": 696756850,
+  "center": {
+    "lat": 42.6948434,
+    "lon": 23.3380414
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof"
+  }
+},
+{
+  "type": "way",
+  "id": 696756851,
+  "center": {
+    "lat": 42.6942144,
+    "lon": 23.3378784
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof"
+  }
+},
+{
+  "type": "way",
+  "id": 697013450,
+  "center": {
+    "lat": 42.7103499,
+    "lon": 23.3142840
+  },
+  "tags": {
+    "amenity": "shelter",
+    "shelter_type": "pavilion"
+  }
+},
+{
+  "type": "way",
+  "id": 863088065,
+  "center": {
+    "lat": 42.6412849,
+    "lon": 23.5211860
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 975224121,
+  "center": {
+    "lat": 42.5677703,
+    "lon": 23.1908723
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1119215933,
+  "center": {
+    "lat": 42.6279186,
+    "lon": 23.2289033
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1119215934,
+  "center": {
+    "lat": 42.6276541,
+    "lon": 23.2280310
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1127325904,
+  "center": {
+    "lat": 42.6943568,
+    "lon": 23.3142993
+  },
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1127325905,
+  "center": {
+    "lat": 42.6943935,
+    "lon": 23.3143711
+  },
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1159028120,
+  "center": {
+    "lat": 42.6281428,
+    "lon": 23.2292185
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1159028121,
+  "center": {
+    "lat": 42.6284046,
+    "lon": 23.2292931
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1159031780,
+  "center": {
+    "lat": 42.6283105,
+    "lon": 23.2288081
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1159036417,
+  "center": {
+    "lat": 42.6282490,
+    "lon": 23.2284070
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1159042527,
+  "center": {
+    "lat": 42.6282569,
+    "lon": 23.2275702
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1159042531,
+  "center": {
+    "lat": 42.6280230,
+    "lon": 23.2273108
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1164907843,
+  "center": {
+    "lat": 42.6515334,
+    "lon": 23.3478305
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1164907844,
+  "center": {
+    "lat": 42.6515402,
+    "lon": 23.3479473
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1191743921,
+  "center": {
+    "lat": 42.6483021,
+    "lon": 23.3755276
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "shed",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1196303659,
+  "center": {
+    "lat": 42.6484497,
+    "lon": 23.3759960
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "shed",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1199360141,
+  "center": {
+    "lat": 42.6447146,
+    "lon": 23.3788021
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1206793007,
+  "center": {
+    "lat": 42.6625825,
+    "lon": 23.3764947
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1206793008,
+  "center": {
+    "lat": 42.6627785,
+    "lon": 23.3762157
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1206793009,
+  "center": {
+    "lat": 42.6627206,
+    "lon": 23.3762985
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1207423767,
+  "center": {
+    "lat": 42.6831294,
+    "lon": 23.3485504
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1207423783,
+  "center": {
+    "lat": 42.6823562,
+    "lon": 23.3488076
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1207971832,
+  "center": {
+    "lat": 42.6756966,
+    "lon": 23.3590221
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1207971833,
+  "center": {
+    "lat": 42.6755340,
+    "lon": 23.3591779
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1207971835,
+  "center": {
+    "lat": 42.6751643,
+    "lon": 23.3587206
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1208043092,
+  "center": {
+    "lat": 42.6643171,
+    "lon": 23.3175281
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1208043174,
+  "center": {
+    "lat": 42.6650285,
+    "lon": 23.3185174
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1209008817,
+  "center": {
+    "lat": 42.6628018,
+    "lon": 23.3769093
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1211510963,
+  "center": {
+    "lat": 42.6720812,
+    "lon": 23.3639732
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1211513398,
+  "center": {
+    "lat": 42.6717063,
+    "lon": 23.3635765
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1221854298,
+  "center": {
+    "lat": 42.6946724,
+    "lon": 23.3388365
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof"
+  }
+},
+{
+  "type": "way",
+  "id": 1227379108,
+  "center": {
+    "lat": 42.6462810,
+    "lon": 23.3756021
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "shed",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1227530780,
+  "center": {
+    "lat": 42.6629378,
+    "lon": 23.3914515
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1228286101,
+  "center": {
+    "lat": 42.6335134,
+    "lon": 23.2141148
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1228400867,
+  "center": {
+    "lat": 42.6473431,
+    "lon": 23.3918818
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1228400868,
+  "center": {
+    "lat": 42.6473692,
+    "lon": 23.3919279
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1228400869,
+  "center": {
+    "lat": 42.6473981,
+    "lon": 23.3919786
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1231572972,
+  "center": {
+    "lat": 42.6784266,
+    "lon": 23.3659043
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "layer": "1",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1241113981,
+  "center": {
+    "lat": 42.5886093,
+    "lon": 23.2925970
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1241113982,
+  "center": {
+    "lat": 42.5886822,
+    "lon": 23.2925850
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1298126606,
+  "center": {
+    "lat": 42.4679843,
+    "lon": 23.2811799
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313303956,
+  "center": {
+    "lat": 42.6573918,
+    "lon": 23.3321379
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313736805,
+  "center": {
+    "lat": 42.6571857,
+    "lon": 23.3305743
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313756346,
+  "center": {
+    "lat": 42.6580982,
+    "lon": 23.3315860
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313811626,
+  "center": {
+    "lat": 42.6591859,
+    "lon": 23.3312923
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313862404,
+  "center": {
+    "lat": 42.6596019,
+    "lon": 23.3335996
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1313913555,
+  "center": {
+    "lat": 42.6580352,
+    "lon": 23.3324819
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1314907126,
+  "center": {
+    "lat": 42.6599832,
+    "lon": 23.3328134
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1315140122,
+  "center": {
+    "lat": 42.6597395,
+    "lon": 23.3321700
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1316932754,
+  "center": {
+    "lat": 42.6560491,
+    "lon": 23.3325332
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1320116066,
+  "center": {
+    "lat": 42.6570176,
+    "lon": 23.3334162
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1322940059,
+  "center": {
+    "lat": 42.7122783,
+    "lon": 23.2833596
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1322940060,
+  "center": {
+    "lat": 42.7120537,
+    "lon": 23.2838121
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1323153347,
+  "center": {
+    "lat": 42.7120123,
+    "lon": 23.2794479
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1323205555,
+  "center": {
+    "lat": 42.7124441,
+    "lon": 23.2747267
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1323233450,
+  "center": {
+    "lat": 42.7038521,
+    "lon": 23.2671655
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1323255857,
+  "center": {
+    "lat": 42.7146916,
+    "lon": 23.2825264
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1323255860,
+  "center": {
+    "lat": 42.7136254,
+    "lon": 23.2833329
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1323283130,
+  "center": {
+    "lat": 42.7102932,
+    "lon": 23.2774658
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1323376665,
+  "center": {
+    "lat": 42.7068624,
+    "lon": 23.2701485
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1323376666,
+  "center": {
+    "lat": 42.7076993,
+    "lon": 23.2730369
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1323376667,
+  "center": {
+    "lat": 42.7063503,
+    "lon": 23.2684624
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1323376668,
+  "center": {
+    "lat": 42.7053273,
+    "lon": 23.2646188
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1324835010,
+  "center": {
+    "lat": 42.7144625,
+    "lon": 23.2813551
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes"
+  }
+},
+{
+  "type": "way",
+  "id": 1324858088,
+  "center": {
+    "lat": 42.7063980,
+    "lon": 23.2682369
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1328845205,
+  "center": {
+    "lat": 42.6852681,
+    "lon": 23.3802115
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1328847722,
+  "center": {
+    "lat": 42.6695021,
+    "lon": 23.4033830
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "roof",
+    "layer": "1",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1329171130,
+  "center": {
+    "lat": 42.6189288,
+    "lon": 23.2990394
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1336952409,
+  "center": {
+    "lat": 42.6231992,
+    "lon": 23.3935908
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "way",
+  "id": 1336952410,
+  "center": {
+    "lat": 42.6232033,
+    "lon": 23.3936959
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "way",
+  "id": 1336952411,
+  "center": {
+    "lat": 42.6232129,
+    "lon": 23.3937923
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "lean_to"
+  }
+},
+{
+  "type": "way",
+  "id": 1355946070,
+  "center": {
+    "lat": 42.6856989,
+    "lon": 23.3404869
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1355952611,
+  "center": {
+    "lat": 42.6754693,
+    "lon": 23.3469347
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1355952614,
+  "center": {
+    "lat": 42.6766704,
+    "lon": 23.3457047
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1355971786,
+  "center": {
+    "lat": 42.6874475,
+    "lon": 23.3390900
+  },
+  "tags": {
+    "amenity": "shelter",
+    "bench": "yes",
+    "building": "yes",
+    "lit": "no",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1356006682,
+  "center": {
+    "lat": 42.6861902,
+    "lon": 23.3397584
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1356011447,
+  "center": {
+    "lat": 42.6832255,
+    "lon": 23.3442165
+  },
+  "tags": {
+    "access": "yes",
+    "amenity": "shelter",
+    "bench": "yes",
+    "bin": "no",
+    "building": "yes",
+    "check_date": "2026-06-26",
+    "drinking_water": "no",
+    "lit": "no",
+    "material": "wood",
+    "picnic_table": "no",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1379193191,
+  "center": {
+    "lat": 42.4258543,
+    "lon": 23.3480785
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1379193192,
+  "center": {
+    "lat": 42.4257436,
+    "lon": 23.3482353
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1417675201,
+  "center": {
+    "lat": 42.6723736,
+    "lon": 23.3066820
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1423829732,
+  "center": {
+    "lat": 42.6322273,
+    "lon": 23.3476849
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1426844693,
+  "center": {
+    "lat": 42.6701641,
+    "lon": 23.4024110
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "layer": "1",
+    "shelter_type": "public_transport"
+  }
+},
+{
+  "type": "way",
+  "id": 1448374640,
+  "center": {
+    "lat": 42.7411933,
+    "lon": 23.3026997
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1448393766,
+  "center": {
+    "lat": 42.7409736,
+    "lon": 23.3068208
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1448720865,
+  "center": {
+    "lat": 42.6859068,
+    "lon": 23.3344192
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1448720866,
+  "center": {
+    "lat": 42.6858719,
+    "lon": 23.3344659
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1448883826,
+  "center": {
+    "lat": 42.7402856,
+    "lon": 23.2994973
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1448883829,
+  "center": {
+    "lat": 42.7392827,
+    "lon": 23.2973107
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1449417037,
+  "center": {
+    "lat": 42.7407178,
+    "lon": 23.3052629
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1449448596,
+  "center": {
+    "lat": 42.7408862,
+    "lon": 23.3034647
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1460122641,
+  "center": {
+    "lat": 42.7074495,
+    "lon": 23.2542933
+  },
+  "tags": {
+    "access": "yes",
+    "amenity": "shelter",
+    "bench": "no",
+    "building": "shelter",
+    "building:material": "stone",
+    "colour": "grey",
+    "fee": "no",
+    "height": "2",
+    "roof:colour": "grey",
+    "shelter_type": "building"
+  }
+},
+{
+  "type": "way",
+  "id": 1463670704,
+  "center": {
+    "lat": 42.7074595,
+    "lon": 23.1436801
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1471100755,
+  "center": {
+    "lat": 42.6716481,
+    "lon": 23.3197455
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1471708884,
+  "center": {
+    "lat": 42.6778454,
+    "lon": 23.2679813
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1471714734,
+  "center": {
+    "lat": 42.6720594,
+    "lon": 23.2564132
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1472484692,
+  "center": {
+    "lat": 42.6757716,
+    "lon": 23.2691958
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+},
+{
+  "type": "way",
+  "id": 1475559223,
+  "center": {
+    "lat": 42.7074276,
+    "lon": 23.2543403
+  },
+  "tags": {
+    "access": "yes",
+    "amenity": "shelter",
+    "bench": "no",
+    "building": "shelter",
+    "building:material": "stone",
+    "colour": "grey",
+    "fee": "no",
+    "height": "2",
+    "roof:colour": "grey",
+    "shelter_type": "building"
+  }
+},
+{
+  "type": "way",
+  "id": 1527883542,
+  "center": {
+    "lat": 42.5995274,
+    "lon": 23.4464573
+  },
+  "tags": {
+    "amenity": "shelter",
+    "building": "yes",
+    "shelter_type": "gazebo"
+  }
+}
+
+  ]
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+work/*
+!work/vitosha-peaks-overpass.json
+!work/vitosha-pois-overpass.json
+docs/qa/pirin-reference-1440x900.png
+docs/qa/pirin-reference-live-1440x900.png
+docs/qa/vitosha-implementation-1440x900.png
+docs/qa/vitosha-implementation-iab-1440x900.png
+*.log

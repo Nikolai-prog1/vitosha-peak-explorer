@@ -1,0 +1,206 @@
+/* Pirin Mist: soft mineral green panels over the terrain, with Atlas structure. */
+:root {
+  color-scheme: light;
+  font-family: Manrope, Arial, sans-serif;
+  --bg: #d9e0d4;
+  --panel: rgba(238, 241, 232, 0.97);
+  --panel-strong: #e8ede3;
+  --panel-soft: #e2e8db;
+  --text: #173f34;
+  --soft: #294b40;
+  --muted: #586c61;
+  --line: #c5cec0;
+  --line-strong: #95a695;
+  --accent: #173f34;
+  --gold: #c99a3d;
+  --selected: #dce9b5;
+  --red: #b94747;
+  --shadow: 0 10px 32px #173f3424;
+}
+
+body, .app-shell { background: var(--bg); }
+.surface { background: var(--panel); border-color: var(--line); box-shadow: var(--shadow); backdrop-filter: blur(8px); }
+.map-canvas::after { background: none; }
+.panel-header strong, .summit-panel h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; line-height: 1.1; }
+.panel-header strong { font-size: 28px; }
+.summit-panel h1 { margin-top: 15px; font-size: 44px; overflow-wrap: anywhere; }
+.summit-panel h2 { font-size: 12px; margin-top: 8px; }
+.panel-header span { font-size: 11px; }
+.summit-head span { font-size: 11px; font-weight: 600; }
+.summit-head i { width: 9px; height: 9px; border: 0; background: var(--accent); box-shadow: none; }
+.search-box { background: transparent; border-color: var(--line); }
+.search-box input::placeholder { color: var(--muted); }
+.search-box:focus-within { border-color: var(--accent); }
+.icon-button, .sort-row button, .route-show-button, .booking-link, .osm-help-button,
+.profile-toggle, .weather-toggle, .minimized-chip {
+  color: var(--text); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 8px; font-weight: 600; box-shadow: none; backdrop-filter: none;
+}
+.route-show-button, .booking-link { font-size: 12px; gap: 6px; }
+.icon-button:hover, .sort-row button:hover, .route-show-button:hover, .booking-link:hover,
+.osm-help-button:hover, .profile-toggle:hover, .weather-toggle:hover, .minimized-chip:hover {
+  background: #dce4d6; border-color: var(--line-strong); color: var(--text);
+}
+.sort-row button.active, .route-show-button.active, .fly-button {
+  background: var(--accent); color: var(--panel); border-color: var(--accent); box-shadow: none; font-weight: 600;
+}
+.fly-button { font-size: 14px; }
+.fly-button:hover { background: #245343; filter: none; }
+.route-show-button.active:hover { background: #245343; color: var(--panel); }
+.profile-toggle[aria-expanded="true"], .osm-help-button[aria-expanded="true"] {
+  background: var(--selected); color: var(--text); border-color: var(--line-strong);
+}
+.peak-row { background: transparent; border-color: transparent; min-height: 48px; }
+.peak-row:hover { background: #dfe6d8; border-color: transparent; }
+.peak-row.selected { background: var(--selected); border-color: transparent; }
+.peak-copy strong { font-size: 13px; font-weight: 600; }
+.peak-copy small { display: none; }
+.height, .route-meta b, .hut-title strong, .summit-picker b { color: var(--text); }
+.summit-mark { background: transparent; color: var(--accent); border: none; border-radius: 0; box-shadow: none; }
+.peak-row.selected .summit-mark { color: var(--accent); }
+.peak-list::-webkit-scrollbar-thumb, .summit-panel::-webkit-scrollbar-thumb, .sheet-content::-webkit-scrollbar-thumb { background: var(--line); }
+.sheet-content, .peak-list, .summit-panel { scrollbar-color: var(--line-strong) transparent; scrollbar-width: thin; }
+.metric-grid div { background: #f7f9f280; border-color: var(--line); }
+.source-block, .hut-block, .elevation-profile { border-color: var(--line); }
+.hut-row { background: #f7f9f280; border-color: var(--line); }
+.hut-row.active { background: var(--selected); border-color: var(--line-strong); box-shadow: none; }
+.hut-copy strong { font-weight: 600; }
+.hut-copy .coverage-label { color: #35684a; }
+.hut-copy .coverage-label.summit-vicinity { color: #785b13; }
+.hut-copy .coverage-label.approach-only { color: #99462e; }
+.osm-help { background: #e2e8db; border-color: var(--line); }
+.profile-grid-line { stroke: var(--line); }
+.profile-area { fill: #a7bb7b40; }
+.profile-line { stroke: var(--accent); }
+.profile-start { fill: #b6c974; stroke: var(--accent); }
+.profile-end { fill: var(--red); stroke: var(--panel); }
+.profile-state.error { color: #9c402c; }
+.map-readout span { color: var(--text); background: var(--panel); border-color: var(--line); box-shadow: none; backdrop-filter: none; }
+.summit-panel.collapsed .summit-head span { background: var(--panel); color: var(--text); border-color: var(--line); backdrop-filter: none; }
+
+.weather-section { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px; min-width: 0; }
+.weather-toggle { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px; width: 100%; min-height: 44px; font-size: 13px; }
+.weather-toggle span { display: inline-flex; align-items: center; gap: 8px; }
+.weather-section h3 { font-family: Georgia, serif; font-weight: 400; font-size: 23px; line-height: 1.2; margin: 0 0 14px; }
+.weather-state { display: grid; justify-items: center; gap: 8px; align-content: center; min-height: 110px; padding: 16px 0; color: var(--muted); font-size: 12px; text-align: center; }
+.weather-content { margin-top: 14px; min-width: 0; }
+.weather-icon { display: inline-flex; align-items: center; color: var(--accent); }
+.weather-current { display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: 10px; align-items: center; }
+.weather-current strong { display: block; font-family: Georgia, serif; font-size: 38px; font-weight: 400; line-height: 1; }
+.weather-current span:not(.weather-icon) { display: block; font-size: 11px; margin-top: 4px; }
+.weather-feels { text-align: right; }
+.weather-feels b { font-size: 18px; font-weight: 500; }
+.weather-feels small { display: block; margin-top: 2px; font-size: 10px; color: var(--muted); }
+.weather-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; padding: 14px 0; margin-top: 8px; }
+.weather-metrics > span { display: flex; align-items: flex-start; gap: 6px; min-width: 0; }
+.weather-metrics svg { flex-shrink: 0; margin-top: 2px; }
+.weather-metrics span span { color: var(--muted); font-size: 10px; }
+.weather-metrics strong { display: block; color: var(--text); font-size: 12px; font-weight: 600; margin-top: 3px; }
+.weather-period { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 8px; padding: 3px; gap: 3px; margin-bottom: 8px; }
+.weather-period button { border: 0; border-radius: 6px; min-height: 36px; background: transparent; color: var(--text); font-size: 12px; }
+.weather-period button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+.weather-table-wrap { max-height: 290px; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; }
+.weather-table { width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed; font-variant-numeric: tabular-nums; }
+.weather-table th, .weather-table td { padding: 10px 4px; text-align: right; vertical-align: middle; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.weather-table thead th { position: sticky; top: 0; background: var(--panel); color: var(--muted); font-size: 10px; font-weight: 500; z-index: 1; }
+.weather-table th:first-child { text-align: left; width: 30%; }
+.weather-table tbody th { font-weight: 500; }
+.weather-table tbody th > span:first-child { display: inline-block; margin-right: 5px; }
+.weather-table small { display: block; color: var(--muted); font-size: 9px; margin-top: 3px; }
+.weather-note { font-size: 10px; color: var(--muted); line-height: 1.5; margin: 10px 0; }
+.weather-credit { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px; font-size: 10px; color: var(--muted); }
+.weather-credit a { display: inline-flex; align-items: center; gap: 4px; color: var(--text); }
+
+@media (max-width: 900px) {
+  .surface { background: var(--panel); }
+  .map-canvas::after { background: none; }
+  .summit-panel h1 { font-size: 32px; margin-top: 0; }
+  .peak-panel .panel-header strong { font-size: 26px; font-weight: 400; }
+  .mobile-command .icon-button { border-color: var(--line); }
+  .summit-picker > svg { color: var(--accent); }
+  .summit-picker strong { font-family: Manrope, Arial, sans-serif; font-weight: 600; }
+  .summit-picker b { color: var(--text); }
+  .sheet-handle { font-weight: 600; }
+  .sheet-handle i { background: var(--line-strong); }
+  .mobile-tabs { grid-template-columns: repeat(4,minmax(0,1fr)); padding-bottom: 8px; gap: 4px; }
+  .mobile-tabs button { flex-direction: column; gap: 5px; min-height: 52px; padding: 6px 1px; font-size: 11px; border: 0; border-radius: 8px; }
+  .mobile-tabs button[aria-selected="true"] { background: var(--accent); color: var(--panel); }
+  .summit-panel:not([data-tab="weather"]) .weather-section { display: none; }
+  .summit-panel[data-tab="weather"] .detail-info, .summit-panel[data-tab="weather"] .elevation-profile,
+  .summit-panel[data-tab="weather"] .hut-block { display: none; }
+  .weather-section { padding-top: 0; margin-top: 0; border: 0; }
+  .weather-content { margin-top: 0; }
+  .weather-table-wrap { max-height: none; overflow: visible; }
+  .weather-period button { min-height: 44px; }
+  .hut-title > span { font-size: 12px; }
+  .booking-link, .route-show-button { font-size: 12px; }
+}
+
+/* Cesium ion imagery and terrain, with local labels limited to Vitosha peaks. */
+.cesium-viewer, .cesium-widget, .cesium-widget canvas { width: 100%; height: 100%; }
+.cesium-widget canvas { outline: none; }
+.cesium-marker-overlay { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+.cesium-marker-overlay > button { position: absolute; left: 0; top: 0; pointer-events: auto; }
+.cesium-widget-credits { font: 9px Manrope, sans-serif; }
+.map-peak-marker, .map-hut-marker, .map-report-marker {
+  appearance: none; border: 0; padding: 0; background: transparent; cursor: pointer;
+  display: grid; place-items: center; filter: drop-shadow(0 3px 6px rgba(23, 63, 52, .35));
+}
+.map-peak-marker { width: 30px; height: 30px; }
+.map-peak-marker svg { width: 27px; height: 27px; transition: transform .18s ease; }
+.map-peak-marker:not(.selected) { width: 18px; height: 18px; opacity: .82; }
+.map-peak-marker:not(.selected) svg { width: 17px; height: 17px; }
+.map-peak-marker:hover svg { transform: translateY(-2px) scale(1.08); }
+.map-peak-marker.selected::before {
+  content: ""; position: absolute; width: 30px; height: 10px; bottom: -2px; border: 2px solid #56d8ff;
+  border-radius: 50%; background: rgba(41, 151, 255, .2); box-shadow: 0 0 8px 3px rgba(34, 167, 255, .75), 0 0 0 2px rgba(235, 252, 255, .72);
+}
+.map-peak-marker.selected { filter: drop-shadow(0 0 5px #55d9ff) drop-shadow(0 0 11px rgba(28, 128, 255, .9)); }
+.map-peak-marker.selected svg { width: 31px; height: 31px; }
+.map-peak-label {
+  position: absolute; top: calc(100% + 1px); left: 50%; transform: translateX(-50%);
+  display: block; max-width: 145px; padding: 2px 5px; border-radius: 4px;
+  background: rgba(6, 24, 24, .72); color: #effff8; font: 600 10px/1.2 Manrope, sans-serif;
+  text-shadow: 0 1px 2px #061016; white-space: nowrap; pointer-events: none;
+}
+.map-peak-marker.selected .map-peak-label { color: #dcf7ff; background: rgba(4, 37, 72, .88); font-size: 11px; }
+.map-hut-marker { width: 30px; height: 30px; }
+.map-hut-marker svg { width: 28px; height: 28px; }
+.map-hut-marker.active svg { transform: scale(1.14); }
+
+.trail-report-launcher, .trail-report-placement {
+  position: fixed; z-index: 18; top: 18px; left: 50%; transform: translateX(-50%);
+  min-height: 42px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--text);
+  box-shadow: var(--shadow); font: 600 12px Manrope, sans-serif;
+}
+.trail-report-launcher:hover { background: #dce4d6; border-color: var(--line-strong); }
+.trail-report-launcher strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--panel); font-size: 10px; }
+.trail-report-placement span { display: grid; gap: 1px; }
+.trail-report-placement small { color: var(--muted); font-size: 10px; font-weight: 500; }
+.trail-report-placement button { border: 0; background: transparent; color: var(--text); }
+.trail-report-card {
+  position: fixed; z-index: 20; top: 72px; left: 50%; transform: translateX(-50%); width: min(380px, calc(100vw - 24px));
+  padding: 16px; color: var(--text); border: 1px solid var(--line); border-radius: 10px;
+}
+.trail-report-card header { display: flex; justify-content: space-between; gap: 12px; }
+.trail-report-card header span, .trail-report-card label span, .trail-report-card dt { color: var(--muted); font-size: 10px; }
+.trail-report-card h2 { margin: 3px 0 0; font: 400 26px Georgia, serif; }
+.trail-report-card form, .trail-report-detail { display: grid; gap: 12px; }
+.trail-report-card label { display: grid; gap: 5px; }
+.trail-report-card select, .trail-report-card textarea { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: rgba(247,249,242,.8); color: var(--text); padding: 10px; font: 12px Manrope, sans-serif; }
+.trail-report-coordinates, .trail-report-status { font-size: 12px; color: var(--soft); }
+.trail-report-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.trail-report-actions button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); font: 600 12px Manrope, sans-serif; }
+.trail-report-actions .primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+.trail-report-detail dl { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 0; }
+.trail-report-detail dl div { padding: 8px; border: 1px solid var(--line); border-radius: 8px; }
+.trail-report-detail dd { margin: 3px 0 0; font-size: 11px; }
+.trail-report-detail p { margin: 0; font-size: 12px; }
+.map-report-marker { width: 28px; height: 28px; border-radius: 50%; background: var(--panel); border: 1px solid var(--red); color: var(--red); }
+
+@media (max-width: 900px) {
+  .trail-report-launcher, .trail-report-placement { top: max(204px, calc(env(safe-area-inset-top) + 194px)); }
+  .trail-report-card { top: max(256px, calc(env(safe-area-inset-top) + 246px)); }
+  .app-content:has(.peak-panel.chooser-open) .trail-report-launcher { display: none; }
+}
