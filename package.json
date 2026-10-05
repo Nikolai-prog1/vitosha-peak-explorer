@@ -3,13 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": { "node": ">=22.12.0" },
   "scripts": {
+    "postinstall": "node scripts/prepare_assets.mjs",
+    "predev": "node scripts/prepare_assets.mjs",
     "dev": "vite --host 127.0.0.1",
+    "prebuild": "node scripts/prepare_assets.mjs",
     "build": "vite build",
+    "postbuild": "node scripts/check_release.mjs",
     "preview": "vite preview --host 127.0.0.1",
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "test": "node --test",
+    "check:release": "node scripts/check_release.mjs",
+    "smoke:release": "node scripts/smoke_release.mjs",
     "check:data": "python scripts/validate_data.py"
   },
   "dependencies": {
-    "vite": "^6.0.7"
+    "@fontsource-variable/manrope": "5.3.0",
+    "cesium": "1.146.0",
+    "htm": "3.1.1",
+    "lucide-react": "1.52.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "vite": "8.3.2"
   }
 }

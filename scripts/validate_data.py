@@ -1,6 +1,7 @@
 import json
 import math
 from pathlib import Path
+from build_vitosha_data import haversine_km
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +55,23 @@ for route in routes:
     line = route["geometry"]["coordinates"][0]
     assert len(line) >= 2, f"{props['id']}: route too short"
     assert props["distance_km"] > 0, f"{props['id']}: invalid distance"
+    for point in line:
+        assert len(point) == 2 and all(type(value) in (int, float) and math.isfinite(value) for value in point), f"{props['id']}: invalid route coordinate"
+        assert 23.05 <= point[0] <= 23.60 and 42.40 <= point[1] <= 42.76, f"{props['id']}: route outside Vitosha"
+    assert props["trail_node_count"] == len(line), f"{props['id']}: point count mismatch"
+    assert props["geometry_kind"] in ("routed", "approximate"), f"{props['id']}: unknown geometry kind"
+    assert (props["geometry_kind"] == "routed") == props["source"].startswith("BRouter"), f"{props['id']}: misleading provenance"
+    peak_point = next(peak for peak in peaks if peak["properties"]["id"] == props["peak_id"])["geometry"]["coordinates"]
+    hut_point = next(hut for hut in huts if hut["properties"]["id"] == props["hut_id"])["geometry"]["coordinates"]
+    assert abs(props["start_gap_m"] - haversine_km(line[0], hut_point) * 1000) <= 1, f"{props['id']}: start gap mismatch"
+    assert abs(props["summit_gap_m"] - haversine_km(line[-1], peak_point) * 1000) <= 1, f"{props['id']}: summit gap mismatch"
+    elevations = props["profile_elevations_m"]
+    if elevations is not None:
+        assert props["geometry_kind"] == "routed" and props["profile_source"] == "BRouter elevation samples", f"{props['id']}: invalid profile source"
+        assert len(elevations) == len(line) and all(type(height) in (int, float) and math.isfinite(height) and 500 <= height <= 3000 for height in elevations), f"{props['id']}: invalid profile"
+    else:
+        assert props["profile_source"] is None, f"{props['id']}: source without a profile"
+    assert "popularity_score" not in props and "hiking_relation_count" not in props, f"{props['id']}: unsupported ranking claims"
     route_ids.add(props["id"])
     per_peak[props["peak_id"]] += 1
 
@@ -61,5 +79,9 @@ assert all(count == 3 for count in per_peak.values()), f"every peak needs three 
 assert quality["peak_count"] == len(peaks)
 assert quality["hut_count"] == len(huts)
 assert quality["hut_route_count"] == len(routes)
+assert quality["schema_version"] == 2
+assert quality["route_counts"]["routed"] == sum(route["properties"]["geometry_kind"] == "routed" for route in routes)
+assert quality["route_counts"]["approximate"] == sum(route["properties"]["geometry_kind"] == "approximate" for route in routes)
+assert quality["route_counts"]["with_elevation_profile"] == sum(route["properties"]["profile_elevations_m"] is not None for route in routes)
 
 print(f"Validated {len(peaks)} peaks, {len(huts)} huts and {len(routes)} routes.")

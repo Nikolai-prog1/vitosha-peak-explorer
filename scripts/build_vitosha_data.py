@@ -88,6 +88,7 @@ HUT_ENGLISH = {
     "х. Погледец": "Pogledets Hut",
     "х. Средец": "Sredets Hut",
     "х. Септември": "Septemvri Hut",
+    "Проф. Ив. Стайков": "Prof. Iv. Staykov Hut",
 }
 
 
@@ -219,7 +220,7 @@ def fetch_route(peak, hut, refresh):
     cache = route_cache_path(peak, hut)
     if cache.exists() and not refresh:
         payload = read_json(cache)
-    else:
+    elif refresh:
         start = hut["geometry"]["coordinates"]
         end = peak["geometry"]["coordinates"]
         params = urllib.parse.urlencode(
@@ -238,19 +239,26 @@ def fetch_route(peak, hut, refresh):
             payload = json.loads(response.read().decode("utf-8"))
         cache.parent.mkdir(parents=True, exist_ok=True)
         write_json(cache, payload)
+    else:
+        raise FileNotFoundError("No cached route; use --refresh-routes for an explicit network refresh")
     feature = payload["features"][0]
     coordinates = [[round(point[0], 7), round(point[1], 7)] for point in feature["geometry"]["coordinates"]]
     props = feature.get("properties", {})
-    return coordinates, round(float(props.get("track-length", 0)) / 1000, 1), "BRouter hiking-beta over OSM trails"
+    elevations = [round(point[2], 1) for point in feature["geometry"]["coordinates"]] if all(
+        len(point) >= 3 and isinstance(point[2], (int, float)) and math.isfinite(point[2])
+        and 500 <= point[2] <= 3000 for point in feature["geometry"]["coordinates"]
+    ) else None
+    return coordinates, round(float(props.get("track-length", 0)) / 1000, 1), "BRouter hiking-beta over OSM trails", elevations
 
 
 def make_route(peak, hut, rank, refresh):
     try:
-        coordinates, distance_km, source = fetch_route(peak, hut, refresh)
+        coordinates, distance_km, source, elevations = fetch_route(peak, hut, refresh)
     except Exception as error:  # Network failure must not make local generation impossible.
         coordinates = fallback_path(hut["geometry"]["coordinates"], peak["geometry"]["coordinates"], rank)
         distance_km = round(sum(haversine_km(coordinates[index - 1], coordinates[index]) for index in range(1, len(coordinates))), 1)
         source = f"Approximate fallback; BRouter unavailable ({type(error).__name__})"
+        elevations = None
     direct_km = round(haversine_km(hut["geometry"]["coordinates"], peak["geometry"]["coordinates"]), 1)
     return {
         "type": "Feature",
@@ -263,9 +271,12 @@ def make_route(peak, hut, rank, refresh):
             "trail_node_count": len(coordinates),
             "confidence": 0.92 if source.startswith("BRouter") else 0.58,
             "ranking_mode": "nearest-routable-huts",
-            "popularity_score": max(24, 96 - rank * 16 - round(distance_km * 2)),
-            "hiking_relation_count": 1 if source.startswith("BRouter") else 0,
             "source": source,
+            "geometry_kind": "routed" if source.startswith("BRouter") else "approximate",
+            "start_gap_m": round(haversine_km(coordinates[0], hut["geometry"]["coordinates"]) * 1000),
+            "summit_gap_m": round(haversine_km(coordinates[-1], peak["geometry"]["coordinates"]) * 1000),
+            "profile_elevations_m": elevations,
+            "profile_source": "BRouter elevation samples" if elevations else None,
         },
         "geometry": {"type": "MultiLineString", "coordinates": [coordinates]},
     }
@@ -289,8 +300,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--refresh-routes", action="store_true", help="Refresh BRouter route geometry")
     args = parser.parse_args()
-    peaks = build_peaks(read_json(PEAK_SOURCE))
-    huts = build_huts(read_json(POI_SOURCE))
+    peak_capture = read_json(PEAK_SOURCE)
+    hut_capture = read_json(POI_SOURCE)
+    peaks = build_peaks(peak_capture)
+    huts = build_huts(hut_capture)
     routes = build_routes(peaks, huts, args.refresh_routes)
     write_json(DATA / "peaks.geojson", {"type": "FeatureCollection", "features": peaks})
     write_json(DATA / "huts.geojson", {"type": "FeatureCollection", "features": huts})
@@ -299,15 +312,27 @@ def main():
         DATA / "data-quality.json",
         {
             "mountain": "Vitosha",
+            "schema_version": 2,
             "generated_from": ["OpenStreetMap Overpass", "BRouter hiking-beta"],
             "peak_count": len(peaks),
             "hut_count": len(huts),
             "hut_route_count": len(routes),
             "peak_min_elevation_m": PEAK_MIN_ELEVATION,
+            "source_timestamps": {
+                "peaks": peak_capture.get("osm3s", {}).get("timestamp_osm_base"),
+                "huts": hut_capture.get("osm3s", {}).get("timestamp_osm_base"),
+            },
+            "route_counts": {
+                "routed": sum(route["properties"]["geometry_kind"] == "routed" for route in routes),
+                "approximate": sum(route["properties"]["geometry_kind"] == "approximate" for route in routes),
+                "with_elevation_profile": sum(route["properties"]["profile_elevations_m"] is not None for route in routes),
+            },
             "limitations": [
                 "Routes are planning context, not turn-by-turn or safety navigation.",
                 "Trail conditions can change faster than the local dataset.",
-                "Popularity is an interface ranking proxy, not measured visitor traffic.",
+                "Approximate lines are geometric planning sketches, not verified trails; GPX export is not available for them.",
+                "Elevation samples are modelled BRouter values, not measurements; derived ascent is an unfiltered sum.",
+                "Confidence values are metadata heuristics, not a field-verified accuracy or safety assessment.",
             ],
         },
     )

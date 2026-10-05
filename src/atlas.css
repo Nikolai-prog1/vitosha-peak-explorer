@@ -8,9 +8,10 @@
   --panel-soft: #e2e8db;
   --text: #173f34;
   --soft: #294b40;
-  --muted: #586c61;
+  --muted: #4f6257;
   --line: #c5cec0;
   --line-strong: #95a695;
+  --control-line: #6f8677;
   --accent: #173f34;
   --gold: #c99a3d;
   --selected: #dce9b5;
@@ -28,7 +29,7 @@ body, .app-shell { background: var(--bg); }
 .panel-header span { font-size: 11px; }
 .summit-head span { font-size: 11px; font-weight: 600; }
 .summit-head i { width: 9px; height: 9px; border: 0; background: var(--accent); box-shadow: none; }
-.search-box { background: transparent; border-color: var(--line); }
+.search-box { background: transparent; border-color: var(--control-line); }
 .search-box input::placeholder { color: var(--muted); }
 .search-box:focus-within { border-color: var(--accent); }
 .icon-button, .sort-row button, .route-show-button, .booking-link, .osm-help-button,
@@ -125,7 +126,7 @@ body, .app-shell { background: var(--bg); }
   .mobile-tabs { grid-template-columns: repeat(4,minmax(0,1fr)); padding-bottom: 8px; gap: 4px; }
   .mobile-tabs button { flex-direction: column; gap: 5px; min-height: 52px; padding: 6px 1px; font-size: 11px; border: 0; border-radius: 8px; }
   .mobile-tabs button[aria-selected="true"] { background: var(--accent); color: var(--panel); }
-  .summit-panel:not([data-tab="weather"]) .weather-section { display: none; }
+  .summit-panel[data-tab]:not([data-tab="weather"]) .weather-section { display: none; }
   .summit-panel[data-tab="weather"] .detail-info, .summit-panel[data-tab="weather"] .elevation-profile,
   .summit-panel[data-tab="weather"] .hut-block { display: none; }
   .weather-section { padding-top: 0; margin-top: 0; border: 0; }
@@ -146,6 +147,85 @@ body, .app-shell { background: var(--bg); }
   appearance: none; border: 0; padding: 0; background: transparent; cursor: pointer;
   display: grid; place-items: center; filter: drop-shadow(0 3px 6px rgba(23, 63, 52, .35));
 }
+
+/* Planning extends the existing summit panel rather than introducing a new map layout. */
+.language-button { font-size: 11px; letter-spacing: .02em; }
+.metric-grid strong { overflow-wrap: anywhere; }
+.hut-row.approximate .route-meta > small:last-child { color: #87531b; font-weight: 600; }
+.approach-planner, .personal-library { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); min-width: 0; }
+.approach-planner h3 { margin: 0 0 10px; font: 400 23px/1.2 Georgia, serif; overflow-wrap: anywhere; }
+.approach-planner > p, .personal-library p { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 8px 0; }
+.provenance-note { padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-soft); }
+.approximate-note { border-color: #c39b62; background: #f3e5c8; color: #78531a !important; }
+.endpoint-gaps { display: grid; gap: 5px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.endpoint-gaps strong { color: #87531b; font-weight: 500; }
+.profile-chart { margin: 10px 0 0; }
+.profile-note { font-size: 11px; line-height: 1.6; text-align: left; margin: 10px 0; }
+.profile-stats small { font-size: 10px; line-height: 1.5; }
+.profile-stats strong { font-size: 12px; overflow-wrap: anywhere; }
+.plan-actions, .backup-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.plan-actions > button, .backup-actions > button { flex: 1; min-height: 44px; padding: 7px; justify-content: center; }
+.planning-warning { padding: 10px; border-left: 3px solid var(--line-strong); }
+.personal-library details { border-bottom: 1px solid var(--line); }
+.personal-library summary { display: flex; align-items: center; gap: 8px; padding: 13px 0; min-height: 48px; cursor: pointer; font-size: 13px; font-weight: 600; list-style: none; }
+.personal-library summary::after { content: "+"; font-size: 20px; font-weight: 400; margin-left: 5px; }
+.personal-library details[open] > summary::after { content: "−"; }
+.personal-library summary span { flex: 1; min-width: 0; }
+.personal-library summary b { min-width: 22px; padding: 3px; border-radius: 5px; text-align: center; background: var(--panel-soft); font-size: 11px; }
+.library-content { padding-bottom: 14px; }
+.saved-plan-row { display: grid; gap: 7px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 13px; overflow-wrap: anywhere; }
+.saved-plan-row > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.saved-plan-row small, .local-disclosure, .backup-note { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.note-list-row { display: grid; gap: 5px; width: 100%; padding: 12px; margin-top: 10px; text-align: left; color: var(--text); background: var(--panel-soft); border: 1px solid var(--line); border-radius: 8px; overflow-wrap: anywhere; font: inherit; font-size: 12px; }
+.note-list-row small { color: var(--muted); font-size: 10px; }
+.storage-state { padding: 12px; background: #f5e7d3; color: #784a1d; border: 1px solid #c5a078; border-radius: 8px; font-size: 12px; line-height: 1.6; }
+.storage-state button { margin: 4px; }
+.action-notice { position: absolute; z-index: 25; top: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 10px 12px; max-width: min(560px, calc(100% - 24px)); width: max-content; font-size: 12px; line-height: 1.5; }
+.planning-dialog-backdrop { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); background: #173f3459; margin: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; border: 0; color: var(--text); }
+.planning-dialog-backdrop:not([open]) { display: none; }
+.planning-dialog-backdrop::backdrop { background: transparent; }
+dialog.peak-panel { margin: 0; color: var(--text); font: inherit; }
+dialog.peak-panel:not([open]) { display: none; }
+dialog.peak-panel::backdrop { background: #173f3480; }
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.skip-navigation { position: absolute; z-index: 26; top: max(10px, env(safe-area-inset-top)); left: max(10px, env(safe-area-inset-left)); display: flex; flex-wrap: wrap; gap: 8px; max-width: calc(100% - 20px); padding: 10px; transform: translateY(calc(-100% - 20px)); }
+.skip-navigation:focus-within { transform: none; }
+.skip-navigation a { display: inline-flex; align-items: center; min-height: 44px; padding: 6px; color: var(--text); font-size: 13px; }
+.summit-panel h1, .summit-panel button, .summit-panel a, .summit-panel summary { scroll-margin-block-start: 66px; scroll-margin-block-end: 14px; }
+.planning-dialog { position: relative; width: min(480px, 100%); max-height: calc(100dvh - 28px); overflow-y: auto; overscroll-behavior: contain; padding: 20px; border-radius: 12px; font-size: 13px; line-height: 1.6; min-width: 0; }
+.planning-dialog p { overflow-wrap: anywhere; }
+.dialog-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.dialog-header h2 { font: 400 27px/1.2 Georgia, serif; margin: 0; }
+.dialog-header small { color: var(--muted); display: block; margin-bottom: 4px; font-size: 11px; }
+.share-field, .note-form, .note-form label { display: grid; gap: 7px; }
+.note-form { gap: 14px; }
+.share-field { margin: 12px 0; }
+.share-field input, .note-form input, .note-form textarea, .note-form select { width: 100%; min-height: 44px; background: #f7f9f2; border: 1px solid var(--control-line); border-radius: 8px; padding: 10px; color: var(--text); font: inherit; }
+.note-form textarea { resize: vertical; min-height: 96px; }
+.note-create-actions { display: grid; gap: 8px; margin-bottom: 8px; }
+.note-coordinates { min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.note-coordinates legend { padding: 0 5px; font-size: 13px; font-weight: 600; }
+.note-coordinates p { margin: 0 0 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.note-coordinate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.note-detail dl { display: grid; gap: 8px; margin: 12px 0; }
+.note-detail dt { color: var(--muted); font-size: 11px; }
+.note-detail dd { margin: 0; font-size: 12px; }
+.note-detail > p { white-space: pre-wrap; }
+button:disabled { opacity: .58; cursor: default; }
+button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 2px solid #247260; outline-offset: 3px; }
+@media (max-width: 900px) {
+  .summit-picker strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .summit-head .language-button { display: none; }
+  .summit-panel:not([data-tab]) .weather-section { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .summit-panel:not([data-tab]) .hut-block { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .action-notice { top: 86px; font-size: 12px; }
+  .planning-dialog { padding: 16px; }
+  .profile-stats strong { font-size: 12px; }
+  .profile-note { font-size: 11px; }
+  .plan-actions > button, .backup-actions > button { min-width: 70px; }
+}
+@media (max-width: 370px) { .summit-picker b { display: none; } }
 .map-peak-marker { width: 30px; height: 30px; }
 .map-peak-marker svg { width: 27px; height: 27px; transition: transform .18s ease; }
 .map-peak-marker:not(.selected) { width: 18px; height: 18px; opacity: .82; }
@@ -204,3 +284,42 @@ body, .app-shell { background: var(--bg); }
   .trail-report-card { top: max(256px, calc(env(safe-area-inset-top) + 246px)); }
   .app-content:has(.peak-panel.chooser-open) .trail-report-launcher { display: none; }
 }
+:root #boot-loader { position: fixed; inset: 0; display: grid; place-content: center; gap: 12px; padding: 24px; background: #d9e0d4; color: #173f34; text-align: center; }
+#boot-loader span { font-size: 13px; }
+.weather-warning { border: 1px solid #a46a22; border-radius: 8px; padding: 10px; color: #744515; font-size: 12px; line-height: 1.5; }
+.connection-status {
+  position: absolute; z-index: 8; left: 50%; top: 42%; transform: translate(-50%, -50%);
+  display: flex; align-items: flex-start; gap: 12px; width: min(330px, calc(100vw - 28px));
+  border: 1px solid var(--line); border-radius: 10px; padding: 18px; font-size: 12px;
+}
+.connection-status > svg { flex-shrink: 0; }
+.connection-status strong { display: block; line-height: 1.5; }
+.connection-status p { margin: 7px 0 10px; color: var(--muted); line-height: 1.5; }
+.connection-status button { min-height: 44px; margin-top: 4px; }
+@media (max-width: 900px) {
+  .connection-status { top: 92px; transform: translateX(-50%); }
+  .app-content:has(.peak-panel.chooser-open) .connection-status { display: none; }
+  /* The active ESM app has one scrollable panel, not the older tabbed sheet. */
+  .summit-panel:not([data-tab]):not(.collapsed) { display: block; overflow-y: auto; overscroll-behavior-y: contain; }
+  .summit-panel:not([data-tab]) > .summit-head {
+    display: flex; position: sticky; top: 0; z-index: 1; padding: 8px 0;
+    background: var(--panel); border-bottom: 1px solid var(--line);
+  }
+  .summit-panel:not([data-tab]).collapsed { left: 10px; right: auto; bottom: max(10px, env(safe-area-inset-bottom)); }
+  .summit-panel:not([data-tab]).collapsed > .summit-head { position: static; border-bottom: 0; padding: 0; }
+  .cesium-widget-credits { left: 6px; bottom: calc(46dvh + 4px); max-width: calc(100% - 12px); }
+  .app-content:has(.summit-panel.collapsed) .cesium-widget-credits { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+.export-filename { overflow-wrap: anywhere; font-size: 13px; font-weight: 700; }
+.file-download-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; min-height: 44px; }
+.file-export-fallback { border-top: 1px solid var(--line); padding-top: 12px; }
+.file-export-fallback summary { cursor: pointer; min-height: 44px; display: list-item; line-height: 1.6; font-size: 12px; font-weight: 700; }
+.file-content-field { display: grid; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+.file-content-field textarea { box-sizing: border-box; width: 100%; resize: vertical; min-height: 132px; max-height: 280px; border: 1px solid var(--control-line); border-radius: 8px; padding: 10px; background: var(--panel); color: var(--text); font: 11px/1.5 monospace; }
+.offline-facts { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.offline-facts h3 { margin: 0 0 10px; font: 400 23px/1.2 Georgia, serif; }
+.offline-facts p, .offline-facts small { color: var(--muted); font-size: 11px; line-height: 1.6; }
+.offline-facts small { display: block; margin-top: 10px; }
+.offline-facts button { min-height: 44px; width: 100%; padding: 8px; }
+.fly-button:disabled, .icon-button:disabled { opacity: .55; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .map-peak-marker svg { transition: none; } }

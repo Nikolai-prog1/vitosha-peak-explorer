@@ -1,0 +1,27 @@
+// Import only the icons the explorer uses; no full icon-library barrel in the runtime.
+export { default as Activity } from "lucide-react/dist/esm/icons/activity.mjs";
+export { default as CheckCircle2 } from "lucide-react/dist/esm/icons/circle-check.mjs";
+export { default as ChevronDown } from "lucide-react/dist/esm/icons/chevron-down.mjs";
+export { default as ChevronUp } from "lucide-react/dist/esm/icons/chevron-up.mjs";
+export { default as Cloud } from "lucide-react/dist/esm/icons/cloud.mjs";
+export { default as CloudFog } from "lucide-react/dist/esm/icons/cloud-fog.mjs";
+export { default as CloudLightning } from "lucide-react/dist/esm/icons/cloud-lightning.mjs";
+export { default as CloudRain } from "lucide-react/dist/esm/icons/cloud-rain.mjs";
+export { default as CloudSnow } from "lucide-react/dist/esm/icons/cloud-snow.mjs";
+export { default as CloudSun } from "lucide-react/dist/esm/icons/cloud-sun.mjs";
+export { default as CircleHelp } from "lucide-react/dist/esm/icons/circle-question-mark.mjs";
+export { default as Compass } from "lucide-react/dist/esm/icons/compass.mjs";
+export { default as ExternalLink } from "lucide-react/dist/esm/icons/external-link.mjs";
+export { default as LocateFixed } from "lucide-react/dist/esm/icons/locate-fixed.mjs";
+export { default as MapPinned } from "lucide-react/dist/esm/icons/map-pinned.mjs";
+export { default as Moon } from "lucide-react/dist/esm/icons/moon.mjs";
+export { default as Mountain } from "lucide-react/dist/esm/icons/mountain.mjs";
+export { default as Navigation } from "lucide-react/dist/esm/icons/navigation.mjs";
+export { default as RotateCcw } from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
+export { default as Search } from "lucide-react/dist/esm/icons/search.mjs";
+export { default as Sun } from "lucide-react/dist/esm/icons/sun.mjs";
+export { default as Target } from "lucide-react/dist/esm/icons/target.mjs";
+export { default as TreePine } from "lucide-react/dist/esm/icons/tree-pine.mjs";
+export { default as Wind } from "lucide-react/dist/esm/icons/wind.mjs";
+export { default as Droplets } from "lucide-react/dist/esm/icons/droplets.mjs";
+export { default as X } from "lucide-react/dist/esm/icons/x.mjs";

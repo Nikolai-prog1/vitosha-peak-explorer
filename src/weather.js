@@ -1,5 +1,7 @@
+import { getAppConfig } from "./config.js";
+import { requestJson, withAbort } from "./requests.js?v=vitosha-planning-20261005";
+
 export const WEATHER_TTL_MS = 15 * 60 * 1000;
-const weatherCache = new Map();
 
 const WEATHER_CODES = {
   0: ["Ясно", "sun"], 1: ["Предимно ясно", "sun"],
@@ -16,16 +18,24 @@ const WEATHER_CODES = {
   95: ["Гръмотевична буря", "storm"], 96: ["Буря със слаба градушка", "storm"],
   99: ["Буря със силна градушка", "storm"],
 };
+const WEATHER_ENGLISH = {
+  0: "Clear", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast", 45: "Fog", 48: "Depositing rime fog",
+  51: "Light drizzle", 53: "Drizzle", 55: "Dense drizzle", 56: "Light freezing drizzle", 57: "Freezing drizzle",
+  61: "Light rain", 63: "Rain", 65: "Heavy rain", 66: "Light freezing rain", 67: "Heavy freezing rain",
+  71: "Light snow", 73: "Snow", 75: "Heavy snow", 77: "Snow grains", 80: "Light rain showers", 81: "Rain showers",
+  82: "Heavy rain showers", 85: "Light snow showers", 86: "Heavy snow showers", 95: "Thunderstorm",
+  96: "Thunderstorm with light hail", 99: "Thunderstorm with heavy hail",
+};
 
-export function weatherDescription(code) {
+export function weatherDescription(code, language = "bg") {
   const [label, icon] = WEATHER_CODES[code] || ["Няма данни за облачността", "unknown"];
-  return { label, icon };
+  return { label: language === "en" ? WEATHER_ENGLISH[code] || "Cloud cover unavailable" : label, icon };
 }
 
-export function weatherNumber(value, unit = "", digits = 0) {
+export function weatherNumber(value, unit = "", digits = 0, language = "bg") {
   return Number.isFinite(value)
-    ? `${new Intl.NumberFormat("bg-BG", { maximumFractionDigits: digits }).format(Math.abs(value) < 0.5 * 10 ** -digits ? 0 : value)}${unit}`
-    : "няма данни";
+    ? `${new Intl.NumberFormat(language === "en" ? "en-GB" : "bg-BG", { maximumFractionDigits: digits }).format(Math.abs(value) < 0.5 * 10 ** -digits ? 0 : value)}${unit}`
+    : language === "en" ? "no data" : "няма данни";
 }
 
 export function sofiaDateTime(date = new Date()) {
@@ -54,12 +64,17 @@ export function forecastUrl(peak) {
 }
 
 export function normalizeForecast(payload) {
+  if (!payload || typeof payload !== "object") throw new Error("Непълни данни от прогнозата.");
   const { current, hourly, daily } = payload;
   const timePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
   if (payload.error || !timePattern.test(current?.time || "") || !Array.isArray(hourly?.time) ||
-      !Array.isArray(daily?.time) || !hourly.time.length || !daily.time.length ||
+      !Array.isArray(daily?.time) || !hourly.time.length || hourly.time.length > 120 || !daily.time.length || daily.time.length > 7 ||
       !hourly.time.every(time => timePattern.test(time)) || !daily.time.every(time => /^\d{4}-\d{2}-\d{2}$/.test(time))) {
     throw new Error("Непълни данни от прогнозата.");
+  }
+  for (const [group, field] of [[hourly, "temperature_2m"], [daily, "temperature_2m_min"], [daily, "temperature_2m_max"]]) {
+    if (!Array.isArray(group[field]) || group[field].length !== group.time.length ||
+        !group[field].every(number => number === null || Number.isFinite(number))) throw new Error("Непълни температурни данни.");
   }
   const value = (group, field, index) => {
     const number = index === undefined ? group[field] : group[field]?.[index];
@@ -92,21 +107,65 @@ export function upcomingHours(hours, date = new Date()) {
   return hours.filter(hour => hour.time >= hourStart).slice(0, 24);
 }
 
-export async function fetchForecast(peak, { signal, refresh = false } = {}) {
-  const url = forecastUrl(peak);
-  const cached = weatherCache.get(url);
-  if (!refresh && cached && Date.now() - cached.fetchedAt < WEATHER_TTL_MS) return cached;
-  let response;
-  try { response = await fetch(url, { signal }); }
-  catch (error) {
-    if (error.name === "AbortError") throw error;
-    throw new Error("Няма връзка с прогнозата. Проверете интернет връзката и опитайте отново.");
-  }
-  if (!response.ok) throw new Error(response.status === 429 ? "Временно е достигнат лимитът на прогнозата. Опитайте по-късно." : "Прогнозата временно не е достъпна.");
-  let payload;
-  try { payload = await response.json(); }
-  catch { throw new Error("Невалиден отговор от прогнозата. Опитайте отново."); }
-  const result = { ...normalizeForecast(payload), fetchedAt: Date.now() };
-  weatherCache.set(url, result);
-  return result;
+export function validateForecast(payload) {
+  const timePattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
+  if (!payload || payload.schemaVersion !== 1 || !Number.isFinite(payload.fetchedAt) || payload.fetchedAt < 0 ||
+      !timePattern.test(payload.current?.time || "") || !Array.isArray(payload.hours) || !payload.hours.length || payload.hours.length > 120 ||
+      !Array.isArray(payload.days) || !payload.days.length || payload.days.length > 7) throw new Error("Невалидна прогноза / Invalid forecast");
+  const numbers = (entry, fields) => Object.fromEntries(fields.map(field => {
+    const value = entry[field];
+    if (value !== null && !Number.isFinite(value)) throw new Error("Невалидна прогноза / Invalid forecast");
+    return [field, value];
+  }));
+  const current = { time: payload.current.time, ...numbers(payload.current, ["temperature", "feels", "code", "isDay", "wind", "gusts"]) };
+  const hours = payload.hours.map(hour => {
+    if (!timePattern.test(hour?.time || "")) throw new Error("Невалидна прогноза / Invalid forecast");
+    return { time: hour.time, ...numbers(hour, ["temperature", "code", "isDay", "probability", "precipitation", "wind", "gusts"]) };
+  });
+  const days = payload.days.map(day => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day?.time || "")) throw new Error("Невалидна прогноза / Invalid forecast");
+    return { time: day.time, ...numbers(day, ["code", "min", "max", "probability", "precipitation", "wind", "gusts"]) };
+  });
+  return { schemaVersion: 1, current, hours, days, fetchedAt: payload.fetchedAt, stale: payload.stale === true, provider: "Open-Meteo" };
 }
+
+export function createWeatherClient({ fetchImpl = fetch, getConfig = getAppConfig, now = Date.now, timeoutMs = 10000, capacity = 32 } = {}) {
+  const cache = new Map();
+  const pending = new Map();
+  const remember = (key, result) => {
+    cache.delete(key);
+    cache.set(key, result);
+    if (cache.size > capacity) cache.delete(cache.keys().next().value);
+    return result;
+  };
+  return async function fetchForecast(peak, { signal, refresh = false } = {}) {
+    if (signal?.aborted) throw signal.reason || new DOMException("Aborted", "AbortError");
+    const config = getConfig();
+    if (config.weatherMode === "disabled") throw Object.assign(new Error("Прогнозата не е активирана от оператора / Forecast is not enabled by the operator"), { code: "weatherDisabled" });
+    // Validate coordinates even when the server endpoint takes only a stable peak ID.
+    const directUrl = forecastUrl(peak);
+    const url = config.weatherMode === "proxy" ? `/api/weather/${encodeURIComponent(peak.properties.id)}` : directUrl;
+    const cached = cache.get(url);
+    if (!refresh && cached && !cached.stale && now() - cached.fetchedAt < WEATHER_TTL_MS) return cached;
+    if (!pending.has(url)) {
+      const operation = (async () => {
+        try {
+          const payload = await requestJson(url, { fetchImpl, timeoutMs, maxBytes: 256 * 1024 });
+          const result = config.weatherMode === "proxy" ? validateForecast(payload)
+            : { schemaVersion: 1, ...normalizeForecast(payload), fetchedAt: now(), stale: false, provider: "Open-Meteo" };
+          return remember(url, result);
+        } catch (error) {
+          if (cached && now() - cached.fetchedAt <= 60 * 60 * 1000) return { ...cached, stale: true };
+          if (error.name === "TimeoutError") throw Object.assign(new Error("Прогнозата се забави. Опитайте отново. / Forecast timed out. Try again."), { code: "weatherTimedOut" });
+          if (error.status === 429) throw Object.assign(new Error("Достигнат е временният лимит на прогнозата. / Forecast temporarily rate limited."), { code: "weatherLimited" });
+          throw Object.assign(new Error("Прогнозата временно не е достъпна. Опитайте отново. / Forecast unavailable. Try again."), { code: "weatherUnavailable" });
+        } finally { pending.delete(url); }
+      })();
+      pending.set(url, operation);
+    }
+    // Cancelling one component must not cancel another subscriber's shared request.
+    return withAbort(pending.get(url), signal);
+  };
+}
+
+export const fetchForecast = createWeatherClient();

@@ -1,4 +1,36 @@
+import { withAbort } from "./requests.js";
+import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, routeFramePoints } from "./map-framing.js?v=vitosha-camera-20261005-1";
+
 const HOME = { longitude: 23.283, latitude: 42.5585, height: 2000, range: 11000, heading: -24, pitch: -43 };
+let cesiumLoadPromise;
+
+function loadCesium() {
+  if (window.Cesium) return Promise.resolve(window.Cesium);
+  if (cesiumLoadPromise) return cesiumLoadPromise;
+  const base = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base");
+  if (!base) return Promise.reject(new Error("Липсва адресът на картния модул / Map module location is missing"));
+  window.CESIUM_BASE_URL = base;
+  cesiumLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    const fail = () => {
+      window.clearTimeout(timeout);
+      script.remove();
+      cesiumLoadPromise = null;
+      reject(new Error("Картният модул не се зареди / Map module did not load"));
+    };
+    const timeout = window.setTimeout(fail, 20000);
+    script.src = `${base}Cesium.js?v=1.146-engine-3`;
+    script.async = true;
+    script.onerror = fail;
+    script.onload = () => {
+      window.clearTimeout(timeout);
+      if (window.Cesium) resolve(window.Cesium);
+      else fail();
+    };
+    document.head.append(script);
+  });
+  return cesiumLoadPromise;
+}
 
 function radians(value) {
   return window.Cesium.Math.toRadians(value);
@@ -22,44 +54,132 @@ function pickedCoordinates(viewer, movement) {
   return { lon: Cesium.Math.toDegrees(point.longitude), lat: Cesium.Math.toDegrees(point.latitude) };
 }
 
-export async function createCesiumMap(container, accessToken, callbacks) {
-  const Cesium = window.Cesium;
-  if (!Cesium) throw new Error("CesiumJS не се зареди / CesiumJS did not load");
-  Cesium.Ion.defaultAccessToken = accessToken;
+export function createRouteLayer(Cesium, entities) {
+  const routes = new Map();
+  const material = candidate => candidate.approximate
+    ? new Cesium.PolylineDashMaterialProperty({ color: Cesium.Color.fromCssColorString(candidate.color), dashLength: 18 })
+    : Cesium.Color.fromCssColorString(candidate.color);
 
-  // Aerial imagery has no city, road or country names baked into its tiles.
-  const [imagery, terrain] = await Promise.all([
-    Cesium.IonImageryProvider.fromAssetId(2),
-    Cesium.createWorldTerrainAsync(),
-  ]);
-  const viewer = new Cesium.Viewer(container, {
+  return (candidates) => {
+    const visibleIds = new Set();
+    for (const candidate of candidates) {
+      if (candidate.path.length < 2) continue;
+      const id = candidate.id;
+      const coordinates = candidate.path.flatMap((point) => [point[0], point[1]]);
+      const width = candidate.active ? 6 : 4.5;
+      const approximate = candidate.approximate === true;
+      visibleIds.add(id);
+      const current = routes.get(id);
+
+      if (!current) {
+        const entity = entities.add({ id: `route:${id}`, polyline: {
+          positions: Cesium.Cartesian3.fromDegreesArray(coordinates),
+          width,
+          material: material(candidate),
+          clampToGround: true,
+        } });
+        routes.set(id, { entity, coordinates, width, color: candidate.color, approximate });
+        continue;
+      }
+
+      // Recreating a ground-clamped entity restarts its asynchronous geometry build.
+      // Leave unchanged geometry alone, even if React supplies new array objects.
+      const sameCoordinates = current.coordinates.length === coordinates.length
+        && current.coordinates.every((value, index) => value === coordinates[index]);
+      if (!sameCoordinates) {
+        current.entity.polyline.positions = Cesium.Cartesian3.fromDegreesArray(coordinates);
+        current.coordinates = coordinates;
+      }
+      if (current.width !== width) {
+        current.entity.polyline.width = width;
+        current.width = width;
+      }
+      if (current.color !== candidate.color || current.approximate !== approximate) {
+        current.entity.polyline.material = material(candidate);
+        current.color = candidate.color;
+        current.approximate = approximate;
+      }
+    }
+
+    for (const [id, route] of routes) {
+      if (visibleIds.has(id)) continue;
+      entities.remove(route.entity);
+      routes.delete(id);
+    }
+  };
+}
+
+export async function createCesiumMap(container, accessToken, callbacks) {
+  const controller = new AbortController();
+  const relay = () => controller.abort(callbacks.signal.reason);
+  if (callbacks.signal?.aborted) relay();
+  else callbacks.signal?.addEventListener("abort", relay, { once: true });
+  const deadline = window.setTimeout(() => controller.abort(new DOMException("Map startup timed out", "TimeoutError")), 20000);
+  let Cesium, imagery, terrain;
+  try {
+    Cesium = await withAbort(loadCesium(), controller.signal);
+    Cesium.Ion.defaultAccessToken = accessToken;
+    // Aerial imagery has no city, road or country names baked into its tiles.
+    [imagery, terrain] = await withAbort(Promise.all([
+      Cesium.IonImageryProvider.fromAssetId(2),
+      Cesium.createWorldTerrainAsync({ requestVertexNormals: true }),
+    ]), controller.signal);
+  } finally {
+    window.clearTimeout(deadline);
+    callbacks.signal?.removeEventListener("abort", relay);
+  }
+  const viewer = new Cesium.CesiumWidget(container, {
     baseLayer: new Cesium.ImageryLayer(imagery),
     terrainProvider: terrain,
-    animation: false,
-    timeline: false,
-    baseLayerPicker: false,
-    geocoder: false,
-    homeButton: false,
-    fullscreenButton: false,
-    sceneModePicker: false,
-    navigationHelpButton: false,
-    infoBox: false,
-    selectionIndicator: false,
     shouldAnimate: false,
+    scene3DOnly: true,
   });
   viewer.scene.globe.depthTestAgainstTerrain = true;
-  viewer.scene.globe.enableLighting = false;
+  viewer.scene.globe.enableLighting = true;
+  viewer.scene.globe.maximumScreenSpaceError = 1.25;
+  viewer.scene.globe.lambertDiffuseMultiplier = 0.6;
+  viewer.scene.globe.vertexShadowDarkness = 0.5;
+  const lightTransform = Cesium.FixedFrameTransforms.eastNorthUpToFixedFrame(Cesium.Cartesian3.fromDegrees(HOME.longitude, HOME.latitude));
+  const lightDirection = Cesium.Matrix4.multiplyByPointAsVector(lightTransform, new Cesium.Cartesian3(0.35, 0.55, -0.76), new Cesium.Cartesian3());
+  viewer.scene.light = new Cesium.DirectionalLight({ direction: Cesium.Cartesian3.normalize(lightDirection, lightDirection), intensity: 1.05 });
   viewer.scene.skyAtmosphere.show = true;
   viewer.scene.screenSpaceCameraController.minimumZoomDistance = 100;
   viewer.scene.screenSpaceCameraController.maximumZoomDistance = 400000;
   viewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
   viewTarget(viewer, HOME);
 
+  const panelElements = [...container.parentElement.querySelectorAll(".peak-panel, .summit-panel, .mobile-command, .map-readout"), ...container.querySelectorAll(".cesium-widget-credits")];
+  const readViewport = () => {
+    const bounds = container.getBoundingClientRect();
+    const occluders = panelElements.filter(element => element.getClientRects().length).map(element => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left - bounds.left, top: rect.top - bounds.top, right: rect.right - bounds.left, bottom: rect.bottom - bounds.top };
+    });
+    return availableMapViewport(container.clientWidth, container.clientHeight, occluders);
+  };
+  const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const framing = createFrameScheduler({ readViewport, requestFrame: callback => window.requestAnimationFrame(callback), cancelFrame: id => window.cancelAnimationFrame(id),
+    applyFrame({ points, options, viewport, duration }) {
+      viewer.resize();
+      const pose = cameraFramePose(Cesium, points, viewport, viewer.camera.frustum, options);
+      if (!pose) return;
+      viewer.camera.cancelFlight();
+      const view = { destination: pose.destination, orientation: { direction: pose.direction, up: pose.up }, endTransform: Cesium.Matrix4.IDENTITY };
+      if (duration && !reducedMotion()) viewer.camera.flyTo({ ...view, duration });
+      else viewer.camera.setView(view);
+    },
+  });
+  let overviewPoints = [[HOME.longitude, HOME.latitude, HOME.height]];
+  framing.request(overviewPoints, { heading: HOME.heading, pitch: HOME.pitch, minimumRange: HOME.range }, 0);
+  const resizeObserver = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => framing.layoutChanged());
+  [container, ...panelElements].forEach(element => resizeObserver?.observe(element));
+  window.addEventListener("resize", framing.layoutChanged);
+
   const overlay = document.createElement("div");
   overlay.className = "cesium-marker-overlay";
   container.append(overlay);
   const markers = new Set();
-  const routes = [];
+  const setRoutes = createRouteLayer(Cesium, viewer.entities);
   const updateMarkers = () => {
     const camera = viewer.camera;
     const labelBounds = [];
@@ -86,6 +206,9 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   viewer.scene.postRender.addEventListener(updateMarkers);
 
   const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  const interruptFraming = () => { framing.interrupt(); viewer.camera.cancelFlight(); };
+  [Cesium.ScreenSpaceEventType.LEFT_DOWN, Cesium.ScreenSpaceEventType.RIGHT_DOWN, Cesium.ScreenSpaceEventType.MIDDLE_DOWN, Cesium.ScreenSpaceEventType.WHEEL, Cesium.ScreenSpaceEventType.PINCH_START]
+    .forEach(event => handler.setInputAction(interruptFraming, event));
   handler.setInputAction((event) => {
     const point = pickedCoordinates(viewer, event.endPosition);
     if (point) callbacks.onMove?.(point);
@@ -97,26 +220,16 @@ export async function createCesiumMap(container, accessToken, callbacks) {
 
   return {
     viewer,
-    resetView() { viewTarget(viewer, HOME, 1.4); },
+    refreshLayout: framing.layoutChanged,
+    setOverview(peaks) { const points = peaks.map(placeFramePoint).filter(Boolean); if (points.length) overviewPoints = points; },
+    resetView(duration = 1.2) { framing.request(overviewPoints, { heading: HOME.heading, pitch: HOME.pitch, minimumRange: 8000 }, duration); },
     focusPeak(peak, close) {
-      viewTarget(viewer, {
-        longitude: peak.geometry.coordinates[0], latitude: peak.geometry.coordinates[1],
-        height: peak.properties.elevation_m, range: close ? 2800 : 6800,
-        heading: close ? -12 : -26, pitch: close ? -28 : -42,
-      }, 1.5);
+      const point = placeFramePoint(peak);
+      if (point) framing.request([point], { heading: close ? -12 : -26, pitch: close ? -28 : -42, minimumRange: close ? 2800 : 6800 });
     },
-    focusRoutes(entries) {
-      const coordinates = entries.flatMap((entry) => entry?.path || []);
-      if (!coordinates.length) return;
-      const longitudes = coordinates.map((point) => point[0]);
-      const latitudes = coordinates.map((point) => point[1]);
-      const center = {
-        longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-        latitude: (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
-        range: Math.max(4200, Math.max(Math.max(...longitudes) - Math.min(...longitudes), Math.max(...latitudes) - Math.min(...latitudes)) * 180000),
-        heading: -24, pitch: -48,
-      };
-      viewTarget(viewer, center, 1.4);
+    focusRoutes(entries, summit) {
+      const points = routeFramePoints(entries, summit);
+      if (points.length) framing.request(points);
     },
     addMarker(element, coordinates, height = 1900) {
       const position = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], height + 14);
@@ -126,21 +239,9 @@ export async function createCesiumMap(container, accessToken, callbacks) {
       updateMarkers();
       return marker;
     },
-    setRoutes(candidates) {
-      for (const route of routes) viewer.entities.remove(route);
-      routes.length = 0;
-      for (const candidate of candidates) {
-        const positions = Cesium.Cartesian3.fromDegreesArray(candidate.path.flatMap((point) => [point[0], point[1]]));
-        if (positions.length < 2) continue;
-        routes.push(viewer.entities.add({ polyline: {
-          positions,
-          width: candidate.active ? 6 : 4.5,
-          material: Cesium.Color.fromCssColorString(candidate.color),
-          clampToGround: true,
-        } }));
-      }
-    },
+    setRoutes,
     destroy() {
+      framing.destroy(); resizeObserver?.disconnect(); window.removeEventListener("resize", framing.layoutChanged);
       handler.destroy();
       viewer.scene.postRender.removeEventListener(updateMarkers);
       markers.forEach((marker) => marker.remove());
