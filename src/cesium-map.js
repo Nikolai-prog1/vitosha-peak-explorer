@@ -148,7 +148,7 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   viewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
   viewTarget(viewer, HOME);
 
-  const panelElements = [...container.parentElement.querySelectorAll(".peak-panel, .summit-panel, .mobile-command, .map-readout"), ...container.querySelectorAll(".cesium-widget-credits")];
+  const panelElements = [...container.parentElement.querySelectorAll(".peak-panel, .summit-panel, .mobile-command, .map-readout, [data-map-occluder]"), ...container.querySelectorAll(".cesium-widget-credits")];
   const readViewport = () => {
     const bounds = container.getBoundingClientRect();
     const occluders = panelElements.filter(element => element.getClientRects().length).map(element => {

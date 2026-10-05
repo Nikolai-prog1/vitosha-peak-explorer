@@ -45,7 +45,7 @@ The updated user objective permits Cesium ion or Mapbox when it improves Vitosha
 - GPX is available only for routed approaches. Approximate sketches have no invented elevation profile or GPX track. File exports are client-only and must not claim a download completed just because a link was clicked.
 - Route previews are informational planning context, never turn-by-turn or safety navigation.
 - `public/data` is generated; change the builder or cached inputs, then regenerate.
-- Preserve the recognizable Pirin Peak Explorer panel skeleton and interaction model.
+- Explorer v2 layout (`src/explorer-v2.css`): full-bleed map, top search combobox, one task-ordered panel (summit → approaches → plan → weather → library → data) that becomes a three-height bottom sheet on phones. Overlay panels carry `data-map-occluder` so camera framing avoids them.
 
 ## Verification
 
