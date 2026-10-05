@@ -36,6 +36,7 @@
 }
 .v2-topbar > * { pointer-events: auto; }
 .v2-brand {
+  font: inherit; color: inherit; border: 0; cursor: pointer; text-align: left;
   display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; height: 52px; box-sizing: border-box;
   background: var(--paper); border-radius: 999px; box-shadow: var(--shadow);
 }
@@ -51,6 +52,9 @@
 .v2-search-field input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink); }
 .v2-search-field input::placeholder { color: var(--ink-3); }
 .v2-search-count { font-size: 12px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+.v2-search-toggle { display: grid; place-items: center; width: 34px; height: 34px; margin-right: -8px; border: 0; border-radius: 50%; background: var(--paper-2); color: var(--ink); cursor: pointer; transition: transform 0.2s; }
+.v2-search-toggle:hover { background: var(--rule); }
+.v2-search.open .v2-search-toggle { transform: rotate(180deg); }
 .v2-search-menu {
   position: absolute; top: calc(100% + 8px); left: 0; right: 0; max-height: min(60vh, 520px); display: flex; flex-direction: column;
   background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
@@ -92,6 +96,13 @@
 .v2-hero p { margin: 8px 0 0; font-size: 14px; color: var(--ink-3); font-weight: 600; }
 .v2-hero-side { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 10px; }
 .v2-hero-side strong { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.v2-hero-actions { display: flex; gap: 6px; }
+.v2-muted { font-size: 13px; font-weight: 600; color: var(--ink-3); }
+.v2-summit-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.v2-summit-list button { display: grid; grid-template-columns: 20px 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 12px; background: none; font: inherit; color: var(--ink-2); text-align: left; cursor: pointer; }
+.v2-summit-list button:hover { background: var(--paper-2); }
+.v2-summit-list span { font-weight: 700; color: var(--ink); }
+.v2-summit-list b { font-variant-numeric: tabular-nums; font-size: 14px; }
 .v2-hero-side strong small { font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
 .v2-icon {
   display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; cursor: pointer;
@@ -162,9 +173,13 @@
 
 /* Map controls and readout */
 .v2-map-controls { position: fixed; z-index: 20; right: 16px; bottom: 40px; display: grid; gap: 8px; }
+.v2-map-controls { justify-items: end; }
 .v2-map-controls .v2-icon { width: 44px; height: 44px; background: var(--paper); border: 0; box-shadow: var(--shadow); }
+.v2-home-button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); font: inherit; font-size: 14px; font-weight: 800; box-shadow: var(--shadow); cursor: pointer; }
+.v2-home-button:hover:not(:disabled) { background: #000; }
+.v2-home-button:disabled { opacity: 0.5; cursor: default; }
 .v2-readout {
-  position: fixed; z-index: 15; right: 76px; bottom: 44px; margin: 0; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
+  position: fixed; z-index: 15; right: 180px; bottom: 44px; margin: 0; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
   font-size: 12px; font-weight: 600; color: var(--ink-2); background: rgba(251, 250, 246, 0.86); border-radius: 999px; pointer-events: none;
 }
 .v2 .connection-status { left: 50%; transform: translateX(-50%); }
@@ -173,6 +188,26 @@
 /* Map markers: route colors stay calm; hut marker follows the route color. */
 .v2 .map-peak-label { font-weight: 700; }
 .v2 .cesium-widget-credits { left: 432px !important; bottom: 8px !important; }
+
+/* Cover page */
+.v2-cover { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; overflow: hidden; background: #3d6fb3; color: #fff; }
+.v2-cover-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+.v2-cover::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(8, 24, 48, 0.55), rgba(8, 24, 48, 0.12) 55%, transparent), linear-gradient(0deg, rgba(10, 22, 12, 0.35), transparent 30%); }
+.v2-cover-top, .v2-cover-body { position: relative; z-index: 2; }
+.v2-cover-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; }
+.v2-cover-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35); }
+.v2-cover-body { margin: 0 auto auto 0; padding: 8vh 28px 0 clamp(28px, 7vw, 120px); max-width: 640px; }
+.v2-cover h1 { margin: 0; font-size: clamp(64px, 11vw, 148px); font-weight: 800; line-height: 0.92; letter-spacing: -0.045em; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
+.v2-cover-lead { margin: 20px 0 0; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; font-weight: 600; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
+.v2-cover-stats { margin: 14px 0 0; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; opacity: 0.95; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
+.v2-cover-enter { margin-top: 28px; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--brand); color: var(--brand-ink); font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+.v2-cover-enter:hover { background: #a3360a; }
+.v2-cover-enter:focus-visible, .v2-cover-peaks button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.v2-cover-peaks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; }
+.v2-cover-peaks > span { width: 100%; font-size: 13px; font-weight: 700; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
+.v2-cover-peaks button { padding: 9px 14px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 999px; background: rgba(10, 20, 30, 0.38); backdrop-filter: blur(6px); color: #fff; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.v2-cover-peaks button:hover { background: rgba(10, 20, 30, 0.6); }
+.v2-cover-peaks b { font-weight: 600; opacity: 0.85; margin-left: 4px; }
 
 /* Phones: search on top, bottom sheet with three heights. */
 @media (max-width: 900px) {
@@ -199,6 +234,16 @@
   .v2-section, .v2-drawer > summary { padding-left: 18px; padding-right: 18px; }
   .v2-drawer-body { padding: 0 18px 16px; }
   .v2-map-controls { bottom: auto; top: 72px; right: 10px; }
+  .v2-home-button { width: 44px; padding: 0; justify-content: center; }
+  .v2-home-button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .v2-cover-photo { object-position: 50% 58%; }
+  .v2-cover::before { background: linear-gradient(180deg, rgba(8, 24, 48, 0.45), rgba(8, 24, 48, 0.05) 45%, rgba(10, 22, 12, 0.15) 60%, rgba(10, 22, 12, 0.7)); }
+  .v2-cover-top { padding: 16px 18px; }
+  .v2-cover-body { flex: 1; display: flex; flex-direction: column; margin: 0; padding: 4vh 20px calc(24px + env(safe-area-inset-bottom)); }
+  .v2-cover h1 { font-size: 64px; }
+  .v2-cover-lead { font-size: 16px; }
+  .v2-cover-enter { margin-top: auto; }
+  .v2-cover-enter { width: 100%; }
   .v2-readout { display: none; }
   .v2 .cesium-widget-credits { left: 8px !important; top: 66px; bottom: auto !important; }
   .v2 .action-notice { top: 72px; left: 10px; right: 64px; }

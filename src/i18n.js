@@ -210,6 +210,18 @@ export const MESSAGES = {
   mapControls: ["Управление на картата", "Map controls"],
   expandPanel: ["Разгъни панела", "Expand panel"],
   collapsePanel: ["Свий панела", "Collapse panel"],
+  coverLead: ["Върховете, хижите и пътеките към тях — на 3D карта, с времето на върха и профил на всеки подход.", "Summits, huts and the trails between them — on a 3D map, with summit weather and a profile for every approach."],
+  coverEnter: ["Разгледай картата", "Explore the map"],
+  coverStartFrom: ["Или започни от връх", "Or start from a summit"],
+  coverStats: ["{peaks} върха · {huts} хижи · {routes} подхода", "{peaks} summits · {huts} huts · {routes} approaches"],
+  coverPhotoAlt: ["Зелени поляни и връх във Витоша под синьо небе", "Green meadows and a Vitosha summit under a blue sky"],
+  backToCover: ["Към началната страница", "Back to the start page"],
+  clearSelection: ["Изчисти избора", "Clear selection"],
+  homeView: ["Начален изглед", "Start view"],
+  overviewEyebrow: ["Планината до София", "The mountain by Sofia"],
+  overviewLead: ["Избери връх от търсенето, от картата или от списъка.", "Pick a summit from search, the map or the list."],
+  allSummits: ["Всички върхове", "All summits"],
+  toggleSummitList: ["Покажи списъка с върхове", "Show the summit list"],
 };
 
 export function translate(language, key, values = {}) {

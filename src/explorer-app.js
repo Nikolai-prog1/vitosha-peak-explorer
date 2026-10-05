@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed
 import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-1";
 import { getAppConfig } from "./config.js?v=vitosha-offline-20261005-3";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
-import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-2";
+import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-3";
 import { routeFacts, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
 import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-accessibility-20261005-3";
@@ -15,6 +15,7 @@ import { FileExportDialog } from "./file-export-ui.js?v=vitosha-accessibility-20
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
+const COVER_BASE = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base")?.startsWith("/public/") ? "/public/assets" : "/assets";
 const ROUTE_COLORS = ["#ff6b2c", "#2f80ed", "#a259ff"];
 const BOOKING_LINKS = {
   "hut-55188093": "https://www.btsbg.org/hizhi/hizha-aleko",
@@ -102,9 +103,11 @@ function App() {
   const [reportPlacementActive, setReportPlacementActive] = useState(false), [reportDraft, setReportDraft] = useState(null), [activeReportId, setActiveReportId] = useState(null);
   const [notice, setNotice] = useState(""), [actionError, setActionError] = useState(""), [shareUrl, setShareUrl] = useState(""), [importPreview, setImportPreview] = useState(null);
   const [fileExport, setFileExport] = useState(null);
+  const [showCover, setShowCover] = useState(() => !parsePlanHash(window.location.hash).peakId);
+  const coverEnterRef = useRef(null), brandRef = useRef(null);
   const t = useCallback((key, values) => translate(language, key, values), [language]);
   const workspace = workspaceState.workspace, trailReports = workspace.reports;
-  const selectedPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === selectedPeakId) || data.peaks[0] || null, [data.peaks, selectedPeakId]);
+  const selectedPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === selectedPeakId) || null, [data.peaks, selectedPeakId]);
   const filteredPeaks = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase(language);
     const list = needle ? data.peaks.filter(peak => `${peak.properties.name_bg} ${peak.properties.name_en}`.toLocaleLowerCase(language).includes(needle)) : [...data.peaks];
@@ -140,6 +143,8 @@ function App() {
   const openChooser = () => { setComboOpen(true); setPendingFocus("search"); };
   const skipToDetails = event => { event.preventDefault(); setDetailsPanelCollapsed(false); setSheet(current => current === "peek" ? "half" : current); setPendingFocus("details"); };
   const cancelNotePlacement = useCallback(() => { reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setSheet("half"); setPendingFocus("note"); }, []);
+  const clearSelection = useCallback(() => { setSelectedPeakId(null); setSelectedHutId(null); setRouteViewMode("none"); setDetailsPanelCollapsed(false); if (summitPanelRef.current) summitPanelRef.current.scrollTop = 0; resetView(); }, [resetView]);
+  const enterExplorer = (peak = null) => { setShowCover(false); setPendingFocus("details"); if (peak) selectPeak(peak); else if (!selectedPeak) setSheet("half"); };
   const cycleSheet = () => setSheet(current => current === "peek" ? "half" : current === "half" ? "full" : "peek");
 
   useEffect(() => {
@@ -154,6 +159,12 @@ function App() {
     document.addEventListener("pointerdown", outside); return () => document.removeEventListener("pointerdown", outside);
   }, [comboOpen]);
   useEffect(() => { document.getElementById(`peak-option-${activeIndex}`)?.scrollIntoView({ block: "nearest" }); }, [activeIndex, comboOpen]);
+  useLayoutEffect(() => { if (showCover) coverEnterRef.current?.focus(); }, [showCover]);
+  useEffect(() => {
+    if (!showCover) return undefined;
+    const leave = event => { if (event.key === "Escape") { event.preventDefault(); setShowCover(false); setPendingFocus("details"); } };
+    window.addEventListener("keydown", leave); return () => window.removeEventListener("keydown", leave);
+  }, [showCover]);
   useLayoutEffect(() => {
     if (!pendingFocus) return;
     const target = pendingFocus === "details" ? summitHeadingRef.current || summitPanelRef.current : pendingFocus === "note" ? noteButtonRef.current : searchRef.current;
@@ -181,7 +192,7 @@ function App() {
       const peak = data.peaks.find(item => item.properties.id === plan.peakId);
       const route = data.hutRoutes.find(item => item.properties.id === plan.routeId);
       if (plan.invalid || (plan.peakId && !peak) || (plan.routeId && !route)) setNotice("invalidSharedPlan");
-      setSelectedPeakId(peak?.properties.id || data.peaks[0]?.properties.id || null);
+      setSelectedPeakId(peak?.properties.id || null);
       setSelectedHutId(route && peak ? route.properties.hut_id : null); setRouteViewMode(route && peak ? "single" : "none");
       if (plan.language) setLanguage(plan.language);
       if (mapRef.current && route && peak) focusRouteCandidates({ path: route.geometry.coordinates[0], routeFeature: route, feature: data.huts.find(hut => hut.properties.id === route.properties.hut_id) }, peak);
@@ -191,7 +202,8 @@ function App() {
     window.addEventListener("hashchange", applyLink); return () => window.removeEventListener("hashchange", applyLink);
   }, [dataPhase, data.peaks, data.huts, data.hutRoutes, focusPeak, focusRouteCandidates]);
   useEffect(() => {
-    if (dataPhase !== "ready" || !selectedPeak || !initialLinkChecked.current) return;
+    if (dataPhase !== "ready" || !initialLinkChecked.current) return;
+    if (!selectedPeak) { window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`); return; }
     const url = sharedPlanUrl(window.location.href, selectedPeak.properties.id, activeRoute?.id, language);
     window.history.replaceState(null, "", url);
   }, [dataPhase, selectedPeak, activeRoute?.id, language]);
@@ -214,7 +226,7 @@ function App() {
     initialCameraFramed.current = true;
     mapRef.current.setOverview(data.peaks);
     if (activeRoute) focusRouteCandidates(activeRoute);
-    else if (selectedPeak && selectedPeak.properties.id !== data.peaks[0]?.properties.id) focusPeak(selectedPeak);
+    else if (selectedPeak) focusPeak(selectedPeak);
     else mapRef.current.resetView(0);
   }, [mapPhase, dataPhase, activeRoute, selectedPeak, data.peaks, focusPeak, focusRouteCandidates]);
   useEffect(() => { if (mapPhase === "ready") mapRef.current?.refreshLayout(); }, [mapPhase, detailsPanelCollapsed, sheet, language]);
@@ -343,7 +355,7 @@ function App() {
   });
 
   return html`<main className="app-shell v2"><div className="app-content">
-    <nav className="skip-navigation surface" aria-label=${t("quickNavigation")}><a href="#peak-search" onClick=${event => { event.preventDefault(); openChooser(); }}>${t("skipToSummits")}</a><a href="#summit-details" onClick=${skipToDetails}>${t("skipToDetails")}</a></nav>
+    <nav className="skip-navigation surface" inert=${showCover} aria-label=${t("quickNavigation")}><a href="#peak-search" onClick=${event => { event.preventDefault(); openChooser(); }}>${t("skipToSummits")}</a><a href="#summit-details" onClick=${skipToDetails}>${t("skipToDetails")}</a></nav>
     <p className="sr-only" role="status" aria-atomic="true">${selectedPeak ? activeRoute ? t("approachAnnouncement", { hut: placeName(activeRoute.feature, language), peak: placeName(selectedPeak, language) }) : t("selectionAnnouncement", { peak: placeName(selectedPeak, language) }) : ""}</p>
     <div ref=${mapNode} className=${`map-canvas ${reportPlacementActive ? "is-reporting" : ""}`} role="region" aria-label=${t("mapRegion")} aria-busy=${mapPhase === "loading"}></div>
     <${ConnectionStatus} mapPhase=${mapPhase} dataPhase=${dataPhase} onRetryData=${retryData} onRetryMap=${retryMap} offline=${offlineState.offline} language=${language} />
@@ -353,12 +365,23 @@ function App() {
     ${fileExport ? html`<${FileExportDialog} language=${language} file=${fileExport} onClose=${() => setFileExport(null)}/>` : null}
     ${shareUrl ? html`<${PlanningDialog} titleId="share-title" onClose=${() => setShareUrl("")}><header className="dialog-header"><h2 id="share-title">${t("shareHeading")}</h2><button type="button" className="icon-button" onClick=${() => setShareUrl("")} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("shareNote")}</p><label className="share-field"><span>${t("shareHeading")}</span><input data-initial-focus value=${shareUrl} readOnly onFocus=${event => event.target.select()}/></label><button type="button" className="route-show-button" onClick=${async () => { try { await navigator.clipboard.writeText(shareUrl); setActionError("linkCopied"); } catch { setActionError("manualCopy"); } }}>${t("copyLink")}</button>${actionError ? html`<p role="status">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
     ${importPreview ? html`<${PlanningDialog} titleId="import-title" onClose=${() => setImportPreview(null)}><header className="dialog-header"><h2 id="import-title">${t("importHeading")}</h2><button type="button" className="icon-button" onClick=${() => setImportPreview(null)} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("importPreview", { plans: importPreview.plans.length, reports: importPreview.reports.length })}</p>${workspaceState.error ? html`<p className="storage-state">${t(workspaceState.error)}</p>` : null}<div className="plan-actions"><button type="button" className="route-show-button" onClick=${() => setImportPreview(null)}>${t("cancel")}</button><button type="button" className="route-show-button active" onClick=${finishImport}>${t(workspaceState.error === "storageInvalid" ? "recoveryConfirm" : "importConfirm")}</button></div>${actionError ? html`<p className="storage-state" role="alert">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
+    ${showCover ? html`<section className="v2-cover" aria-labelledby="cover-title">
+      <img className="v2-cover-photo" src=${`${COVER_BASE}/vitosha-cover-1800.webp`} srcSet=${`${COVER_BASE}/vitosha-cover-1000.webp 1000w, ${COVER_BASE}/vitosha-cover-1800.webp 1800w`} sizes="100vw" alt=${t("coverPhotoAlt")} decoding="async" fetchpriority="high"/>
+      <div className="v2-cover-top"><span className="v2-cover-brand"><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span>${t("brandTagline")}</span><button type="button" className="v2-chip-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button></div>
+      <div className="v2-cover-body">
+        <h1 id="cover-title">${t("brandName")}</h1>
+        <p className="v2-cover-lead">${t("coverLead")}</p>
+        ${dataPhase === "ready" ? html`<p className="v2-cover-stats">${t("coverStats", { peaks: data.peaks.length, huts: data.huts.length, routes: data.hutRoutes.length })}</p>` : null}
+        <button ref=${coverEnterRef} type="button" className="v2-cover-enter" onClick=${() => enterExplorer()}>${t("coverEnter")} →</button>
+        ${dataPhase === "ready" ? html`<div className="v2-cover-peaks"><span>${t("coverStartFrom")}</span>${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).slice(0, 3).map(peak => html`<button type="button" key=${peak.properties.id} onClick=${() => enterExplorer(peak)}>${placeName(peak, language)} <b>${metre(peak.properties.elevation_m)}</b></button>`)}</div>` : null}
+      </div>
+    </section>` : null}
     <input ref=${importInputRef} type="file" accept=".json,application/json" hidden onChange=${importFile} aria-label=${t("importBackup")}/>
 
-    <header className="v2-topbar" data-map-occluder>
-      <div className="v2-brand"><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span><span><strong>${t("brandName")}</strong><small>${t("brandTagline")}</small></span></div>
+    <header className="v2-topbar" inert=${showCover} data-map-occluder>
+      <button ref=${brandRef} type="button" className="v2-brand" title=${t("backToCover")} aria-label=${t("backToCover")} onClick=${() => setShowCover(true)}><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span><span><strong>${t("brandName")}</strong><small>${t("brandTagline")}</small></span></button>
       <div ref=${comboRef} className=${`v2-search ${comboOpen ? "open" : ""}`}>
-        <label className="v2-search-field"><${Icon} component=${Search} size=${17}/><input ref=${searchRef} id="peak-search" role="combobox" aria-expanded=${comboOpen} aria-controls="peak-options" aria-autocomplete="list" aria-activedescendant=${comboOpen && filteredPeaks[activeIndex] ? `peak-option-${activeIndex}` : undefined} value=${query} placeholder=${t("findSummit")} aria-label=${t("searchSummit")} onFocus=${() => setComboOpen(true)} onInput=${event => { setQuery(event.target.value); setActiveIndex(0); setComboOpen(true); }} onKeyDown=${comboKey}/><span className="v2-search-count">${t("summitCount", { count: data.peaks.length })}</span></label>
+        <label className="v2-search-field"><${Icon} component=${Search} size=${17}/><input ref=${searchRef} id="peak-search" role="combobox" aria-expanded=${comboOpen} aria-controls="peak-options" aria-autocomplete="list" aria-activedescendant=${comboOpen && filteredPeaks[activeIndex] ? `peak-option-${activeIndex}` : undefined} value=${query} placeholder=${t("findSummit")} aria-label=${t("searchSummit")} onFocus=${() => setComboOpen(true)} onInput=${event => { setQuery(event.target.value); setActiveIndex(0); setComboOpen(true); }} onKeyDown=${comboKey}/><span className="v2-search-count">${t("summitCount", { count: data.peaks.length })}</span><button type="button" className="v2-search-toggle" tabIndex="-1" aria-label=${t("toggleSummitList")} aria-expanded=${comboOpen} aria-controls="peak-options" onPointerDown=${event => event.preventDefault()} onClick=${() => { setComboOpen(open => !open); searchRef.current?.focus(); }}><${Icon} component=${ChevronDown} size=${18}/></button></label>
         ${comboOpen ? html`<div className="v2-search-menu">
           <div className="v2-sort" role="group" aria-label=${t("sortSummits")}><button type="button" aria-pressed=${sortMode === "elevation-desc"} onClick=${() => setSortMode("elevation-desc")}>${t("elevation")}</button><button type="button" aria-pressed=${sortMode === "name"} onClick=${() => setSortMode("name")}>${t("alphabetical")}</button></div>
           <ul id="peak-options" role="listbox" aria-label=${t("chooseSummit")}>${filteredPeaks.length ? filteredPeaks.map((peak, index) => html`<li key=${peak.properties.id} id=${`peak-option-${index}`} role="option" aria-selected=${index === activeIndex} className=${`${index === activeIndex ? "active" : ""} ${peak.properties.id === selectedPeak?.properties.id ? "current" : ""}`} onPointerDown=${event => event.preventDefault()} onClick=${() => pickFromCombo(peak)} onPointerMove=${() => setActiveIndex(index)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}<small>${peak.properties[language === "bg" ? "name_en" : "name_bg"]}</small></span><b>${metre(peak.properties.elevation_m)}</b></li>`) : html`<li className="v2-empty" role="presentation">${t("noSummits")} ${t("searchHint")}</li>`}</ul>
@@ -368,13 +391,14 @@ function App() {
       <button type="button" className="v2-chip-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button>
     </header>
 
-    <aside ref=${summitPanelRef} id="summit-details" tabIndex="-1" className=${`v2-panel sheet-${sheet} ${detailsPanelCollapsed ? "collapsed" : ""}`} aria-label=${t("details")} data-map-occluder>
+    <aside ref=${summitPanelRef} id="summit-details" tabIndex="-1" className=${`v2-panel sheet-${sheet} ${detailsPanelCollapsed ? "collapsed" : ""}`} inert=${showCover} aria-label=${t("details")} data-map-occluder>
       ${isMobile ? html`<button type="button" className="v2-sheet-handle" aria-label=${t(sheet === "full" ? "collapsePanel" : "expandPanel")} onClick=${cycleSheet}><span></span></button>` : null}
       ${selectedPeak ? html`<header className="v2-hero">
         <div><small>${t("summitEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${placeName(selectedPeak, language)}</h1>${nearest ? html`<p>${t("nearestStart", { hut: placeName(nearest.feature, language), distance: km(nearest.routeKm) })}</p>` : null}</div>
-        <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong>${isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`}</div>
-      </header>` : html`<header className="v2-hero"><div><h1 ref=${summitHeadingRef} tabIndex="-1">${t("chooseSummit")}</h1></div></header>`}
+        <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong><div className="v2-hero-actions"><button type="button" className="v2-icon" title=${t("clearSelection")} aria-label=${t("clearSelection")} onClick=${clearSelection}><${Icon} component=${X}/></button>${isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`}</div></div>
+      </header>` : html`<header className="v2-hero"><div><small>${t("overviewEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${t("brandName")}</h1><p>${t("overviewLead")}</p></div></header>`}
       <div id="summit-content" className="v2-content" hidden=${!panelOpen}>
+      ${selectedPeak ? null : html`<section className="v2-section" aria-labelledby="all-summits-heading"><div className="v2-section-head"><h2 id="all-summits-heading">${t("allSummits")}</h2><span className="v2-muted">${t("summitCount", { count: data.peaks.length })}</span></div><ul className="v2-summit-list">${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => selectPeak(peak)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}</span><b>${metre(peak.properties.elevation_m)}</b></button></li>`)}</ul></section>`}
       ${selectedPeak ? html`
         <section className="v2-section" aria-labelledby="approaches-heading">
           <div className="v2-section-head"><h2 id="approaches-heading">${t("whereToStart")}</h2><button type="button" className="v2-link" aria-pressed=${routeViewMode === "all"} disabled=${!routeCandidates.length || mapPhase !== "ready"} onClick=${toggleAllRoutes}>${t(routeViewMode === "all" ? "hideFromMap" : "showOnMapAll")}</button></div>
@@ -390,9 +414,9 @@ function App() {
       </div>
     </aside>
 
-    <div className="v2-map-controls" role="group" aria-label=${t("mapControls")} data-map-occluder>
+    <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
       <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
-      <button type="button" className="v2-icon" title=${t("resetView")} aria-label=${t("resetView")} disabled=${mapPhase !== "ready"} onClick=${resetView}><${Icon} component=${RotateCcw}/></button>
+      <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>
     </div>
     <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}${coords ? ` · ${formatCoord(coords.lat)}, ${formatCoord(coords.lon)}` : ""} · ${status}</p>
   </div></main>`;
