@@ -49,6 +49,10 @@ Open `http://127.0.0.1:4175/`. Without `.env`, this is explicitly an evaluation 
 
 The compiled client requires complete runtime configuration. If it is missing or malformed, public planning data remains available, but the map and forecast stay disabled with an explicit reload control. It never substitutes the source preview's demo token or direct evaluation forecast. The offline worker's token-free bootstrap is a separate, intentional planning-only state.
 
+### Temporary GitHub Pages preview
+
+GitHub Pages is static, so it serves the same source preview as Python, below the repository path (`https://nikolai-prog1.github.io/vitosha-peak-explorer/`). `node scripts/build_pages.mjs /vitosha-peak-explorer/` assembles it into `_site/` after `npm ci`; the `Deploy GitHub Pages` workflow on `main` builds the `redesign` branch whenever its verification passes. Like every source preview, it uses the public demo Cesium token and the free evaluation forecast, and has no offline pack.
+
 ## Checks
 
 ```powershell

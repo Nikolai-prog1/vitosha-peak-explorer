@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, TreePine, X } from "@vitosha/icons";
 import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-1";
-import { getAppConfig } from "./config.js?v=vitosha-offline-20261005-3";
+import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261021-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
 import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-3";
 import { routeFacts, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
@@ -16,7 +16,7 @@ import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-safety-202610
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
-const COVER_BASE = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base")?.startsWith("/public/") ? "/public/assets" : "/assets";
+const COVER_BASE = `${appLocation().publicBase}assets`;
 const ROUTE_COLORS = ["#ff6b2c", "#2f80ed", "#a259ff"];
 const BOOKING_LINKS = {
   "hut-55188093": "https://www.btsbg.org/hizhi/hizha-aleko",
@@ -41,7 +41,7 @@ function useExplorerData() {
   useEffect(() => {
     const controller = new AbortController();
     setState(current => ({ ...current, phase: "loading", error: null }));
-    const base = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base")?.startsWith("/public/") ? "/public/data" : "/data";
+    const base = `${appLocation().publicBase}data`;
     loadExplorerData({ base, signal: controller.signal })
       .then(data => { if (!controller.signal.aborted) setState({ phase: "ready", data }); })
       .catch(() => { if (!controller.signal.aborted) setState(current => ({ ...current, phase: "error" })); });

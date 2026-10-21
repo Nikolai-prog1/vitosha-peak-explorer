@@ -19,7 +19,16 @@ export function resolveAppConfig(supplied, { sourcePreview = false, legacyToken 
   });
 }
 
+// The Cesium base marks where the app is served: "/vendor/cesium/" for a build,
+// "/public/vendor/cesium/" for the source preview, optionally below a sub-path
+// such as GitHub Pages' "/<repository>/".
+export function appLocation(cesiumBase = typeof document !== "undefined" ? document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base") : undefined) {
+  const match = typeof cesiumBase === "string" ? cesiumBase.match(/^((?:\/[\w.-]+)*?\/)(public\/)?vendor\/cesium\/$/) : null;
+  if (!match || match[1].split("/").some(segment => segment.startsWith("."))) return { sourcePreview: false, publicBase: "/" };
+  return { sourcePreview: Boolean(match[2]), publicBase: `${match[1]}${match[2] || ""}` };
+}
+
 export function getAppConfig() {
-  const sourcePreview = typeof document !== "undefined" && document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base")?.startsWith("/public/vendor/cesium/") === true;
+  const { sourcePreview } = appLocation();
   return resolveAppConfig(window.__VITOSHA_CONFIG__, { sourcePreview, legacyToken: window.__CESIUM_ION_ACCESS_TOKEN__ });
 }
