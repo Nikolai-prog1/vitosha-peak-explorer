@@ -269,11 +269,6 @@ function App() {
       reportMarkersRef.current.push(map.addMarker(element, [report.longitude, report.latitude]));
     });
   }, [activeReportId, mapPhase, trailReports, t]);
-  useEffect(() => {
-    if (!activeRoute?.id) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    summitPanelRef.current?.querySelector(".v2-plan")?.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
-  }, [activeRoute?.id]);
   useLayoutEffect(() => { if (reportPlacementActive) placementCancelRef.current?.focus(); }, [reportPlacementActive]);
   useEffect(() => {
     reportPlacementActiveRef.current = reportPlacementActive;

@@ -6,9 +6,9 @@
   --ink-2: #36423c;
   --ink-3: #56625b;
   --rule: #e3dfd4;
-  --brand: #c2410c;
+  --brand: #0f766e;
   --brand-ink: #ffffff;
-  --brand-soft: #fdebdd;
+  --brand-soft: #d7f0ec;
   /* Re-map the shared tokens so existing planning/weather/library parts follow the new palette. */
   --panel: rgba(251, 250, 246, 0.97);
   --panel-strong: #fbfaf6;
@@ -24,6 +24,8 @@
   --shadow: 0 12px 40px rgba(20, 28, 24, 0.18);
   --radius: 18px;
   font-family: "Manrope Variable", Manrope, system-ui, sans-serif;
+  /* Manrope's Bulgarian locl forms draw ъ like a Latin r; keep the standard Cyrillic shapes. */
+  font-feature-settings: "locl" 0;
   color: var(--ink);
 }
 .v2 .map-canvas { position: fixed; inset: 0; z-index: 0; }
@@ -201,7 +203,7 @@
 .v2-cover-lead { margin: 20px 0 0; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; font-weight: 600; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
 .v2-cover-stats { margin: 14px 0 0; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; opacity: 0.95; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
 .v2-cover-enter { margin-top: 28px; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--brand); color: var(--brand-ink); font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
-.v2-cover-enter:hover { background: #a3360a; }
+.v2-cover-enter:hover { background: #115e59; }
 .v2-cover-enter:focus-visible, .v2-cover-peaks button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .v2-cover-peaks { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; }
 .v2-cover-peaks > span { width: 100%; font-size: 13px; font-weight: 700; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
