@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { resolveAppConfig, DEVELOPMENT_ION_TOKEN } from "../src/config.js";
+import { appLocation, resolveAppConfig, DEVELOPMENT_ION_TOKEN } from "../src/config.js";
+import { rebaseSourceHtml } from "../scripts/build_pages.mjs";
 
 test("compiled clients fail closed when runtime configuration is absent, malformed or evaluation-direct", () => {
   for (const supplied of [undefined, null, "bad", {}, { weatherMode: "direct", evaluation: true, ionAccessToken: "public-token" },
@@ -28,4 +29,17 @@ test("evaluation defaults remain limited to the explicitly identified source pre
   assert.equal(config.configurationUnavailable, false); assert.equal(config.ionAccessToken, DEVELOPMENT_ION_TOKEN);
   assert.equal(config.weatherMode, "direct"); assert.equal(config.evaluation, true);
   assert.equal(resolveAppConfig({}, { sourcePreview: true, legacyToken: "legacy-browser-token" }).ionAccessToken, "legacy-browser-token");
+});
+test("app location identifies the source preview at the root or below a static sub-path", () => {
+  assert.deepEqual(appLocation("/vendor/cesium/"), { sourcePreview: false, publicBase: "/" });
+  assert.deepEqual(appLocation("/public/vendor/cesium/"), { sourcePreview: true, publicBase: "/public/" });
+  assert.deepEqual(appLocation("/vitosha-peak-explorer/public/vendor/cesium/"), { sourcePreview: true, publicBase: "/vitosha-peak-explorer/public/" });
+  for (const base of [undefined, "", "https://cdn.example/public/vendor/cesium/", "//cdn.example/public/vendor/cesium/", "/../public/vendor/cesium/", "/public/vendor/cesium"])
+    assert.deepEqual(appLocation(base), { sourcePreview: false, publicBase: "/" });
+});
+test("pages build rebases only source-preview URLs onto the repository path", () => {
+  const html = rebaseSourceHtml('<link data-cesium-base="/public/vendor/cesium/" href="/public/a.css"><script src="/src/app.js?v=1"></script><a href="https://x.test/src/">', "/repo/");
+  assert.equal(html, '<link data-cesium-base="/repo/public/vendor/cesium/" href="/repo/public/a.css"><script src="/repo/src/app.js?v=1"></script><a href="https://x.test/src/">');
+  assert.throws(() => rebaseSourceHtml("", "/../"));
+  assert.throws(() => rebaseSourceHtml("", "repo/"));
 });
