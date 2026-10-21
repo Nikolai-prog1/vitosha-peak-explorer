@@ -208,9 +208,10 @@
 .v2-cover-top, .v2-cover-body { position: relative; z-index: 2; }
 .v2-cover-top { display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; }
 .v2-cover-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 15px; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35); }
-.v2-cover-body { margin: 0 auto auto 0; padding: 8vh 28px 0 clamp(28px, 7vw, 120px); max-width: 640px; }
-.v2-cover h1 { margin: 0; font-size: clamp(64px, 11vw, 148px); font-weight: 800; line-height: 0.92; letter-spacing: -0.045em; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
-.v2-cover-lead { margin: 20px 0 0; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; font-weight: 600; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
+.v2-cover-body { margin: 0 auto auto 0; padding: 8vh 28px 0 clamp(28px, 7vw, 120px); max-width: 860px; }
+.v2-cover h1 { margin: 0; font-size: clamp(56px, 7.5vw, 112px); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3); }
+.v2-cover-subtitle { margin: 16px 0 0; font-size: clamp(19px, 1.9vw, 26px); line-height: 1.25; font-weight: 700; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
+.v2-cover-lead { margin: 14px 0 0; max-width: 640px; font-size: clamp(17px, 1.6vw, 21px); line-height: 1.45; font-weight: 600; text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45); }
 .v2-cover-stats { margin: 14px 0 0; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; opacity: 0.95; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45); }
 .v2-cover-enter { margin-top: 28px; height: 56px; padding: 0 28px; border: 0; border-radius: 999px; background: var(--brand); color: var(--brand-ink); font: inherit; font-size: 17px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
 .v2-cover-enter:hover { background: #115e59; }
@@ -252,7 +253,8 @@
   .v2-cover::before { background: linear-gradient(180deg, rgba(8, 24, 48, 0.45), rgba(8, 24, 48, 0.05) 45%, rgba(10, 22, 12, 0.15) 60%, rgba(10, 22, 12, 0.7)); }
   .v2-cover-top { padding: 16px 18px; }
   .v2-cover-body { flex: 1; display: flex; flex-direction: column; margin: 0; padding: 4vh 20px calc(24px + env(safe-area-inset-bottom)); }
-  .v2-cover h1 { font-size: 64px; }
+  .v2-cover h1 { font-size: clamp(40px, 13vw, 60px); }
+  .v2-cover-subtitle { font-size: 18px; }
   .v2-cover-lead { font-size: 16px; }
   .v2-cover-enter { margin-top: auto; }
   .v2-cover-enter { width: 100%; }
