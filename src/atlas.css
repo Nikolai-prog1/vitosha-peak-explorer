@@ -2,6 +2,7 @@
 :root {
   color-scheme: light;
   font-family: Manrope, Arial, sans-serif;
+  font-feature-settings: "locl" 0; /* Bulgarian locl forms make ъ look like a Latin r. */
   --bg: #d9e0d4;
   --panel: rgba(238, 241, 232, 0.97);
   --panel-strong: #e8ede3;
@@ -156,7 +157,8 @@ body, .app-shell { background: var(--bg); }
 .approach-planner h3 { margin: 0 0 10px; font: 400 23px/1.2 Georgia, serif; overflow-wrap: anywhere; }
 .approach-planner > p, .personal-library p { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 8px 0; }
 .provenance-note { padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-soft); }
-.approximate-note { border-color: #c39b62; background: #f3e5c8; color: #78531a !important; }
+.approximate-note { position: relative; padding-left: 38px; border: 2px solid #c81e1e; background: #fdecec; color: #8f1414 !important; font-weight: 700; }
+.approximate-note::before { content: "!"; position: absolute; left: 10px; top: 10px; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; background: #c81e1e; color: #fff; font-size: 12px; font-weight: 800; line-height: 1; }
 .endpoint-gaps { display: grid; gap: 5px; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .endpoint-gaps strong { color: #87531b; font-weight: 500; }
 .profile-chart { margin: 10px 0 0; }
