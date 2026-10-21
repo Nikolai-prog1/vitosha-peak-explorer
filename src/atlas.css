@@ -323,3 +323,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
 .offline-facts button { min-height: 44px; width: 100%; padding: 8px; }
 .fly-button:disabled, .icon-button:disabled { opacity: .55; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .map-peak-marker svg { transition: none; } }
+.safety-disclaimer ul { margin: 0 0 12px; padding-left: 18px; display: grid; gap: 8px; }
+.safety-disclaimer .safety-risk { margin: 0 0 16px; padding: 10px 12px; background: #f5e7d3; color: #784a1d; border: 1px solid #c5a078; border-radius: 8px; font-weight: 600; }
+.safety-disclaimer .safety-accept { width: 100%; min-height: 44px; }

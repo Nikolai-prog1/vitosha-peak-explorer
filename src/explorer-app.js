@@ -12,6 +12,7 @@ import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "
 import { SummitWeather } from "./weather-ui.js?v=vitosha-accessibility-20261005-2";
 import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-accessibility-20261005-2";
 import { FileExportDialog } from "./file-export-ui.js?v=vitosha-accessibility-20261005-3";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-safety-20261021-2";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
@@ -102,7 +103,7 @@ function App() {
   const [workspaceState, setWorkspaceState] = useState(() => readWorkspace(browserStorage()));
   const [reportPlacementActive, setReportPlacementActive] = useState(false), [reportDraft, setReportDraft] = useState(null), [activeReportId, setActiveReportId] = useState(null);
   const [notice, setNotice] = useState(""), [actionError, setActionError] = useState(""), [shareUrl, setShareUrl] = useState(""), [importPreview, setImportPreview] = useState(null);
-  const [fileExport, setFileExport] = useState(null);
+  const [fileExport, setFileExport] = useState(null), [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [showCover, setShowCover] = useState(() => !parsePlanHash(window.location.hash).peakId);
   const coverEnterRef = useRef(null), brandRef = useRef(null);
   const t = useCallback((key, values) => translate(language, key, values), [language]);
@@ -208,7 +209,7 @@ function App() {
     window.history.replaceState(null, "", url);
   }, [dataPhase, selectedPeak, activeRoute?.id, language]);
   useEffect(() => {
-    if (!mapNode.current) return undefined;
+    if (!mapNode.current || !disclaimerAccepted) return undefined;
     if (APP_CONFIG.configurationUnavailable) { setMapPhase("config-error"); setMapStatus("configurationUnavailable"); return undefined; }
     if (APP_CONFIG.offlineLaunch || (navigator.onLine === false && mapRevision === 0)) { setMapPhase("offline"); setMapStatus("offlinePlanning"); return undefined; }
     initialCameraFramed.current = false; setMapPhase("loading");
@@ -220,7 +221,7 @@ function App() {
     } }).then(map => { if (cancelled) { map.destroy(); return; } mapRef.current = map; setMapPhase("ready"); setMapStatus("map3d"); })
       .catch(() => { if (!cancelled) { setMapPhase("error"); setMapStatus("mapUnavailable"); } });
     return () => { cancelled = true; controller.abort(); clearMarkers(peakMarkersRef); clearMarkers(hutMarkersRef); clearMarkers(reportMarkersRef); mapRef.current?.destroy(); mapRef.current = null; };
-  }, [mapRevision]);
+  }, [mapRevision, disclaimerAccepted]);
   useEffect(() => {
     if (mapPhase !== "ready" || dataPhase !== "ready" || initialCameraFramed.current) return;
     initialCameraFramed.current = true;
@@ -362,6 +363,7 @@ function App() {
     ${notice ? html`<div className="action-notice surface" role="status" aria-live="polite"><span>${t(notice)}</span><button type="button" className="icon-button" aria-label=${t("close")} onClick=${() => setNotice("")}><${Icon} component=${X} size=${16}/></button></div>` : null}
     ${reportPlacementActive ? html`<div className="trail-report-placement" role="status"><${Icon} component=${TreePine} size=${20}/><span><strong>${t("reportPlacement")}</strong><small>${t("reportPlacementHint")}</small></span><button ref=${placementCancelRef} type="button" onClick=${cancelNotePlacement} aria-label=${t("cancel")}><${Icon} component=${X} size=${18}/></button></div>` : null}
     ${reportDraft || activeTrailReport ? html`<${ReportDialog} language=${language} draft=${reportDraft} report=${activeTrailReport} onClose=${closeNote} returnFocus=${() => noteButtonRef.current} onDraftChange=${setReportDraft} onSave=${saveNote} onUpdate=${updateNote} error=${actionError}/>` : null}
+    ${disclaimerAccepted || showCover ? null : html`<${SafetyDisclaimer} onAccept=${() => setDisclaimerAccepted(true)} returnFocus=${() => summitPanelRef.current}/>`}
     ${fileExport ? html`<${FileExportDialog} language=${language} file=${fileExport} onClose=${() => setFileExport(null)}/>` : null}
     ${shareUrl ? html`<${PlanningDialog} titleId="share-title" onClose=${() => setShareUrl("")}><header className="dialog-header"><h2 id="share-title">${t("shareHeading")}</h2><button type="button" className="icon-button" onClick=${() => setShareUrl("")} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("shareNote")}</p><label className="share-field"><span>${t("shareHeading")}</span><input data-initial-focus value=${shareUrl} readOnly onFocus=${event => event.target.select()}/></label><button type="button" className="route-show-button" onClick=${async () => { try { await navigator.clipboard.writeText(shareUrl); setActionError("linkCopied"); } catch { setActionError("manualCopy"); } }}>${t("copyLink")}</button>${actionError ? html`<p role="status">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
     ${importPreview ? html`<${PlanningDialog} titleId="import-title" onClose=${() => setImportPreview(null)}><header className="dialog-header"><h2 id="import-title">${t("importHeading")}</h2><button type="button" className="icon-button" onClick=${() => setImportPreview(null)} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("importPreview", { plans: importPreview.plans.length, reports: importPreview.reports.length })}</p>${workspaceState.error ? html`<p className="storage-state">${t(workspaceState.error)}</p>` : null}<div className="plan-actions"><button type="button" className="route-show-button" onClick=${() => setImportPreview(null)}>${t("cancel")}</button><button type="button" className="route-show-button active" onClick=${finishImport}>${t(workspaceState.error === "storageInvalid" ? "recoveryConfirm" : "importConfirm")}</button></div>${actionError ? html`<p className="storage-state" role="alert">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
