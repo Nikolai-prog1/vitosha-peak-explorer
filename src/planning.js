@@ -26,6 +26,28 @@ export function routeFacts(route) {
   return { samples, distance, ascent: Math.round(ascent), descent: Math.round(descent), min: Math.min(...elevations), max: Math.max(...elevations) };
 }
 
+// Difficulty 1–5 for routed approaches. Effort is measured in "effort kilometres"
+// (horizontal km + 1 km per 100 m of ascent); the steepest sustained 300 m stretch
+// adds one level when it reaches 35 % grade. Approximate sketches have no facts → null.
+export const DIFFICULTY_EFFORT_STEPS = [6, 9, 12, 15];
+export const DIFFICULTY_STEEP_GRADE = 0.35;
+export function steepestGrade(facts, window = 300) {
+  const samples = facts?.samples ?? [];
+  let steepest = 0;
+  for (let start = 0, end = 0; start < samples.length; start++) {
+    while (end < samples.length && samples[end].distance - samples[start].distance < window) end++;
+    if (end >= samples.length) break;
+    steepest = Math.max(steepest, Math.abs(samples[end].height - samples[start].height) / (samples[end].distance - samples[start].distance));
+  }
+  return steepest;
+}
+export function routeDifficulty(facts) {
+  if (!facts || !(facts.distance > 0)) return null;
+  const effortKm = facts.distance / 1000 + Math.max(0, facts.ascent) / 100, grade = steepestGrade(facts);
+  const base = 1 + DIFFICULTY_EFFORT_STEPS.filter(step => effortKm >= step).length;
+  return { level: Math.min(5, base + (grade >= DIFFICULTY_STEEP_GRADE ? 1 : 0)), effortKm: Math.round(effortKm * 10) / 10, steepestGrade: Math.round(grade * 100) };
+}
+
 export function profileGeometry(facts, width = 320, height = 116) {
   if (!facts || !facts.samples.length) return null;
   const inset = 8, usableWidth = width - 2 * inset, usableHeight = height - 2 * inset;

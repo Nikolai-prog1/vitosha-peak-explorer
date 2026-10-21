@@ -6,7 +6,7 @@ import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-1";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261021-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
 import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-3";
-import { routeFacts, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
+import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
 import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-accessibility-20261005-3";
 import { SummitWeather } from "./weather-ui.js?v=vitosha-accessibility-20261005-2";
@@ -119,8 +119,8 @@ function App() {
     return data.hutRoutes.filter(route => route.properties.peak_id === selectedPeak.properties.id)
       .sort((left, right) => left.properties.distance_km - right.properties.distance_km)
       .map((route, rank) => {
-        const hut = data.huts.find(item => item.properties.id === route.properties.hut_id);
-        return hut ? { id: route.properties.id, feature: hut, routeFeature: route, rank, path: route.geometry.coordinates[0], routeKm: route.properties.distance_km, trailNodeCount: route.properties.trail_node_count, source: route.properties.source, facts: routeFacts(route) } : null;
+        const hut = data.huts.find(item => item.properties.id === route.properties.hut_id), facts = routeFacts(route);
+        return hut ? { id: route.properties.id, feature: hut, routeFeature: route, rank, path: route.geometry.coordinates[0], routeKm: route.properties.distance_km, trailNodeCount: route.properties.trail_node_count, source: route.properties.source, facts, difficulty: routeDifficulty(facts) } : null;
       }).filter(Boolean);
   }, [data.hutRoutes, data.huts, selectedPeak]);
   const activeHutId = routeOptions.some(entry => entry.feature.properties.id === selectedHutId) ? selectedHutId : null;
@@ -335,11 +335,20 @@ function App() {
   const panelOpen = isMobile || !detailsPanelCollapsed;
   const toggleAllRoutes = () => { if (routeViewMode === "all") { setRouteViewMode("none"); setSelectedHutId(null); } else { setSelectedHutId(null); setRouteViewMode("all"); focusRouteCandidates(routeCandidates); } };
 
+  const difficultyBadge = difficulty => difficulty
+    ? html`<span className="approach-difficulty" data-level=${difficulty.level} role="img" aria-label=${t("difficultyAria", { level: difficulty.level, label: t(`difficulty${difficulty.level}`) })} title=${t("difficultyTitle", { label: t(`difficulty${difficulty.level}`), effort: formatNumber(difficulty.effortKm, language), grade: difficulty.steepestGrade })}>
+        <span className="difficulty-meter" aria-hidden="true">${[1, 2, 3, 4, 5].map(step => html`<i key=${step} className=${step <= difficulty.level ? "on" : ""}></i>`)}</span>
+        <b aria-hidden="true">${difficulty.level}<small>/5</small></b><small aria-hidden="true">${t("difficultyShort")}</small>
+      </span>`
+    : html`<span className="approach-difficulty none" title=${t("difficultyNone")} aria-label=${t("difficultyNone")} role="img"><b aria-hidden="true">—</b><small aria-hidden="true">${t("difficultyShort")}</small></span>`;
   const approachRows = routeCandidates.map(candidate => {
     const props = candidate.feature.properties, approximate = candidate.routeFeature.properties.geometry_kind === "approximate", facts = candidate.facts;
     return html`<li key=${props.id} className=${`approach-row ${candidate.active ? "active" : ""} ${approximate ? "approximate" : ""}`} style=${{ "--route": ROUTE_COLORS[candidate.rank] }}>
       <button type="button" className="approach-select" aria-pressed=${candidate.active} onClick=${() => selectRoute(candidate)}>
-        <span className="approach-name"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${t(approximate ? "sketchShort" : "routedShort")}</small></span>
+        <span className="approach-head">
+          <span className="approach-name"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${t(approximate ? "sketchShort" : "routedShort")}</small></span>
+          ${difficultyBadge(candidate.difficulty)}
+        </span>
         <span className="approach-stats">
           <span><b>${km(candidate.routeKm)}</b><small>${t("distanceShort")}</small></span>
           <span><b>${facts ? `↑ ${metre(facts.ascent)}` : "—"}</b><small>${t("climbShort")}</small></span>
@@ -405,7 +414,7 @@ function App() {
         <details className="v2-drawer" open=${weatherExpanded} onToggle=${event => setWeatherExpanded(event.currentTarget.open)}><summary><${Icon} component=${CloudSun} size=${18}/><span>${t("weather")}</span><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body" id="summit-weather"><${SummitWeather} key=${selectedPeak.properties.id} peak=${selectedPeak} active=${weatherExpanded && panelOpen} offline=${offlineState.offline} configurationUnavailable=${APP_CONFIG.configurationUnavailable} language=${language} evaluation=${APP_CONFIG.evaluation}/></div></details>` : null}
         <details className="v2-drawer"><summary><${Icon} component=${MapPinned} size=${18}/><span>${t("myPlansNotes")}</span><b className="v2-count">${workspace.plans.length + workspace.reports.length}</b><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body"><${PersonalLibrary} language=${language} workspaceState=${workspaceState} data=${data} mapReady=${mapPhase === "ready"} noteButtonRef=${noteButtonRef} onOpenPlan=${openPlan} onRemovePlan=${removePlan} onExport=${exportBackup} onImport=${startImport} onReload=${reloadLocal} onOriginal=${exportOriginal} onAddNote=${addNote} onCoordinateNote=${addCoordinateNote} onOpenNote=${openNote}/></div></details>
         <details className="v2-drawer"><summary><${Icon} component=${CircleHelp} size=${18}/><span>${t("aboutData")}</span><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body">
-          ${selectedPeak ? html`<h3 className="v2-subhead">${t("summitData")}</h3><dl className="v2-facts"><div><dt>${t("altitude")}</dt><dd>${metre(selectedPeak.properties.elevation_m)}</dd></div><div><dt>${t("latitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[1])}</dd></div><div><dt>${t("longitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[0])}</dd></div><div><dt>${t("source")}</dt><dd>${t("osmNode", { id: selectedPeak.properties.osm_id })}</dd></div></dl><p className="v2-fineprint">${t("peakSourceNote")}</p><h3 className="v2-subhead">${t("routeHelpTitle")}</h3><p className="v2-fineprint">${t("routeHelpText")} ${t("planningWarning")}</p>` : null}
+          ${selectedPeak ? html`<h3 className="v2-subhead">${t("summitData")}</h3><dl className="v2-facts"><div><dt>${t("altitude")}</dt><dd>${metre(selectedPeak.properties.elevation_m)}</dd></div><div><dt>${t("latitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[1])}</dd></div><div><dt>${t("longitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[0])}</dd></div><div><dt>${t("source")}</dt><dd>${t("osmNode", { id: selectedPeak.properties.osm_id })}</dd></div></dl><p className="v2-fineprint">${t("peakSourceNote")}</p><h3 className="v2-subhead">${t("routeHelpTitle")}</h3><p className="v2-fineprint">${t("routeHelpText")} ${t("difficultyHelp")} ${t("planningWarning")}</p>` : null}
           <${OfflineFactsPanel} language=${language} state=${offlineState} quality=${data.quality}/>
         </div></details>
       </div>

@@ -129,6 +129,16 @@
 .approach-row:hover { border-color: var(--line-strong); }
 .approach-row.active { border-color: var(--route); box-shadow: 0 0 0 2px var(--route) inset, 0 6px 18px rgba(20, 28, 24, 0.1); }
 .approach-select { display: grid; gap: 10px; width: 100%; padding: 14px 14px 10px 20px; text-align: left; font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.approach-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.approach-difficulty { flex: none; display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 6px; row-gap: 3px; padding: 6px 9px; border-radius: 10px; background: var(--brand-soft); color: var(--brand); }
+.approach-difficulty b { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; justify-self: end; }
+.approach-difficulty b small { font-size: 11px; font-weight: 700; opacity: 0.75; }
+.approach-difficulty > small { grid-column: 1 / -1; font-size: 11px; font-weight: 700; color: var(--ink-3); text-align: right; line-height: 1; }
+.approach-difficulty.none { background: var(--paper-2); color: var(--ink-3); }
+.difficulty-meter { display: inline-flex; gap: 2px; align-items: flex-end; }
+.difficulty-meter i { display: block; width: 4px; border-radius: 2px; background: currentColor; opacity: 0.22; }
+.difficulty-meter i:nth-child(1) { height: 6px; } .difficulty-meter i:nth-child(2) { height: 8px; } .difficulty-meter i:nth-child(3) { height: 10px; } .difficulty-meter i:nth-child(4) { height: 12px; } .difficulty-meter i:nth-child(5) { height: 14px; }
+.difficulty-meter i.on { opacity: 1; }
 .approach-name strong { display: block; font-size: 15px; font-weight: 800; }
 .approach-name small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--ink-3); font-weight: 600; }
 .approach-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
