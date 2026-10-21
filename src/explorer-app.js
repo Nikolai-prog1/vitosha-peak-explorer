@@ -375,7 +375,8 @@ function App() {
       <img className="v2-cover-photo" src=${`${COVER_BASE}/vitosha-cover-1800.webp`} srcSet=${`${COVER_BASE}/vitosha-cover-1000.webp 1000w, ${COVER_BASE}/vitosha-cover-1800.webp 1800w`} sizes="100vw" alt=${t("coverPhotoAlt")} decoding="async" fetchpriority="high"/>
       <div className="v2-cover-top"><span className="v2-cover-brand"><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span>${t("brandTagline")}</span><button type="button" className="v2-chip-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button></div>
       <div className="v2-cover-body">
-        <h1 id="cover-title">${t("brandName")}</h1>
+        <h1 id="cover-title">${t("coverTitle")}</h1>
+        <p className="v2-cover-subtitle">${t("coverSubtitle")}</p>
         <p className="v2-cover-lead">${t("coverLead")}</p>
         ${dataPhase === "ready" ? html`<p className="v2-cover-stats">${t("coverStats", { peaks: data.peaks.length, huts: data.huts.length, routes: data.hutRoutes.length })}</p>` : null}
         <button ref=${coverEnterRef} type="button" className="v2-cover-enter" onClick=${() => enterExplorer()}>${t("coverEnter")} →</button>
