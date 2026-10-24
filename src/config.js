@@ -29,6 +29,8 @@ export function appLocation(cesiumBase = typeof document !== "undefined" ? docum
 }
 
 export function getAppConfig() {
-  const { sourcePreview } = appLocation();
+  // The Vite dev server rewrites /public/vendor/ to /vendor/, so its Cesium base
+  // looks like a build. It still serves the source preview's runtime config.
+  const sourcePreview = appLocation().sourcePreview || import.meta.env?.DEV === true;
   return resolveAppConfig(window.__VITOSHA_CONFIG__, { sourcePreview, legacyToken: window.__CESIUM_ION_ACCESS_TOKEN__ });
 }
