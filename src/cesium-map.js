@@ -133,6 +133,10 @@ export async function createCesiumMap(container, accessToken, callbacks) {
     terrainProvider: terrain,
     shouldAnimate: false,
     scene3DOnly: true,
+    // Render only when the camera, tiles or our own changes need a new frame,
+    // instead of 60 frames per second while nothing moves.
+    requestRenderMode: true,
+    maximumRenderTimeChange: Infinity,
   });
   viewer.scene.globe.depthTestAgainstTerrain = true;
   viewer.scene.globe.enableLighting = true;
@@ -167,6 +171,7 @@ export async function createCesiumMap(container, accessToken, callbacks) {
       const view = { destination: pose.destination, orientation: { direction: pose.direction, up: pose.up }, endTransform: Cesium.Matrix4.IDENTITY };
       if (duration && !reducedMotion()) viewer.camera.flyTo({ ...view, duration });
       else viewer.camera.setView(view);
+      viewer.scene.requestRender();
     },
   });
   let overviewPoints = [[HOME.longitude, HOME.latitude, HOME.height]];
@@ -179,7 +184,12 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   overlay.className = "cesium-marker-overlay";
   container.append(overlay);
   const markers = new Set();
-  const setRoutes = createRouteLayer(Cesium, viewer.entities);
+  const setRouteLayer = createRouteLayer(Cesium, viewer.entities);
+  // Ground-clamped routes build over several frames, so keep rendering briefly
+  // after a change; afterwards the scene goes back to rendering on demand.
+  let settleUntil = 0;
+  const keepRendering = () => { if (performance.now() < settleUntil) viewer.scene.requestRender(); };
+  viewer.scene.preUpdate.addEventListener(keepRendering);
   const updateMarkers = () => {
     const camera = viewer.camera;
     const labelBounds = [];
@@ -192,7 +202,7 @@ export async function createCesiumMap(container, accessToken, callbacks) {
       marker.element.style.display = visible ? "grid" : "none";
       if (!visible) continue;
       marker.element.style.transform = `translate3d(${pixel.x}px, ${pixel.y}px, 0) translate(-50%, -100%)`;
-      const label = marker.element.querySelector(".map-peak-label");
+      const label = marker.label;
       if (!label) continue;
       const selected = marker.element.classList.contains("selected");
       const width = Math.min(145, label.textContent.length * 6.5 + 12);
@@ -206,12 +216,19 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   viewer.scene.postRender.addEventListener(updateMarkers);
 
   const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+  let pendingMove, moveFrame = 0;
   const interruptFraming = () => { framing.interrupt(); viewer.camera.cancelFlight(); };
   [Cesium.ScreenSpaceEventType.LEFT_DOWN, Cesium.ScreenSpaceEventType.RIGHT_DOWN, Cesium.ScreenSpaceEventType.MIDDLE_DOWN, Cesium.ScreenSpaceEventType.WHEEL, Cesium.ScreenSpaceEventType.PINCH_START]
     .forEach(event => handler.setInputAction(interruptFraming, event));
   handler.setInputAction((event) => {
-    const point = pickedCoordinates(viewer, event.endPosition);
-    if (point) callbacks.onMove?.(point);
+    // Picking the globe is costly: handle at most one pointer position per frame.
+    pendingMove = event.endPosition;
+    if (moveFrame) return;
+    moveFrame = window.requestAnimationFrame(() => {
+      moveFrame = 0;
+      const point = pickedCoordinates(viewer, pendingMove);
+      if (point) callbacks.onMove?.(point);
+    });
   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   handler.setInputAction((event) => {
     const point = pickedCoordinates(viewer, event.position);
@@ -233,16 +250,22 @@ export async function createCesiumMap(container, accessToken, callbacks) {
     },
     addMarker(element, coordinates, height = 1900) {
       const position = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], height + 14);
-      const marker = { element, position, remove() { markers.delete(marker); element.remove(); } };
+      const marker = { element, position, label: element.querySelector(".map-peak-label"), remove() { markers.delete(marker); element.remove(); } };
       markers.add(marker);
       overlay.append(element);
       updateMarkers();
       return marker;
     },
-    setRoutes,
+    setRoutes(candidates) {
+      setRouteLayer(candidates);
+      settleUntil = performance.now() + 3000;
+      viewer.scene.requestRender();
+    },
     destroy() {
       framing.destroy(); resizeObserver?.disconnect(); window.removeEventListener("resize", framing.layoutChanged);
       handler.destroy();
+      window.cancelAnimationFrame(moveFrame);
+      viewer.scene.preUpdate.removeEventListener(keepRendering);
       viewer.scene.postRender.removeEventListener(updateMarkers);
       markers.forEach((marker) => marker.remove());
       viewer.destroy();

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createRoot } from "react-dom/client";
 import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-1";
-import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261021-1";
+import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-2";
+import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
 import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-3";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
@@ -73,6 +73,13 @@ function makeHutMarkerElement(color, active) {
   element.innerHTML = `<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 15.5 17 5l13 10.5v13H4v-13Z" fill="${color}" stroke="#061016" stroke-width="2" stroke-linejoin="round"/><path d="M12 28v-8h10v8" fill="#071218"/><path d="M3 16 17 4l14 12" fill="none" stroke="#fff4c8" stroke-width="2.2" stroke-linecap="round"/></svg>`;
   return element;
 }
+// Pointer coordinates change on every mouse move; keep that state out of App so
+// moving the mouse re-renders only this text, not the whole explorer.
+function PointerCoordinates({ sinkRef }) {
+  const [coords, setCoords] = useState(null);
+  useEffect(() => { sinkRef.current = setCoords; return () => { sinkRef.current = null; }; }, [sinkRef]);
+  return coords ? ` · ${formatCoord(coords.lat)}, ${formatCoord(coords.lon)}` : "";
+}
 function ConnectionStatus({ mapPhase, dataPhase, onRetryData, onRetryMap, offline, language }) {
   if (mapPhase === "ready" && dataPhase === "ready" && !offline) return null;
   const t = (key, values) => translate(language, key, values), failed = mapPhase === "error" || dataPhase === "error";
@@ -99,7 +106,8 @@ function App() {
   const [comboOpen, setComboOpen] = useState(false), [activeIndex, setActiveIndex] = useState(0);
   const [routeViewMode, setRouteViewMode] = useState("none"), [sheet, setSheet] = useState("half");
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(false), [weatherExpanded, setWeatherExpanded] = useState(true);
-  const [mapPhase, setMapPhase] = useState("loading"), [mapStatus, setMapStatus] = useState("map3d"), [coords, setCoords] = useState(null);
+  const [mapPhase, setMapPhase] = useState("loading"), [mapStatus, setMapStatus] = useState("map3d");
+  const coordsSinkRef = useRef(null);
   const [workspaceState, setWorkspaceState] = useState(() => readWorkspace(browserStorage()));
   const [reportPlacementActive, setReportPlacementActive] = useState(false), [reportDraft, setReportDraft] = useState(null), [activeReportId, setActiveReportId] = useState(null);
   const [notice, setNotice] = useState(""), [actionError, setActionError] = useState(""), [shareUrl, setShareUrl] = useState(""), [importPreview, setImportPreview] = useState(null);
@@ -214,7 +222,7 @@ function App() {
     if (APP_CONFIG.offlineLaunch || (navigator.onLine === false && mapRevision === 0)) { setMapPhase("offline"); setMapStatus("offlinePlanning"); return undefined; }
     initialCameraFramed.current = false; setMapPhase("loading");
     let cancelled = false; const controller = new AbortController();
-    createCesiumMap(mapNode.current, APP_CONFIG.ionAccessToken, { signal: controller.signal, onMove: setCoords, onClick: point => {
+    createCesiumMap(mapNode.current, APP_CONFIG.ionAccessToken, { signal: controller.signal, onMove: point => coordsSinkRef.current?.(point), onClick: point => {
       if (!reportPlacementActiveRef.current) return;
       reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setSheet("half"); setActionError("");
       setReportDraft({ longitude: point.lon, latitude: point.lat, severity: "blocked", note: "" }); setMapStatus("reportDescribe");
@@ -425,7 +433,7 @@ function App() {
       <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
       <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>
     </div>
-    <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}${coords ? ` · ${formatCoord(coords.lat)}, ${formatCoord(coords.lon)}` : ""} · ${status}</p>
+    <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}<${PointerCoordinates} sinkRef=${coordsSinkRef}/> · ${status}</p>
   </div></main>`;
 }
 document.getElementById("boot-loader")?.remove();
