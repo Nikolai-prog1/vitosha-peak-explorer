@@ -1,4 +1,4 @@
-import { withAbort } from "./requests.js";
+import { withAbort } from "./requests.js?v=vitosha-planning-20261005";
 import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, routeFramePoints } from "./map-framing.js?v=vitosha-camera-20261005-1";
 
 const HOME = { longitude: 23.283, latitude: 42.5585, height: 2000, range: 11000, heading: -24, pitch: -43 };
