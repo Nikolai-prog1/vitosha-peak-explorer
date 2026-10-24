@@ -1,5 +1,7 @@
-// Public, browser-scoped project token, retained for the local prototype only.
-export const DEVELOPMENT_ION_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI5MTlmNTk4Mi02ZmI1LTRkMzItYTcxZC1mNGQ0YjA1MzU5ZjEiLCJpZCI6NDMzMTE0LCJpc3MiOiJodHRwczovL2lvbi5jZXNpdW0uY29tIiwiYXVkIjoidW5kZWZpbmVkX2RlZmF1bHQiLCJpYXQiOjE3NzkxMTU0NzR9.jhswSBvYIiVV23V3xzKIVIp6-NqcXZcX5kpNy6EBglE";
+// Public browser token for GitHub Pages and local previews. It can only read
+// assets and Cesium ion accepts it only from nikolai-prog1.github.io and
+// 127.0.0.1 / localhost, so it is safe to ship. Production sets CESIUM_ION_TOKEN.
+export const DEVELOPMENT_ION_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImxHQWdIclBXQ0xNRkhHUHMiLCJqdGkiOiI5NjliYzU4MS0yZDY3LTQzODgtOTIwZi1kMGI2ODEwM2ZkYzQiLCJpZCI6NDMzMTE0LCJzdWIiOiJOaWtvbGFpLXByb2cxIiwiaXNzIjoiaHR0cHM6Ly9hcGkuY2VzaXVtLmNvbSIsImF1ZCI6InZpdG9zaGEtcGVhay1leHBsb3Jlci13ZWIiLCJpYXQiOjE3OTI4ODM5NTd9.ZEi26lmSC2LegUZ_XLO09NAE6k3v-uoCJSLGaZFaOgA";
 
 export function resolveAppConfig(supplied, { sourcePreview = false, legacyToken } = {}) {
   const config = supplied && typeof supplied === "object" ? supplied : {};
