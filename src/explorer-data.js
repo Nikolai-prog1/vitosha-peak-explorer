@@ -1,5 +1,5 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
-import { distanceMeters } from "./planning.js";
+import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
 
 export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], quality: null };
 const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "data-quality.json"];
