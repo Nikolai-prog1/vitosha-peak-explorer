@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import htm from "htm";
 import { CheckCircle2, ChevronDown, ChevronUp, ExternalLink, MapPinned, Mountain, TreePine, X } from "@vitosha/icons";
-import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=explorer-v2-3";
+import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=explorer-v2-4";
 import { profileGeometry } from "./planning.js?v=vitosha-camera-20261005-2";
 import { openModalDialog } from "./focus-management.js?v=vitosha-accessibility-20261005-2";
 import { NOTE_COORDINATE_BOUNDS } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";

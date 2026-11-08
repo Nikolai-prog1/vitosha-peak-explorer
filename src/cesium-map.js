@@ -4,7 +4,7 @@ import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFrame
 const HOME = { longitude: 23.283, latitude: 42.5585, height: 2000, range: 11000, heading: -24, pitch: -43 };
 let cesiumLoadPromise;
 
-function loadCesium() {
+export function loadCesium() {
   if (window.Cesium) return Promise.resolve(window.Cesium);
   if (cesiumLoadPromise) return cesiumLoadPromise;
   const base = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base");
