@@ -2,17 +2,18 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createRoot } from "react-dom/client";
 import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-2";
+import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-3";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
-import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-3";
+import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-4";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-accessibility-20261005-3";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-accessibility-20261005-2";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-accessibility-20261005-2";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-accessibility-20261005-3";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-safety-20261021-2";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-cover-20261108";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-cover-20261108";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-cover-20261108";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-cover-20261108";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-cover-20261108";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-cover-20261108";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
@@ -114,9 +115,14 @@ function App() {
   const [fileExport, setFileExport] = useState(null), [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
   const [showCover, setShowCover] = useState(() => !parsePlanHash(window.location.hash).peakId);
   const coverEnterRef = useRef(null), brandRef = useRef(null);
+  const [coverSceneFailed, setCoverSceneFailed] = useState(false);
+  // The cover's own 3D scene needs the same map access as the explorer.
+  const coverSceneEnabled = showCover && !APP_CONFIG.configurationUnavailable && !APP_CONFIG.offlineLaunch && navigator.onLine !== false;
   const t = useCallback((key, values) => translate(language, key, values), [language]);
   const workspace = workspaceState.workspace, trailReports = workspace.reports;
   const selectedPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === selectedPeakId) || null, [data.peaks, selectedPeakId]);
+  const coverPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === COVER_SUMMIT.id) || null, [data.peaks]);
+  const highestPeaks = useMemo(() => [...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).slice(0, 6), [data.peaks]);
   const filteredPeaks = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase(language);
     const list = needle ? data.peaks.filter(peak => `${peak.properties.name_bg} ${peak.properties.name_en}`.toLocaleLowerCase(language).includes(needle)) : [...data.peaks];
@@ -289,6 +295,7 @@ function App() {
     try { setWorkspaceState(commitWorkspace(browserStorage(), next, workspaceState, { recover })); setActionError(""); return true; }
     catch (error) { const code = error.code || "storageUnavailable"; setNotice(code); setActionError(code); return false; }
   }, [workspaceState]);
+  const chooseLanguage = next => { if (next === language) return; setLanguage(next); if (!writeLanguage(browserStorage(), next)) setNotice("storageUnavailable"); };
   const switchLanguage = () => { const next = language === "bg" ? "en" : "bg"; setLanguage(next); if (!writeLanguage(browserStorage(), next)) setNotice("storageUnavailable"); };
   const savePlan = useCallback(() => {
     if (!activeRoute || !selectedPeak || workspace.plans.some(plan => plan.routeId === activeRoute.id)) return;
@@ -379,17 +386,40 @@ function App() {
     ${fileExport ? html`<${FileExportDialog} language=${language} file=${fileExport} onClose=${() => setFileExport(null)}/>` : null}
     ${shareUrl ? html`<${PlanningDialog} titleId="share-title" onClose=${() => setShareUrl("")}><header className="dialog-header"><h2 id="share-title">${t("shareHeading")}</h2><button type="button" className="icon-button" onClick=${() => setShareUrl("")} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("shareNote")}</p><label className="share-field"><span>${t("shareHeading")}</span><input data-initial-focus value=${shareUrl} readOnly onFocus=${event => event.target.select()}/></label><button type="button" className="route-show-button" onClick=${async () => { try { await navigator.clipboard.writeText(shareUrl); setActionError("linkCopied"); } catch { setActionError("manualCopy"); } }}>${t("copyLink")}</button>${actionError ? html`<p role="status">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
     ${importPreview ? html`<${PlanningDialog} titleId="import-title" onClose=${() => setImportPreview(null)}><header className="dialog-header"><h2 id="import-title">${t("importHeading")}</h2><button type="button" className="icon-button" onClick=${() => setImportPreview(null)} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("importPreview", { plans: importPreview.plans.length, reports: importPreview.reports.length })}</p>${workspaceState.error ? html`<p className="storage-state">${t(workspaceState.error)}</p>` : null}<div className="plan-actions"><button type="button" className="route-show-button" onClick=${() => setImportPreview(null)}>${t("cancel")}</button><button type="button" className="route-show-button active" onClick=${finishImport}>${t(workspaceState.error === "storageInvalid" ? "recoveryConfirm" : "importConfirm")}</button></div>${actionError ? html`<p className="storage-state" role="alert">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
-    ${showCover ? html`<section className="v2-cover" aria-labelledby="cover-title">
-      <img className="v2-cover-photo" src=${`${COVER_BASE}/vitosha-cover-1800.webp`} srcSet=${`${COVER_BASE}/vitosha-cover-1000.webp 1000w, ${COVER_BASE}/vitosha-cover-1800.webp 1800w`} sizes="100vw" alt=${t("coverPhotoAlt")} decoding="async" fetchpriority="high"/>
-      <div className="v2-cover-top"><span className="v2-cover-brand"><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span>${t("brandTagline")}</span><button type="button" className="v2-chip-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button></div>
-      <div className="v2-cover-body">
-        <h1 id="cover-title">${t("coverTitle")}</h1>
-        <p className="v2-cover-subtitle">${t("coverSubtitle")}</p>
-        <p className="v2-cover-lead">${t("coverLead")}</p>
-        ${dataPhase === "ready" ? html`<p className="v2-cover-stats">${t("coverStats", { peaks: data.peaks.length, huts: data.huts.length, routes: data.hutRoutes.length })}</p>` : null}
-        <button ref=${coverEnterRef} type="button" className="v2-cover-enter" onClick=${() => enterExplorer()}>${t("coverEnter")} →</button>
-        ${dataPhase === "ready" ? html`<div className="v2-cover-peaks"><span>${t("coverStartFrom")}</span>${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).slice(0, 3).map(peak => html`<button type="button" key=${peak.properties.id} onClick=${() => enterExplorer(peak)}>${placeName(peak, language)} <b>${metre(peak.properties.elevation_m)}</b></button>`)}</div>` : null}
+    ${showCover ? html`<section className=${`x-home ${coverSceneFailed ? "scene-failed" : ""}`} aria-labelledby="cover-title">
+      <header className="x-home-header">
+        <span className="x-home-wordmark"><span className="x-home-mark"><${Icon} component=${Mountain} size=${20}/></span>${t("brandName")}</span>
+        <nav aria-label=${t("coverNav")}>
+          <span aria-current="page">${t("coverNavHome")}</span>
+          <button type="button" onClick=${() => enterExplorer()}>${t("coverNavMap")}</button>
+          ${coverPeak ? html`<button type="button" onClick=${() => enterExplorer(coverPeak)}>${placeName(coverPeak, language)}</button>` : null}
+        </nav>
+        <div className="x-home-language" role="group" aria-label=${t("coverLanguage")}>
+          <button type="button" lang="bg" aria-pressed=${language === "bg"} onClick=${() => chooseLanguage("bg")}>BG</button><span aria-hidden="true">/</span><button type="button" lang="en" aria-pressed=${language === "en"} onClick=${() => chooseLanguage("en")}>EN</button>
+        </div>
+      </header>
+      <div className="x-home-hero">
+        ${coverSceneFailed ? html`<img className="x-home-photo" src=${`${COVER_BASE}/vitosha-cover-1800.webp`} srcSet=${`${COVER_BASE}/vitosha-cover-1000.webp 1000w, ${COVER_BASE}/vitosha-cover-1800.webp 1800w`} sizes="(max-width: 760px) 100vw, 64vw" alt=${t("coverPhotoAlt")} decoding="async"/>`
+          : html`<${CoverScene} language=${language} accessToken=${APP_CONFIG.ionAccessToken} enabled=${coverSceneEnabled} onOpen=${() => enterExplorer(coverPeak)} onFail=${() => setCoverSceneFailed(true)}/>`}
+        <div className="x-home-content">
+          <p className="x-home-eyebrow">${t("coverEyebrow")}</p>
+          <h1 id="cover-title">${t("coverTitle").split("\n").map((line, index) => html`${index ? html`<br/>` : null}${line}`)}</h1>
+          <p className="x-home-lead">${t("coverLead")}</p>
+          <div className="x-home-actions">
+            <button ref=${coverEnterRef} type="button" className="primary" onClick=${() => enterExplorer()}>${t("coverEnter")}<span aria-hidden="true">→</span></button>
+            ${coverPeak ? html`<button type="button" className="secondary" onClick=${() => enterExplorer(coverPeak)}>${t("coverToSummit", { peak: placeName(coverPeak, language) })}<span aria-hidden="true">→</span></button>` : null}
+          </div>
+          ${dataPhase === "ready" ? html`<nav className="x-home-suggested" aria-label=${t("coverStartFrom")}><span>${t("coverStartFrom")}</span><ul>${highestPeaks.map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => enterExplorer(peak)}>${placeName(peak, language)}</button></li>`)}</ul></nav>` : null}
+          <dl className="x-home-stats">
+            ${[["coverStatPeaks", data.peaks.length], ["coverStatHuts", data.huts.length], ["coverStatRoutes", data.hutRoutes.length]].map(([key, count]) => html`<div key=${key}><dt>${t(key)}</dt><dd>${dataPhase === "ready" ? formatNumber(count, language, 0) : "…"}</dd></div>`)}
+            <div><dt>${t("coverStatHighest")}</dt><dd>${dataPhase === "ready" && highestPeaks[0] ? metre(highestPeaks[0].properties.elevation_m) : "…"}</dd></div>
+          </dl>
+        </div>
       </div>
+      <footer className="x-home-footer">
+        <span><b>Vitosha Peak Explorer</b><i aria-hidden="true"></i>${t("coverFooterTag")}</span>
+        <span>${t("coverSources")}</span>
+      </footer>
     </section>` : null}
     <input ref=${importInputRef} type="file" accept=".json,application/json" hidden onChange=${importFile} aria-label=${t("importBackup")}/>
 
