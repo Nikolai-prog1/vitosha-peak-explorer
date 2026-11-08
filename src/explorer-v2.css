@@ -1,18 +1,23 @@
 /* Explorer v2: full-bleed map, one task-ordered panel, search-first summit choice. */
 .app-shell.v2 {
-  --paper: #fbfaf6;
-  --paper-2: #f3f1ea;
-  --ink: #1b2620;
-  --ink-2: #36423c;
-  --ink-3: #56625b;
-  --rule: #e3dfd4;
-  --brand: #0f766e;
+  /* X-Alto palette (as on the start page): cream paper, night and navy ink, gold accents. */
+  --x-night: #0a1220;
+  --x-gold: #b8823a;
+  --x-gold-light: #d9b47c;
+  --x-gold-text: #8a5f22;
+  --paper: #f7f6f0;
+  --paper-2: #efede4;
+  --ink: #182029;
+  --ink-2: #2f3a46;
+  --ink-3: #59616a;
+  --rule: #e2dfd4;
+  --brand: #10427a;
   --brand-ink: #ffffff;
-  --brand-soft: #d7f0ec;
+  --brand-soft: #e1e9f3;
   /* Re-map the shared tokens so existing planning/weather/library parts follow the new palette. */
-  --panel: rgba(251, 250, 246, 0.97);
-  --panel-strong: #fbfaf6;
-  --panel-soft: #f3f1ea;
+  --panel: rgba(247, 246, 240, 0.97);
+  --panel-strong: #f7f6f0;
+  --panel-soft: #efede4;
   --text: var(--ink);
   --soft: var(--ink-2);
   --muted: var(--ink-3);
@@ -188,11 +193,11 @@
 .v2-map-controls { justify-items: end; }
 .v2-map-controls .v2-icon { width: 44px; height: 44px; background: var(--paper); border: 0; box-shadow: var(--shadow); }
 .v2-home-button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); font: inherit; font-size: 14px; font-weight: 800; box-shadow: var(--shadow); cursor: pointer; }
-.v2-home-button:hover:not(:disabled) { background: #000; }
+.v2-home-button:hover:not(:disabled) { background: #1b2638; }
 .v2-home-button:disabled { opacity: 0.5; cursor: default; }
 .v2-readout {
   position: fixed; z-index: 15; right: 180px; bottom: 44px; margin: 0; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 600; color: var(--ink-2); background: rgba(251, 250, 246, 0.86); border-radius: 999px; pointer-events: none;
+  font-size: 12px; font-weight: 600; color: var(--ink-2); background: rgba(247, 246, 240, 0.86); border-radius: 999px; pointer-events: none;
 }
 .v2 .connection-status { left: 50%; transform: translateX(-50%); }
 .v2 .action-notice { left: auto; right: 16px; top: 84px; }
@@ -237,6 +242,24 @@
 @media (prefers-reduced-motion: reduce) {
   .v2-panel, .approach-row, .v2-drawer > summary > svg { transition: none; }
 }
+
+/* Explorer in the X-Alto look: a night top bar (brand pill and language chip), serif summit
+   names, gold eyebrows and gold focus rings over the cream panels. */
+.v2 :is(button, a, summary, input, select, textarea):focus-visible { outline: 3px solid var(--x-gold); outline-offset: 2px; }
+.v2-brand { background: var(--x-night); color: #fbfaf5; }
+.v2-brand-mark { background: #f5f4ee; color: var(--x-night); }
+.v2-brand strong { font: 400 19px/1.05 Georgia, "Times New Roman", serif; letter-spacing: .02em; }
+.v2-brand small { color: #a7adb3; }
+.v2-search-field:focus-within { border-color: var(--x-gold); }
+.v2-search-menu li.current { box-shadow: inset 3px 0 0 var(--x-gold); }
+.v2-search-menu li.current span { color: var(--brand); }
+.v2-chip-button { background: var(--x-night); color: #fbfaf5; }
+.v2-sort button[aria-pressed="true"] { background: var(--x-night); border-color: var(--x-night); }
+.v2-hero small { color: var(--x-gold-text); }
+.v2-hero h1 { font: 400 34px/1.05 Georgia, "Times New Roman", serif; letter-spacing: -.02em; }
+.v2-home-button { background: var(--x-night); color: #fbfaf5; }
+.v2-home-button svg { color: var(--x-gold-light); }
+@media (max-width: 900px) { .v2-hero h1 { font-size: 28px; } }
 
 /* Start page after the X-Alto home page: a night page, a live 3D Черни връх on the right that turns
    by itself and by hand, a serif headline, pill buttons and a bracketed row of figures. */
