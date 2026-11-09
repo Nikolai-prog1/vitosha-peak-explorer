@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
-import { routeFacts, profileGeometry, distanceMeters, parsePlanHash, sharedPlanUrl, createGpx, createTextFile, resolveSavedPlan } from "../src/planning.js";
+import { routeFacts, routeDifficulty, profileGeometry, distanceMeters, parsePlanHash, sharedPlanUrl, createGpx, createTextFile, resolveSavedPlan } from "../src/planning.js";
 import { MESSAGES, translate, placeName } from "../src/i18n.js";
 import { weatherDescription, weatherNumber } from "../src/weather.js";
 
@@ -116,4 +116,22 @@ test("all named places and weather descriptions support an English rendered expe
   for (const feature of [...peaks, ...huts]) { assert.equal(/[А-Яа-я]/.test(placeName(feature, "en")), false, feature.properties.id); assert.equal(placeName(feature, "bg").length > 0, true); }
   for (const code of [0, 1, 2, 3, 45, 48, 51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86, 95, 96, 99, 1000]) assert.equal(/[А-Яа-я]/.test(weatherDescription(code, "en").label), false);
   assert.equal(weatherNumber(null, "", 0, "en"), "no data"); assert.equal(weatherNumber(0, "°", 0, "en"), "0°");
+});
+
+test("difficulty is rated 1–5 for routed approaches only and grows with effort and steepness", () => {
+  const levels = new Set();
+  for (const route of routes) {
+    const difficulty = routeDifficulty(routeFacts(route));
+    if (route.properties.geometry_kind === "approximate") { assert.equal(difficulty, null); continue; }
+    assert.equal(Number.isInteger(difficulty.level) && difficulty.level >= 1 && difficulty.level <= 5, true);
+    levels.add(difficulty.level);
+  }
+  assert.equal(levels.size >= 4, true);
+  const flat = distance => ({ distance, ascent: 0, samples: [{ distance: 0, height: 1000 }, { distance, height: 1000 }] });
+  assert.equal(routeDifficulty(flat(2000)).level, 1);
+  assert.equal(routeDifficulty({ ...flat(4000), ascent: 600 }).level, 3);
+  assert.equal(routeDifficulty(flat(20000)).level, 5);
+  const steep = { distance: 1000, ascent: 400, samples: [{ distance: 0, height: 1000 }, { distance: 1000, height: 1400 }] };
+  assert.equal(routeDifficulty(steep).level, 2);
+  assert.equal(routeDifficulty(null), null);
 });

@@ -14,3 +14,4 @@ docs/qa/vitosha-implementation-1440x900.png
 docs/qa/vitosha-implementation-iab-1440x900.png
 *.log
 __pycache__/
+_site/

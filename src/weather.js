@@ -1,4 +1,4 @@
-import { getAppConfig } from "./config.js";
+import { getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { requestJson, withAbort } from "./requests.js?v=vitosha-planning-20261005";
 
 export const WEATHER_TTL_MS = 15 * 60 * 1000;

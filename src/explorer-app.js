@@ -1,23 +1,24 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import htm from "htm";
-import { Activity, ChevronDown, ChevronUp, CircleHelp, CloudSun, Compass, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Target, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=vitosha-camera-20261005-1";
-import { getAppConfig } from "./config.js?v=vitosha-offline-20261005-3";
+import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, TreePine, X } from "@vitosha/icons";
+import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-3";
+import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
-import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-accessibility-20261005-2";
-import { routeFacts, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
+import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-4";
+import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-accessibility-20261005-3";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-accessibility-20261005-2";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-accessibility-20261005-2";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-accessibility-20261005-3";
-import { openModalDialog, isBackdropClick } from "./focus-management.js?v=vitosha-accessibility-20261005-2";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-safety-20261021-1";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-cover-20261108";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-cover-20261108";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-cover-20261108";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-cover-20261108";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-cover-20261108";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-cover-20261108";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
-const ROUTE_COLORS = ["#ff405f", "#ffd166", "#8ae6bf"];
+const COVER_BASE = `${appLocation().publicBase}assets`;
+const ROUTE_COLORS = ["#ff6b2c", "#2f80ed", "#a259ff"];
 const BOOKING_LINKS = {
   "hut-55188093": "https://www.btsbg.org/hizhi/hizha-aleko",
   "hut-266281250": "https://www.btsbg.org/hizhi/hizha-kumata",
@@ -30,6 +31,8 @@ const BOOKING_LINKS = {
 function Icon({ component: Component, size = 17 }) { return html`<${Component} size=${size} strokeWidth=${1.9} aria-hidden="true" />`; }
 function browserStorage() { try { return window.localStorage; } catch { return null; } }
 function formatCoord(value) { return Number(value).toFixed(5); }
+// DAV/Swiss rule of thumb: the larger of horizontal and vertical time plus half the smaller.
+function climbMinutes(km, ascent) { const horizontal = km / 4 * 60, vertical = Math.max(0, ascent) / 300 * 60; return Math.round((Math.max(horizontal, vertical) + Math.min(horizontal, vertical) / 2) / 5) * 5; }
 function hutUrl(props, language) { return BOOKING_LINKS[props.id] || `https://www.google.com/search?q=${encodeURIComponent(props[language === "en" ? "name_en" : "name_bg"] + " hut official website")}`; }
 
 function useExplorerData() {
@@ -39,7 +42,7 @@ function useExplorerData() {
   useEffect(() => {
     const controller = new AbortController();
     setState(current => ({ ...current, phase: "loading", error: null }));
-    const base = document.querySelector("[data-cesium-base]")?.getAttribute("data-cesium-base")?.startsWith("/public/") ? "/public/data" : "/data";
+    const base = `${appLocation().publicBase}data`;
     loadExplorerData({ base, signal: controller.signal })
       .then(data => { if (!controller.signal.aborted) setState({ phase: "ready", data }); })
       .catch(() => { if (!controller.signal.aborted) setState(current => ({ ...current, phase: "error" })); });
@@ -71,6 +74,13 @@ function makeHutMarkerElement(color, active) {
   element.innerHTML = `<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 15.5 17 5l13 10.5v13H4v-13Z" fill="${color}" stroke="#061016" stroke-width="2" stroke-linejoin="round"/><path d="M12 28v-8h10v8" fill="#071218"/><path d="M3 16 17 4l14 12" fill="none" stroke="#fff4c8" stroke-width="2.2" stroke-linecap="round"/></svg>`;
   return element;
 }
+// Pointer coordinates change on every mouse move; keep that state out of App so
+// moving the mouse re-renders only this text, not the whole explorer.
+function PointerCoordinates({ sinkRef }) {
+  const [coords, setCoords] = useState(null);
+  useEffect(() => { sinkRef.current = setCoords; return () => { sinkRef.current = null; }; }, [sinkRef]);
+  return coords ? ` · ${formatCoord(coords.lat)}, ${formatCoord(coords.lon)}` : "";
+}
 function ConnectionStatus({ mapPhase, dataPhase, onRetryData, onRetryMap, offline, language }) {
   if (mapPhase === "ready" && dataPhase === "ready" && !offline) return null;
   const t = (key, values) => translate(language, key, values), failed = mapPhase === "error" || dataPhase === "error";
@@ -84,7 +94,7 @@ function App() {
   const [mapRevision, setMapRevision] = useState(0);
   const retryMap = useCallback(() => setMapRevision(value => value + 1), []);
   const mapNode = useRef(null), mapRef = useRef(null), summitPanelRef = useRef(null), importInputRef = useRef(null);
-  const peakPanelRef = useRef(null), searchRef = useRef(null), pickerRef = useRef(null), minimizedChooserRef = useRef(null), summitHeadingRef = useRef(null);
+  const searchRef = useRef(null), comboRef = useRef(null), summitHeadingRef = useRef(null);
   const noteButtonRef = useRef(null), placementCancelRef = useRef(null);
   const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 900px)").matches);
   const [pendingFocus, setPendingFocus] = useState(null);
@@ -94,16 +104,25 @@ function App() {
   const [language, setLanguage] = useState(() => parsePlanHash(window.location.hash).language || readLanguage(browserStorage()));
   const [selectedPeakId, setSelectedPeakId] = useState(() => parsePlanHash(window.location.hash).peakId || null);
   const [selectedHutId, setSelectedHutId] = useState(null), [query, setQuery] = useState(""), [sortMode, setSortMode] = useState("elevation-desc");
-  const [routeViewMode, setRouteViewMode] = useState("none"), [peakPanelCollapsed, setPeakPanelCollapsed] = useState(false), [chooserOpen, setChooserOpen] = useState(false);
-  const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(false), [weatherExpanded, setWeatherExpanded] = useState(false), [osmHelpOpen, setOsmHelpOpen] = useState(false);
-  const [mapPhase, setMapPhase] = useState("loading"), [mapStatus, setMapStatus] = useState("map3d"), [coords, setCoords] = useState(null);
+  const [comboOpen, setComboOpen] = useState(false), [activeIndex, setActiveIndex] = useState(0);
+  const [routeViewMode, setRouteViewMode] = useState("none"), [sheet, setSheet] = useState("half");
+  const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(false), [weatherExpanded, setWeatherExpanded] = useState(true);
+  const [mapPhase, setMapPhase] = useState("loading"), [mapStatus, setMapStatus] = useState("map3d");
+  const coordsSinkRef = useRef(null);
   const [workspaceState, setWorkspaceState] = useState(() => readWorkspace(browserStorage()));
   const [reportPlacementActive, setReportPlacementActive] = useState(false), [reportDraft, setReportDraft] = useState(null), [activeReportId, setActiveReportId] = useState(null);
   const [notice, setNotice] = useState(""), [actionError, setActionError] = useState(""), [shareUrl, setShareUrl] = useState(""), [importPreview, setImportPreview] = useState(null);
   const [fileExport, setFileExport] = useState(null), [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
+  const [showCover, setShowCover] = useState(() => !parsePlanHash(window.location.hash).peakId);
+  const coverEnterRef = useRef(null), brandRef = useRef(null);
+  const [coverSceneFailed, setCoverSceneFailed] = useState(false);
+  // The cover's own 3D scene needs the same map access as the explorer.
+  const coverSceneEnabled = showCover && !APP_CONFIG.configurationUnavailable && !APP_CONFIG.offlineLaunch && navigator.onLine !== false;
   const t = useCallback((key, values) => translate(language, key, values), [language]);
   const workspace = workspaceState.workspace, trailReports = workspace.reports;
-  const selectedPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === selectedPeakId) || data.peaks[0] || null, [data.peaks, selectedPeakId]);
+  const selectedPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === selectedPeakId) || null, [data.peaks, selectedPeakId]);
+  const coverPeak = useMemo(() => data.peaks.find(peak => peak.properties.id === COVER_SUMMIT.id) || null, [data.peaks]);
+  const highestPeaks = useMemo(() => [...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).slice(0, 6), [data.peaks]);
   const filteredPeaks = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase(language);
     const list = needle ? data.peaks.filter(peak => `${peak.properties.name_bg} ${peak.properties.name_en}`.toLocaleLowerCase(language).includes(needle)) : [...data.peaks];
@@ -114,8 +133,8 @@ function App() {
     return data.hutRoutes.filter(route => route.properties.peak_id === selectedPeak.properties.id)
       .sort((left, right) => left.properties.distance_km - right.properties.distance_km)
       .map((route, rank) => {
-        const hut = data.huts.find(item => item.properties.id === route.properties.hut_id);
-        return hut ? { id: route.properties.id, feature: hut, routeFeature: route, rank, path: route.geometry.coordinates[0], routeKm: route.properties.distance_km, trailNodeCount: route.properties.trail_node_count, source: route.properties.source, facts: routeFacts(route) } : null;
+        const hut = data.huts.find(item => item.properties.id === route.properties.hut_id), facts = routeFacts(route);
+        return hut ? { id: route.properties.id, feature: hut, routeFeature: route, rank, path: route.geometry.coordinates[0], routeKm: route.properties.distance_km, trailNodeCount: route.properties.trail_node_count, source: route.properties.source, facts, difficulty: routeDifficulty(facts) } : null;
       }).filter(Boolean);
   }, [data.hutRoutes, data.huts, selectedPeak]);
   const activeHutId = routeOptions.some(entry => entry.feature.properties.id === selectedHutId) ? selectedHutId : null;
@@ -127,29 +146,45 @@ function App() {
   const resetView = useCallback(() => { mapRef.current?.resetView(); setMapStatus("map3d"); }, []);
   const focusPeak = useCallback((peak, close = false) => { if (!mapRef.current || !peak) return; mapRef.current.focusPeak(peak, close); setMapStatus(close ? "summitFocused" : "selectedSummit"); }, []);
   const focusRouteCandidates = useCallback((candidates, summit = selectedPeak) => { const entries = Array.isArray(candidates) ? candidates : [candidates]; mapRef.current?.focusRoutes(entries, summit); setMapStatus(entries.length > 1 ? "routesAll" : "routeShown"); }, [selectedPeak]);
-  const selectPeak = useCallback(peak => { setSelectedPeakId(peak.properties.id); setSelectedHutId(null); setRouteViewMode("none"); setChooserOpen(false); if (summitPanelRef.current) summitPanelRef.current.scrollTop = 0; focusPeak(peak); }, [focusPeak]);
+  const selectPeak = useCallback(peak => { setSelectedPeakId(peak.properties.id); setSelectedHutId(null); setRouteViewMode("none"); setDetailsPanelCollapsed(false); setSheet(current => current === "peek" ? "half" : current); if (summitPanelRef.current) summitPanelRef.current.scrollTop = 0; focusPeak(peak); }, [focusPeak]);
   const selectRoute = useCallback(candidate => { setSelectedHutId(candidate.feature.properties.id); setRouteViewMode("single"); focusRouteCandidates(candidate); }, [focusRouteCandidates]);
-  const openChooser = () => { setPeakPanelCollapsed(false); if (isMobile) setChooserOpen(true); else setPendingFocus("search"); };
-  const closeChooser = () => { if (isMobile) setChooserOpen(false); else { setPeakPanelCollapsed(true); setPendingFocus("minimized-chooser"); } };
-  const skipToDetails = event => { event.preventDefault(); setDetailsPanelCollapsed(false); setPendingFocus("details"); };
-  const cancelNotePlacement = useCallback(() => { reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setPendingFocus("note"); }, []);
-  const ChooserPanel = isMobile ? "dialog" : "section";
+  const pickFromCombo = peak => { selectPeak(peak); setQuery(""); setComboOpen(false); searchRef.current?.blur(); };
+  const comboKey = event => {
+    if (event.key === "ArrowDown") { event.preventDefault(); setComboOpen(true); setActiveIndex(index => Math.min(index + 1, filteredPeaks.length - 1)); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); setActiveIndex(index => Math.max(index - 1, 0)); }
+    else if (event.key === "Enter" && filteredPeaks[activeIndex]) { event.preventDefault(); pickFromCombo(filteredPeaks[activeIndex]); }
+    else if (event.key === "Escape" && comboOpen) { event.preventDefault(); setComboOpen(false); }
+  };
+  const openChooser = () => { setComboOpen(true); setPendingFocus("search"); };
+  const skipToDetails = event => { event.preventDefault(); setDetailsPanelCollapsed(false); setSheet(current => current === "peek" ? "half" : current); setPendingFocus("details"); };
+  const cancelNotePlacement = useCallback(() => { reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setSheet("half"); setPendingFocus("note"); }, []);
+  const clearSelection = useCallback(() => { setSelectedPeakId(null); setSelectedHutId(null); setRouteViewMode("none"); setDetailsPanelCollapsed(false); if (summitPanelRef.current) summitPanelRef.current.scrollTop = 0; resetView(); }, [resetView]);
+  const enterExplorer = (peak = null) => { setShowCover(false); setPendingFocus("details"); if (peak) selectPeak(peak); else if (!selectedPeak) setSheet("half"); };
+  const cycleSheet = () => setSheet(current => current === "peek" ? "half" : current === "half" ? "full" : "peek");
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 900px)");
-    const changed = () => { setIsMobile(media.matches); if (!media.matches) setChooserOpen(false); };
+    const changed = () => setIsMobile(media.matches);
     changed(); media.addEventListener("change", changed);
     return () => media.removeEventListener("change", changed);
   }, []);
-  useLayoutEffect(() => {
-    if (!isMobile || !chooserOpen) return undefined;
-    return openModalDialog(peakPanelRef.current, { initialFocus: () => searchRef.current, onClose: () => setChooserOpen(false), returnFocus: () => pickerRef.current?.getClientRects().length ? pickerRef.current : searchRef.current || minimizedChooserRef.current });
-  }, [isMobile, chooserOpen]);
+  useEffect(() => {
+    if (!comboOpen) return undefined;
+    const outside = event => { if (!comboRef.current?.contains(event.target)) setComboOpen(false); };
+    document.addEventListener("pointerdown", outside); return () => document.removeEventListener("pointerdown", outside);
+  }, [comboOpen]);
+  useEffect(() => { document.getElementById(`peak-option-${activeIndex}`)?.scrollIntoView({ block: "nearest" }); }, [activeIndex, comboOpen]);
+  useLayoutEffect(() => { if (showCover) coverEnterRef.current?.focus(); }, [showCover]);
+  useEffect(() => {
+    if (!showCover) return undefined;
+    const leave = event => { if (event.key === "Escape") { event.preventDefault(); setShowCover(false); setPendingFocus("details"); } };
+    window.addEventListener("keydown", leave); return () => window.removeEventListener("keydown", leave);
+  }, [showCover]);
   useLayoutEffect(() => {
     if (!pendingFocus) return;
-    const target = pendingFocus === "details" ? summitHeadingRef.current || summitPanelRef.current : pendingFocus === "minimized-chooser" ? minimizedChooserRef.current : pendingFocus === "note" ? noteButtonRef.current : searchRef.current;
+    const target = pendingFocus === "details" ? summitHeadingRef.current || summitPanelRef.current : pendingFocus === "note" ? noteButtonRef.current : searchRef.current;
     target?.focus(); setPendingFocus(null);
-  }, [pendingFocus, peakPanelCollapsed, detailsPanelCollapsed, isMobile]);
+  }, [pendingFocus, detailsPanelCollapsed, sheet, isMobile]);
 
   useEffect(() => {
     document.documentElement.lang = language; document.title = t("appTitle"); document.querySelector('meta[name="description"]')?.setAttribute("content", t("appDescription"));
@@ -172,7 +207,7 @@ function App() {
       const peak = data.peaks.find(item => item.properties.id === plan.peakId);
       const route = data.hutRoutes.find(item => item.properties.id === plan.routeId);
       if (plan.invalid || (plan.peakId && !peak) || (plan.routeId && !route)) setNotice("invalidSharedPlan");
-      setSelectedPeakId(peak?.properties.id || data.peaks[0]?.properties.id || null);
+      setSelectedPeakId(peak?.properties.id || null);
       setSelectedHutId(route && peak ? route.properties.hut_id : null); setRouteViewMode(route && peak ? "single" : "none");
       if (plan.language) setLanguage(plan.language);
       if (mapRef.current && route && peak) focusRouteCandidates({ path: route.geometry.coordinates[0], routeFeature: route, feature: data.huts.find(hut => hut.properties.id === route.properties.hut_id) }, peak);
@@ -182,7 +217,8 @@ function App() {
     window.addEventListener("hashchange", applyLink); return () => window.removeEventListener("hashchange", applyLink);
   }, [dataPhase, data.peaks, data.huts, data.hutRoutes, focusPeak, focusRouteCandidates]);
   useEffect(() => {
-    if (dataPhase !== "ready" || !selectedPeak || !initialLinkChecked.current) return;
+    if (dataPhase !== "ready" || !initialLinkChecked.current) return;
+    if (!selectedPeak) { window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`); return; }
     const url = sharedPlanUrl(window.location.href, selectedPeak.properties.id, activeRoute?.id, language);
     window.history.replaceState(null, "", url);
   }, [dataPhase, selectedPeak, activeRoute?.id, language]);
@@ -192,9 +228,9 @@ function App() {
     if (APP_CONFIG.offlineLaunch || (navigator.onLine === false && mapRevision === 0)) { setMapPhase("offline"); setMapStatus("offlinePlanning"); return undefined; }
     initialCameraFramed.current = false; setMapPhase("loading");
     let cancelled = false; const controller = new AbortController();
-    createCesiumMap(mapNode.current, APP_CONFIG.ionAccessToken, { signal: controller.signal, onMove: setCoords, onClick: point => {
+    createCesiumMap(mapNode.current, APP_CONFIG.ionAccessToken, { signal: controller.signal, onMove: point => coordsSinkRef.current?.(point), onClick: point => {
       if (!reportPlacementActiveRef.current) return;
-      reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setActionError("");
+      reportPlacementActiveRef.current = false; setReportPlacementActive(false); setDetailsPanelCollapsed(false); setSheet("half"); setActionError("");
       setReportDraft({ longitude: point.lon, latitude: point.lat, severity: "blocked", note: "" }); setMapStatus("reportDescribe");
     } }).then(map => { if (cancelled) { map.destroy(); return; } mapRef.current = map; setMapPhase("ready"); setMapStatus("map3d"); })
       .catch(() => { if (!cancelled) { setMapPhase("error"); setMapStatus("mapUnavailable"); } });
@@ -205,10 +241,10 @@ function App() {
     initialCameraFramed.current = true;
     mapRef.current.setOverview(data.peaks);
     if (activeRoute) focusRouteCandidates(activeRoute);
-    else if (selectedPeak && selectedPeak.properties.id !== data.peaks[0]?.properties.id) focusPeak(selectedPeak);
+    else if (selectedPeak) focusPeak(selectedPeak);
     else mapRef.current.resetView(0);
   }, [mapPhase, dataPhase, activeRoute, selectedPeak, data.peaks, focusPeak, focusRouteCandidates]);
-  useEffect(() => { if (mapPhase === "ready") mapRef.current?.refreshLayout(); }, [mapPhase, peakPanelCollapsed, detailsPanelCollapsed, chooserOpen, language]);
+  useEffect(() => { if (mapPhase === "ready") mapRef.current?.refreshLayout(); }, [mapPhase, detailsPanelCollapsed, sheet, language]);
   useEffect(() => {
     const map = mapRef.current; if (!map || mapPhase !== "ready") return;
     clearMarkers(peakMarkersRef);
@@ -259,6 +295,7 @@ function App() {
     try { setWorkspaceState(commitWorkspace(browserStorage(), next, workspaceState, { recover })); setActionError(""); return true; }
     catch (error) { const code = error.code || "storageUnavailable"; setNotice(code); setActionError(code); return false; }
   }, [workspaceState]);
+  const chooseLanguage = next => { if (next === language) return; setLanguage(next); if (!writeLanguage(browserStorage(), next)) setNotice("storageUnavailable"); };
   const switchLanguage = () => { const next = language === "bg" ? "en" : "bg"; setLanguage(next); if (!writeLanguage(browserStorage(), next)) setNotice("storageUnavailable"); };
   const savePlan = useCallback(() => {
     if (!activeRoute || !selectedPeak || workspace.plans.some(plan => plan.routeId === activeRoute.id)) return;
@@ -267,7 +304,7 @@ function App() {
   }, [activeRoute, selectedPeak, workspace, persistWorkspace]);
   const openPlan = useCallback(plan => {
     const selection = resolveSavedPlan(data, plan); if (!selection) { setNotice("invalidSharedPlan"); return; }
-    setSelectedPeakId(selection.peak.properties.id); setSelectedHutId(selection.candidate.feature.properties.id); setRouteViewMode("single"); setChooserOpen(false); setDetailsPanelCollapsed(false);
+    setSelectedPeakId(selection.peak.properties.id); setSelectedHutId(selection.candidate.feature.properties.id); setRouteViewMode("single"); setDetailsPanelCollapsed(false);
     focusRouteCandidates(selection.candidate, selection.peak);
   }, [data.hutRoutes, data.peaks, data.huts, focusRouteCandidates]);
   const removePlan = useCallback(id => { if (persistWorkspace({ ...workspace, plans: workspace.plans.filter(plan => plan.routeId !== id) })) setNotice("planRemoved"); }, [workspace, persistWorkspace]);
@@ -284,7 +321,7 @@ function App() {
   const exportOriginal = useCallback(() => setFileExport({ kind: "original", content: workspaceState.raw ?? workspaceState.legacyRaw ?? "", filename: "vitosha-unreadable-original.json", type: "text/plain" }), [workspaceState]);
   const startImport = useCallback(() => importInputRef.current?.click(), []);
   const reloadLocal = useCallback(() => { setWorkspaceState(readWorkspace(browserStorage())); setActionError(""); setNotice(""); }, []);
-  const addNote = useCallback(() => { if (mapPhase !== "ready") { setNotice("mapRequiredForNote"); return; } setDetailsPanelCollapsed(true); setActionError(""); reportPlacementActiveRef.current = true; setReportPlacementActive(true); }, [mapPhase]);
+  const addNote = useCallback(() => { if (mapPhase !== "ready") { setNotice("mapRequiredForNote"); return; } setDetailsPanelCollapsed(true); setSheet("peek"); setActionError(""); reportPlacementActiveRef.current = true; setReportPlacementActive(true); }, [mapPhase]);
   const addCoordinateNote = useCallback(() => { reportPlacementActiveRef.current = false; setReportPlacementActive(false); setActionError(""); setReportDraft({ manualCoordinates: true, longitude: "", latitude: "", severity: "blocked", note: "" }); }, []);
   const openNote = useCallback(id => { setActionError(""); setActiveReportId(id); }, []);
   const saveNote = event => {
@@ -306,40 +343,127 @@ function App() {
     catch { setActionError("invalidBackup"); }
   };
   const metre = value => Number.isFinite(value) ? `${formatNumber(value, language, 0)} ${t("metreUnit")}` : "—";
+  const km = value => `${formatNumber(value, language)} ${t("kilometreUnit")}`;
+  const duration = minutes => minutes >= 60 ? t("durationHm", { h: Math.floor(minutes / 60), m: String(minutes % 60).padStart(2, "0") }) : t("durationM", { m: minutes });
   const status = t(dataPhase === "ready" ? "dataReady" : dataPhase === "error" ? "dataError" : "dataLoading");
-  const languageButton = html`<button type="button" className="icon-button language-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button>`;
+  const nearest = routeOptions[0];
+  const panelOpen = isMobile || !detailsPanelCollapsed;
+  const toggleAllRoutes = () => { if (routeViewMode === "all") { setRouteViewMode("none"); setSelectedHutId(null); } else { setSelectedHutId(null); setRouteViewMode("all"); focusRouteCandidates(routeCandidates); } };
 
-  return html`<main className="app-shell"><div className="app-content">
-    <nav className="skip-navigation surface" aria-label=${t("quickNavigation")}><a href="#peak-chooser-panel" onClick=${event => { event.preventDefault(); openChooser(); }}>${t("skipToSummits")}</a><a href="#summit-details" onClick=${skipToDetails}>${t("skipToDetails")}</a></nav>
+  const difficultyBadge = difficulty => difficulty
+    ? html`<span className="approach-difficulty" data-level=${difficulty.level} role="img" aria-label=${t("difficultyAria", { level: difficulty.level, label: t(`difficulty${difficulty.level}`) })} title=${t("difficultyTitle", { label: t(`difficulty${difficulty.level}`), effort: formatNumber(difficulty.effortKm, language), grade: difficulty.steepestGrade })}>
+        <span className="difficulty-meter" aria-hidden="true">${[1, 2, 3, 4, 5].map(step => html`<i key=${step} className=${step <= difficulty.level ? "on" : ""}></i>`)}</span>
+        <b aria-hidden="true">${difficulty.level}<small>/5</small></b><small aria-hidden="true">${t("difficultyShort")}</small>
+      </span>`
+    : html`<span className="approach-difficulty none" title=${t("difficultyNone")} aria-label=${t("difficultyNone")} role="img"><b aria-hidden="true">—</b><small aria-hidden="true">${t("difficultyShort")}</small></span>`;
+  const approachRows = routeCandidates.map(candidate => {
+    const props = candidate.feature.properties, approximate = candidate.routeFeature.properties.geometry_kind === "approximate", facts = candidate.facts;
+    return html`<li key=${props.id} className=${`approach-row ${candidate.active ? "active" : ""} ${approximate ? "approximate" : ""}`} style=${{ "--route": ROUTE_COLORS[candidate.rank] }}>
+      <button type="button" className="approach-select" aria-pressed=${candidate.active} onClick=${() => selectRoute(candidate)}>
+        <span className="approach-head">
+          <span className="approach-name"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${t(approximate ? "sketchShort" : "routedShort")}</small></span>
+          ${difficultyBadge(candidate.difficulty)}
+        </span>
+        <span className="approach-stats">
+          <span><b>${km(candidate.routeKm)}</b><small>${t("distanceShort")}</small></span>
+          <span><b>${facts ? `↑ ${metre(facts.ascent)}` : "—"}</b><small>${t("climbShort")}</small></span>
+          <span><b>${facts ? duration(climbMinutes(candidate.routeKm, facts.ascent)) : "—"}</b><small>${t("timeShort")}</small></span>
+        </span>
+      </button>
+      <a className="approach-link" href=${hutUrl(props, language)} target="_blank" rel="noopener noreferrer">${t(BOOKING_LINKS[props.id] ? "hutWebsite" : "hutSearch")}<${Icon} component=${ExternalLink} size=${12}/></a>
+    </li>`;
+  });
+
+  return html`<main className="app-shell v2"><div className="app-content">
+    <nav className="skip-navigation surface" inert=${showCover} aria-label=${t("quickNavigation")}><a href="#peak-search" onClick=${event => { event.preventDefault(); openChooser(); }}>${t("skipToSummits")}</a><a href="#summit-details" onClick=${skipToDetails}>${t("skipToDetails")}</a></nav>
     <p className="sr-only" role="status" aria-atomic="true">${selectedPeak ? activeRoute ? t("approachAnnouncement", { hut: placeName(activeRoute.feature, language), peak: placeName(selectedPeak, language) }) : t("selectionAnnouncement", { peak: placeName(selectedPeak, language) }) : ""}</p>
     <div ref=${mapNode} className=${`map-canvas ${reportPlacementActive ? "is-reporting" : ""}`} role="region" aria-label=${t("mapRegion")} aria-busy=${mapPhase === "loading"}></div>
     <${ConnectionStatus} mapPhase=${mapPhase} dataPhase=${dataPhase} onRetryData=${retryData} onRetryMap=${retryMap} offline=${offlineState.offline} language=${language} />
     ${notice ? html`<div className="action-notice surface" role="status" aria-live="polite"><span>${t(notice)}</span><button type="button" className="icon-button" aria-label=${t("close")} onClick=${() => setNotice("")}><${Icon} component=${X} size=${16}/></button></div>` : null}
     ${reportPlacementActive ? html`<div className="trail-report-placement" role="status"><${Icon} component=${TreePine} size=${20}/><span><strong>${t("reportPlacement")}</strong><small>${t("reportPlacementHint")}</small></span><button ref=${placementCancelRef} type="button" onClick=${cancelNotePlacement} aria-label=${t("cancel")}><${Icon} component=${X} size=${18}/></button></div>` : null}
     ${reportDraft || activeTrailReport ? html`<${ReportDialog} language=${language} draft=${reportDraft} report=${activeTrailReport} onClose=${closeNote} returnFocus=${() => noteButtonRef.current} onDraftChange=${setReportDraft} onSave=${saveNote} onUpdate=${updateNote} error=${actionError}/>` : null}
-    ${disclaimerAccepted ? null : html`<${SafetyDisclaimer} onAccept=${() => setDisclaimerAccepted(true)}/>`}
+    ${disclaimerAccepted || showCover ? null : html`<${SafetyDisclaimer} onAccept=${() => setDisclaimerAccepted(true)} returnFocus=${() => summitPanelRef.current}/>`}
     ${fileExport ? html`<${FileExportDialog} language=${language} file=${fileExport} onClose=${() => setFileExport(null)}/>` : null}
     ${shareUrl ? html`<${PlanningDialog} titleId="share-title" onClose=${() => setShareUrl("")}><header className="dialog-header"><h2 id="share-title">${t("shareHeading")}</h2><button type="button" className="icon-button" onClick=${() => setShareUrl("")} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("shareNote")}</p><label className="share-field"><span>${t("shareHeading")}</span><input data-initial-focus value=${shareUrl} readOnly onFocus=${event => event.target.select()}/></label><button type="button" className="route-show-button" onClick=${async () => { try { await navigator.clipboard.writeText(shareUrl); setActionError("linkCopied"); } catch { setActionError("manualCopy"); } }}>${t("copyLink")}</button>${actionError ? html`<p role="status">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
     ${importPreview ? html`<${PlanningDialog} titleId="import-title" onClose=${() => setImportPreview(null)}><header className="dialog-header"><h2 id="import-title">${t("importHeading")}</h2><button type="button" className="icon-button" onClick=${() => setImportPreview(null)} aria-label=${t("close")}><${Icon} component=${X}/></button></header><p>${t("importPreview", { plans: importPreview.plans.length, reports: importPreview.reports.length })}</p>${workspaceState.error ? html`<p className="storage-state">${t(workspaceState.error)}</p>` : null}<div className="plan-actions"><button type="button" className="route-show-button" onClick=${() => setImportPreview(null)}>${t("cancel")}</button><button type="button" className="route-show-button active" onClick=${finishImport}>${t(workspaceState.error === "storageInvalid" ? "recoveryConfirm" : "importConfirm")}</button></div>${actionError ? html`<p className="storage-state" role="alert">${t(actionError)}</p>` : null}</${PlanningDialog}>` : null}
-    <input ref=${importInputRef} type="file" accept=".json,application/json" hidden onChange=${importFile} aria-label=${t("importBackup")}/>
-    <div className="mobile-command surface"><button ref=${pickerRef} type="button" className="summit-picker" onClick=${openChooser} aria-label=${t("chooseSummit")} aria-haspopup="dialog" aria-expanded=${chooserOpen} aria-controls="peak-chooser-panel"><${Icon} component=${Mountain} size=${20}/><span><small>${t("selectedSummit")}</small><strong>${selectedPeak ? placeName(selectedPeak, language) : t("chooseSummit")}</strong></span>${selectedPeak ? html`<b>${metre(selectedPeak.properties.elevation_m)}</b>` : null}<${Icon} component=${ChevronDown} size=${17}/></button>${languageButton}<button type="button" className="icon-button" title=${t("resetView")} disabled=${mapPhase !== "ready"} onClick=${resetView}><${Icon} component=${RotateCcw}/></button></div>
-    <${ChooserPanel} ref=${peakPanelRef} id="peak-chooser-panel" className=${`peak-panel surface ${peakPanelCollapsed && !isMobile ? "collapsed" : ""} ${isMobile && chooserOpen ? "chooser-open" : ""}`} aria-label=${t("chooseSummit")} tabIndex="-1" onClick=${event => { if (isMobile && isBackdropClick(event)) setChooserOpen(false); }}>
-      ${peakPanelCollapsed && !isMobile ? html`<button ref=${minimizedChooserRef} type="button" className="minimized-chip" onClick=${openChooser} title=${t("chooseSummit")} aria-label=${t("chooseSummit")} aria-expanded="false" aria-controls="peak-chooser-panel"><${Icon} component=${Mountain} size=${16}/><span>${t("summit")}</span><${Icon} component=${ChevronDown} size=${16}/></button>` : html`<header className="panel-header"><div><span>${t("appTitle")}</span><strong>${t("chooseSummit")}</strong></div><div className="panel-actions"><button type="button" className="icon-button" title=${t(isMobile ? "closeChooser" : "minimizeChooser")} aria-label=${t(isMobile ? "closeChooser" : "minimizeChooser")} aria-expanded=${isMobile ? undefined : true} aria-controls=${isMobile ? undefined : "peak-chooser-panel"} onClick=${closeChooser}><${Icon} component=${ChevronUp}/></button><button type="button" className="icon-button" title=${t("resetView")} disabled=${mapPhase !== "ready"} onClick=${resetView}><${Icon} component=${RotateCcw}/></button></div></header><label className="search-box"><${Icon} component=${Search} size=${16}/><input ref=${searchRef} value=${query} onInput=${event => setQuery(event.target.value)} placeholder=${t("findSummit")} aria-label=${t("searchSummit")} aria-describedby="peak-search-results"/></label><p id="peak-search-results" className="sr-only" role="status" aria-atomic="true">${dataPhase === "ready" ? t("matchingSummits", { count: filteredPeaks.length }) : t("dataLoading")}</p><div className="sort-row" role="group" aria-label=${t("sortSummits")}><button type="button" aria-pressed=${sortMode === "elevation-desc"} className=${sortMode === "elevation-desc" ? "active" : ""} onClick=${() => setSortMode("elevation-desc")}>${t("elevation")}</button><button type="button" aria-pressed=${sortMode === "name"} className=${sortMode === "name" ? "active" : ""} onClick=${() => setSortMode("name")}>${t("alphabetical")}</button></div><div className="peak-list" aria-busy=${dataPhase === "loading"}>${dataPhase === "ready" && !filteredPeaks.length ? html`<p className="empty-state">${t("noSummits")}<br/>${t("searchHint")}</p>` : null}${filteredPeaks.map(peak => html`<button type="button" className=${`peak-row ${peak.properties.id === selectedPeak?.properties.id ? "selected" : ""}`} aria-pressed=${peak.properties.id === selectedPeak?.properties.id} key=${peak.properties.id} onClick=${() => selectPeak(peak)} title=${peak.properties[language === "bg" ? "name_en" : "name_bg"]}><span className="summit-mark"><${Icon} component=${Mountain} size=${14}/></span><span className="peak-copy"><strong>${placeName(peak, language)}</strong></span><span className="height">${metre(peak.properties.elevation_m)}</span></button>`)}</div>`}
-    </${ChooserPanel}>
-    <section ref=${summitPanelRef} id="summit-details" tabIndex="-1" className=${`summit-panel surface ${detailsPanelCollapsed ? "collapsed" : ""}`} aria-label=${t("details")}>
-      <div className="summit-head"><span><${Icon} component=${Target} size=${15}/> ${t("details")}</span><div className="panel-actions">${languageButton}<button type="button" className="icon-button" title=${t(detailsPanelCollapsed ? "expandDetails" : "minimizeDetails")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronUp : ChevronDown}/></button><i></i></div></div>
-      <div id="summit-content" hidden=${detailsPanelCollapsed}>
-      ${selectedPeak ? html`<h1 ref=${summitHeadingRef} tabIndex="-1">${placeName(selectedPeak, language)}</h1><h2>${t("location")}</h2><div className="metric-grid"><div><span>${t("altitude")}</span><strong>${metre(selectedPeak.properties.elevation_m)}</strong></div><div><span>${t("dataSource")}</span><strong>OpenStreetMap</strong></div><div><span>${t("latitude")}</span><strong>${formatCoord(selectedPeak.geometry.coordinates[1])}</strong></div><div><span>${t("longitude")}</span><strong>${formatCoord(selectedPeak.geometry.coordinates[0])}</strong></div></div><button type="button" className="fly-button" disabled=${mapPhase !== "ready"} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed} size=${19}/> ${t("zoomSummit")}</button><div className="source-block"><span>${t("source")}</span><strong>${t("osmNode", { id: selectedPeak.properties.osm_id })}</strong><small>${t("peakSourceNote")}</small></div>
-      <section className="weather-section" aria-label=${t("weather")}><button type="button" className="weather-toggle" aria-expanded=${weatherExpanded} aria-controls="summit-weather" onClick=${() => setWeatherExpanded(open => !open)}><span><${Icon} component=${CloudSun} size=${18}/>${t("weather")}</span><${Icon} component=${weatherExpanded ? ChevronUp : ChevronDown} size=${16}/></button><div id="summit-weather"><${SummitWeather} key=${selectedPeak.properties.id} peak=${selectedPeak} active=${weatherExpanded && !detailsPanelCollapsed} offline=${offlineState.offline} configurationUnavailable=${APP_CONFIG.configurationUnavailable} language=${language} evaluation=${APP_CONFIG.evaluation}/></div></section>
-      <div className="hut-block"><div className="hut-title"><span><${Icon} component=${MapPinned} size=${15}/> ${t("approaches")}</span><div className="hut-title-actions"><strong>${routeViewMode === "all" ? t("approachCount", { count: routeCandidates.length }) : activeRoute ? `~${formatNumber(activeRoute.routeKm, language)} ${t("kilometreUnit")}` : t("hidden")}</strong><button type="button" className=${`route-show-button ${routeViewMode === "all" ? "active" : ""}`} aria-pressed=${routeViewMode === "all"} disabled=${!routeCandidates.length || mapPhase !== "ready"} onClick=${() => { if (routeViewMode === "all") { setRouteViewMode("none"); setSelectedHutId(null); } else { setSelectedHutId(null); setRouteViewMode("all"); focusRouteCandidates(routeCandidates); } }}>${t(routeViewMode === "all" ? "hideRoutes" : "showAll")}</button></div></div>
-      <div className="hut-list">${routeCandidates.map(candidate => { const props = candidate.feature.properties, approximate = candidate.routeFeature.properties.geometry_kind === "approximate"; return html`<div key=${props.id} className=${`hut-row ${candidate.active ? "active" : ""} ${approximate ? "approximate" : ""}`}><button type="button" className="hut-select" aria-pressed=${candidate.active} onClick=${() => selectRoute(candidate)}><span className="route-color" style=${{ background: ROUTE_COLORS[candidate.rank] }}></span><span className="hut-copy"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${candidate.facts ? `↑ ${metre(candidate.facts.ascent)}` : t("geometryPoints", { count: candidate.trailNodeCount })}</small></span><span className="route-meta"><small>${t(approximate ? "approachLength" : "toSummit")}</small><b>${formatNumber(candidate.routeKm, language)} ${t("kilometreUnit")}</b><small>${t(approximate ? "approximate" : "routed")}</small></span></button><button type="button" className=${`route-show-button ${candidate.active ? "active" : ""}`} onClick=${() => selectRoute(candidate)}>${t(mapPhase === "ready" ? candidate.active ? "shown" : "show" : candidate.active ? "selectedApproach" : "selectApproach")}</button><a className="booking-link" href=${hutUrl(props, language)} target="_blank" rel="noopener noreferrer">${t(BOOKING_LINKS[props.id] ? "hutWebsite" : "hutSearch")}<${Icon} component=${ExternalLink} size=${12}/></a></div>`; })}</div>
-      <div id="route-help" className="osm-help" hidden=${!osmHelpOpen}><strong>${t("routeHelpTitle")}</strong><span>${t("routeHelpText")}</span><small>${t("planningWarning")}</small></div><div className="route-source"><span><${Icon} component=${Navigation} size=${14}/> ${t("routeSelectionNote")}</span><button type="button" className="osm-help-button" aria-expanded=${osmHelpOpen} aria-controls="route-help" onClick=${() => setOsmHelpOpen(open => !open)}><${Icon} component=${CircleHelp} size=${13}/> ${t("routeHelp")}</button></div></div>
-      <${ApproachPlanner} language=${language} peak=${selectedPeak} route=${activeRoute} saved=${workspace.plans.some(plan => plan.routeId === activeRoute?.id)} onSave=${savePlan} onShare=${sharePlan} onGpx=${exportGpx}/>` : html`<p>${t("chooseSummit")}</p>`}
-      <${PersonalLibrary} language=${language} workspaceState=${workspaceState} data=${data} mapReady=${mapPhase === "ready"} noteButtonRef=${noteButtonRef} onOpenPlan=${openPlan} onRemovePlan=${removePlan} onExport=${exportBackup} onImport=${startImport} onReload=${reloadLocal} onOriginal=${exportOriginal} onAddNote=${addNote} onCoordinateNote=${addCoordinateNote} onOpenNote=${openNote}/>
-      <${OfflineFactsPanel} language=${language} state=${offlineState} quality=${data.quality}/>
+    ${showCover ? html`<section className=${`x-home ${coverSceneFailed ? "scene-failed" : ""}`} aria-labelledby="cover-title">
+      <header className="x-home-header">
+        <span className="x-home-wordmark"><span className="x-home-mark"><${Icon} component=${Mountain} size=${20}/></span>${t("brandName")}</span>
+        <nav aria-label=${t("coverNav")}>
+          <span aria-current="page">${t("coverNavHome")}</span>
+          <button type="button" onClick=${() => enterExplorer()}>${t("coverNavMap")}</button>
+          ${coverPeak ? html`<button type="button" onClick=${() => enterExplorer(coverPeak)}>${placeName(coverPeak, language)}</button>` : null}
+        </nav>
+        <div className="x-home-language" role="group" aria-label=${t("coverLanguage")}>
+          <button type="button" lang="bg" aria-pressed=${language === "bg"} onClick=${() => chooseLanguage("bg")}>BG</button><span aria-hidden="true">/</span><button type="button" lang="en" aria-pressed=${language === "en"} onClick=${() => chooseLanguage("en")}>EN</button>
+        </div>
+      </header>
+      <div className="x-home-hero">
+        ${coverSceneFailed ? html`<img className="x-home-photo" src=${`${COVER_BASE}/vitosha-cover-1800.webp`} srcSet=${`${COVER_BASE}/vitosha-cover-1000.webp 1000w, ${COVER_BASE}/vitosha-cover-1800.webp 1800w`} sizes="(max-width: 760px) 100vw, 64vw" alt=${t("coverPhotoAlt")} decoding="async"/>`
+          : html`<${CoverScene} language=${language} accessToken=${APP_CONFIG.ionAccessToken} enabled=${coverSceneEnabled} onOpen=${() => enterExplorer(coverPeak)} onFail=${() => setCoverSceneFailed(true)}/>`}
+        <div className="x-home-content">
+          <p className="x-home-eyebrow">${t("coverEyebrow")}</p>
+          <h1 id="cover-title">${t("coverTitle").split("\n").map((line, index) => html`${index ? html`<br/>` : null}${line}`)}</h1>
+          <p className="x-home-lead">${t("coverLead")}</p>
+          <div className="x-home-actions">
+            <button ref=${coverEnterRef} type="button" className="primary" onClick=${() => enterExplorer()}>${t("coverEnter")}<span aria-hidden="true">→</span></button>
+            ${coverPeak ? html`<button type="button" className="secondary" onClick=${() => enterExplorer(coverPeak)}>${t("coverToSummit", { peak: placeName(coverPeak, language) })}<span aria-hidden="true">→</span></button>` : null}
+          </div>
+          ${dataPhase === "ready" ? html`<nav className="x-home-suggested" aria-label=${t("coverStartFrom")}><span>${t("coverStartFrom")}</span><ul>${highestPeaks.map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => enterExplorer(peak)}>${placeName(peak, language)}</button></li>`)}</ul></nav>` : null}
+          <dl className="x-home-stats">
+            ${[["coverStatPeaks", data.peaks.length], ["coverStatHuts", data.huts.length], ["coverStatRoutes", data.hutRoutes.length]].map(([key, count]) => html`<div key=${key}><dt>${t(key)}</dt><dd>${dataPhase === "ready" ? formatNumber(count, language, 0) : "…"}</dd></div>`)}
+            <div><dt>${t("coverStatHighest")}</dt><dd>${dataPhase === "ready" && highestPeaks[0] ? metre(highestPeaks[0].properties.elevation_m) : "…"}</dd></div>
+          </dl>
+        </div>
       </div>
-    </section>
-    <footer className="map-readout"><span><${Icon} component=${Activity} size=${15}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}</span><span><${Icon} component=${Compass} size=${15}/> ${coords ? `${formatCoord(coords.lat)}, ${formatCoord(coords.lon)}` : t("coordinates")}</span><span>${status}</span></footer>
+      <footer className="x-home-footer">
+        <span><b>Vitosha Peak Explorer</b><i aria-hidden="true"></i>${t("coverFooterTag")}</span>
+        <span>${t("coverSources")}</span>
+      </footer>
+    </section>` : null}
+    <input ref=${importInputRef} type="file" accept=".json,application/json" hidden onChange=${importFile} aria-label=${t("importBackup")}/>
+
+    <header className="v2-topbar" inert=${showCover} data-map-occluder>
+      <button ref=${brandRef} type="button" className="v2-brand" title=${t("backToCover")} aria-label=${t("backToCover")} onClick=${() => setShowCover(true)}><span className="v2-brand-mark"><${Icon} component=${Mountain} size=${18}/></span><span><strong>${t("brandName")}</strong><small>${t("brandTagline")}</small></span></button>
+      <div ref=${comboRef} className=${`v2-search ${comboOpen ? "open" : ""}`}>
+        <label className="v2-search-field"><${Icon} component=${Search} size=${17}/><input ref=${searchRef} id="peak-search" role="combobox" aria-expanded=${comboOpen} aria-controls="peak-options" aria-autocomplete="list" aria-activedescendant=${comboOpen && filteredPeaks[activeIndex] ? `peak-option-${activeIndex}` : undefined} value=${query} placeholder=${t("findSummit")} aria-label=${t("searchSummit")} onFocus=${() => setComboOpen(true)} onInput=${event => { setQuery(event.target.value); setActiveIndex(0); setComboOpen(true); }} onKeyDown=${comboKey}/><span className="v2-search-count">${t("summitCount", { count: data.peaks.length })}</span><button type="button" className="v2-search-toggle" tabIndex="-1" aria-label=${t("toggleSummitList")} aria-expanded=${comboOpen} aria-controls="peak-options" onPointerDown=${event => event.preventDefault()} onClick=${() => { setComboOpen(open => !open); searchRef.current?.focus(); }}><${Icon} component=${ChevronDown} size=${18}/></button></label>
+        ${comboOpen ? html`<div className="v2-search-menu">
+          <div className="v2-sort" role="group" aria-label=${t("sortSummits")}><button type="button" aria-pressed=${sortMode === "elevation-desc"} onClick=${() => setSortMode("elevation-desc")}>${t("elevation")}</button><button type="button" aria-pressed=${sortMode === "name"} onClick=${() => setSortMode("name")}>${t("alphabetical")}</button></div>
+          <ul id="peak-options" role="listbox" aria-label=${t("chooseSummit")}>${filteredPeaks.length ? filteredPeaks.map((peak, index) => html`<li key=${peak.properties.id} id=${`peak-option-${index}`} role="option" aria-selected=${index === activeIndex} className=${`${index === activeIndex ? "active" : ""} ${peak.properties.id === selectedPeak?.properties.id ? "current" : ""}`} onPointerDown=${event => event.preventDefault()} onClick=${() => pickFromCombo(peak)} onPointerMove=${() => setActiveIndex(index)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}<small>${peak.properties[language === "bg" ? "name_en" : "name_bg"]}</small></span><b>${metre(peak.properties.elevation_m)}</b></li>`) : html`<li className="v2-empty" role="presentation">${t("noSummits")} ${t("searchHint")}</li>`}</ul>
+        </div>` : null}
+        <p className="sr-only" role="status" aria-atomic="true">${comboOpen && dataPhase === "ready" ? t("matchingSummits", { count: filteredPeaks.length }) : ""}</p>
+      </div>
+      <button type="button" className="v2-chip-button" title=${t("languageSwitch")} aria-label=${t("languageSwitch")} onClick=${switchLanguage}>${language === "bg" ? "EN" : "БГ"}</button>
+    </header>
+
+    <aside ref=${summitPanelRef} id="summit-details" tabIndex="-1" className=${`v2-panel sheet-${sheet} ${detailsPanelCollapsed ? "collapsed" : ""}`} inert=${showCover} aria-label=${t("details")} data-map-occluder>
+      ${isMobile ? html`<button type="button" className="v2-sheet-handle" aria-label=${t(sheet === "full" ? "collapsePanel" : "expandPanel")} onClick=${cycleSheet}><span></span></button>` : null}
+      ${selectedPeak ? html`<header className="v2-hero">
+        <div><small>${t("summitEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${placeName(selectedPeak, language)}</h1>${nearest ? html`<p>${t("nearestStart", { hut: placeName(nearest.feature, language), distance: km(nearest.routeKm) })}</p>` : null}</div>
+        <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong><div className="v2-hero-actions"><button type="button" className="v2-icon" title=${t("clearSelection")} aria-label=${t("clearSelection")} onClick=${clearSelection}><${Icon} component=${X}/></button>${isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`}</div></div>
+      </header>` : html`<header className="v2-hero"><div><small>${t("overviewEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${t("brandName")}</h1><p>${t("overviewLead")}</p></div></header>`}
+      <div id="summit-content" className="v2-content" hidden=${!panelOpen}>
+      ${selectedPeak ? null : html`<section className="v2-section" aria-labelledby="all-summits-heading"><div className="v2-section-head"><h2 id="all-summits-heading">${t("allSummits")}</h2><span className="v2-muted">${t("summitCount", { count: data.peaks.length })}</span></div><ul className="v2-summit-list">${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => selectPeak(peak)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}</span><b>${metre(peak.properties.elevation_m)}</b></button></li>`)}</ul></section>`}
+      ${selectedPeak ? html`
+        <section className="v2-section" aria-labelledby="approaches-heading">
+          <div className="v2-section-head"><h2 id="approaches-heading">${t("whereToStart")}</h2><button type="button" className="v2-link" aria-pressed=${routeViewMode === "all"} disabled=${!routeCandidates.length || mapPhase !== "ready"} onClick=${toggleAllRoutes}>${t(routeViewMode === "all" ? "hideFromMap" : "showOnMapAll")}</button></div>
+          ${routeCandidates.length ? html`<ul className="v2-approaches">${approachRows}</ul><p className="v2-fineprint">${t("timeEstimateNote")} ${t("routeSelectionNote")}</p>` : html`<p className="v2-fineprint">${t("noApproaches")}</p>`}
+        </section>
+        ${activeRoute ? html`<section className="v2-section v2-plan" style=${{ "--route": ROUTE_COLORS[activeRoute.rank] }}><${ApproachPlanner} language=${language} peak=${selectedPeak} route=${activeRoute} saved=${workspace.plans.some(plan => plan.routeId === activeRoute.id)} onSave=${savePlan} onShare=${sharePlan} onGpx=${exportGpx}/></section>` : null}
+        <details className="v2-drawer" open=${weatherExpanded} onToggle=${event => setWeatherExpanded(event.currentTarget.open)}><summary><${Icon} component=${CloudSun} size=${18}/><span>${t("weather")}</span><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body" id="summit-weather"><${SummitWeather} key=${selectedPeak.properties.id} peak=${selectedPeak} active=${weatherExpanded && panelOpen} offline=${offlineState.offline} configurationUnavailable=${APP_CONFIG.configurationUnavailable} language=${language} evaluation=${APP_CONFIG.evaluation}/></div></details>` : null}
+        <details className="v2-drawer"><summary><${Icon} component=${MapPinned} size=${18}/><span>${t("myPlansNotes")}</span><b className="v2-count">${workspace.plans.length + workspace.reports.length}</b><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body"><${PersonalLibrary} language=${language} workspaceState=${workspaceState} data=${data} mapReady=${mapPhase === "ready"} noteButtonRef=${noteButtonRef} onOpenPlan=${openPlan} onRemovePlan=${removePlan} onExport=${exportBackup} onImport=${startImport} onReload=${reloadLocal} onOriginal=${exportOriginal} onAddNote=${addNote} onCoordinateNote=${addCoordinateNote} onOpenNote=${openNote}/></div></details>
+        <details className="v2-drawer"><summary><${Icon} component=${CircleHelp} size=${18}/><span>${t("aboutData")}</span><${Icon} component=${ChevronDown} size=${16}/></summary><div className="v2-drawer-body">
+          ${selectedPeak ? html`<h3 className="v2-subhead">${t("summitData")}</h3><dl className="v2-facts"><div><dt>${t("altitude")}</dt><dd>${metre(selectedPeak.properties.elevation_m)}</dd></div><div><dt>${t("latitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[1])}</dd></div><div><dt>${t("longitude")}</dt><dd>${formatCoord(selectedPeak.geometry.coordinates[0])}</dd></div><div><dt>${t("source")}</dt><dd>${t("osmNode", { id: selectedPeak.properties.osm_id })}</dd></div></dl><p className="v2-fineprint">${t("peakSourceNote")}</p><h3 className="v2-subhead">${t("routeHelpTitle")}</h3><p className="v2-fineprint">${t("routeHelpText")} ${t("difficultyHelp")} ${t("planningWarning")}</p>` : null}
+          <${OfflineFactsPanel} language=${language} state=${offlineState} quality=${data.quality}/>
+        </div></details>
+      </div>
+    </aside>
+
+    <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
+      <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
+      <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>
+    </div>
+    <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}<${PointerCoordinates} sinkRef=${coordsSinkRef}/> · ${status}</p>
   </div></main>`;
 }
 document.getElementById("boot-loader")?.remove();
