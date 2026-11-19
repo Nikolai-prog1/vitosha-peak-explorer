@@ -1,8 +1,12 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
 import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
 
-export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], quality: null };
-const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "data-quality.json"];
+export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], markedTrails: [], quality: null };
+const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "marked-trails.geojson", "data-quality.json"];
+const COLOURS = new Set(["red", "blue", "green", "yellow", "white", "black", "orange", "purple"]);
+const NETWORKS = new Set(["lwn", "rwn", "nwn", "iwn"]);
+const VIA_TRAILS = "BRouter hiking-beta via OSM marked trails";
+const snapshotSources = new Set(["overpass", "geofabrik bulgaria-latest"]);
 
 function fail() { throw new Error("Invalid Vitosha dataset"); }
 function collection(value, maxCount) {
@@ -15,6 +19,22 @@ function coordinate(value) {
     || value[0] < 22.9 || value[0] > 23.7 || value[1] < 42.2 || value[1] > 42.85) fail();
 }
 function finite(value, min, max) { if (!Number.isFinite(value) || value < min || value > max) fail(); }
+function record(value) { return value && typeof value === "object" && !Array.isArray(value); }
+function text(value, limit = 3000) { return typeof value === "string" && value.trim().length > 0 && value.length <= limit; }
+function dateOnly(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) && Number.isFinite(Date.parse(value))
+    && new Date(value).toISOString().slice(0, 10) === value;
+}
+function validHutDetails(props) {
+  if (!["hut", "shelter"].includes(props.kind) || !["node", "way"].includes(props.osm_type)
+    || props.osm_url !== `https://www.openstreetmap.org/${props.osm_type}/${props.osm_id}` || !record(props.details)) fail();
+  for (const detail of Object.values(props.details)) {
+    if (!record(detail) || !["osm", "manual"].includes(detail.source) || (detail.checked !== null && !dateOnly(detail.checked))) fail();
+    const value = detail.value;
+    if (!text(value) && typeof value !== "boolean" && !(Number.isSafeInteger(value) && value > 0)
+      && !(Array.isArray(value) && value.length > 0 && value.length <= 80 && value.every(item => text(item, 250)))) fail();
+  }
+}
 function places(value, prefix) {
   const features = collection(value, 1000);
   const ids = new Set();
@@ -26,18 +46,65 @@ function places(value, prefix) {
     coordinate(item.geometry.coordinates);
     if (prefix === "peak" || props.elevation_m !== null) finite(props.elevation_m, prefix === "peak" ? 1900 : 500, 3000);
     if (prefix === "peak") finite(props.confidence, 0, 1);
+    else validHutDetails(props);
     ids.add(props.id);
   }
   return { features, ids };
 }
 
-export function validateExplorerData({ peaks, huts, hutRoutes, quality }) {
+function trailsById(trails) {
+  const byId = new Map();
+  if (trails.length < 5) fail();
+  for (const trail of trails) {
+    const props = trail?.properties, lines = trail?.geometry?.coordinates, relation = props?.osm_relation_id;
+    if (trail?.type !== "Feature" || trail.geometry?.type !== "MultiLineString"
+      || !Number.isSafeInteger(relation) || relation < 1 || props.id !== `trail-${relation}` || byId.has(props.id)
+      || props.osm_url !== `https://www.openstreetmap.org/relation/${relation}`
+      || props.wmt_url !== `https://hiking.waymarkedtrails.org/#route?id=${relation}&type=relation`
+      || (props.colour !== null && !COLOURS.has(props.colour)) || (props.network !== null && !NETWORKS.has(props.network))
+      || !Array.isArray(lines) || !lines.length || lines.length > 20000
+      || !Number.isSafeInteger(props.piece_count) || props.piece_count < 1 || props.piece_count > lines.length) fail();
+    for (const field of ["name_bg", "name_en", "ref", "operator", "from", "to", "osmc_symbol"]) {
+      if (props[field] !== null && !text(props[field], 800)) fail();
+    }
+    finite(props.length_km, 0.001, 1000);
+    for (const line of lines) {
+      if (!Array.isArray(line) || line.length < 2 || line.length > 20000) fail();
+      for (const point of line) {
+        coordinate(point);
+        if (point[0] < 23.05 || point[0] > 23.60 || point[1] < 42.40 || point[1] > 42.76) fail();
+      }
+      if (!line.some(point => point[0] !== line[0][0] || point[1] !== line[0][1])) fail();
+    }
+    byId.set(props.id, props);
+  }
+  return byId;
+}
+
+function validateTrailShares(props, byId) {
+  finite(props.marked_share, 0, 1);
+  if (!Array.isArray(props.marked_trails) || props.marked_trails.length > byId.size) fail();
+  const seen = new Set();
+  let previous = props.marked_share;
+  for (const annotation of props.marked_trails) {
+    const trail = byId.get(annotation?.trail_id);
+    if (!trail || seen.has(annotation.trail_id) || annotation.colour !== trail.colour || annotation.ref !== trail.ref) fail();
+    finite(annotation.share, 0, previous);
+    seen.add(annotation.trail_id);
+    previous = annotation.share;
+  }
+}
+
+export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, quality }) {
   const summits = places(peaks, "peak");
   const shelters = places(huts, "hut");
   const routes = collection(hutRoutes, 5000);
+  const trails = collection(markedTrails, 1000);
+  const trailProperties = trailsById(trails);
   const ids = new Set();
   const peakById = new Map(summits.features.map(peak => [peak.properties.id, peak]));
   const hutById = new Map(shelters.features.map(hut => [hut.properties.id, hut]));
+  const perPeak = new Map(summits.features.map(peak => [peak.properties.id, 0]));
   for (const route of routes) {
     const props = route?.properties;
     if (route?.type !== "Feature" || route.geometry?.type !== "MultiLineString" || !props
@@ -52,26 +119,39 @@ export function validateExplorerData({ peaks, huts, hutRoutes, quality }) {
     if (props.trail_node_count !== paths[0].length) fail();
     if (typeof props.source !== "string" || !props.source.trim()) fail();
     if (!["routed", "approximate"].includes(props.geometry_kind) || (props.geometry_kind === "routed") !== props.source.startsWith("BRouter")) fail();
+    if (props.ranking_mode !== "nearest-routable-huts" || "popularity_score" in props || "hiking_relation_count" in props) fail();
     finite(props.start_gap_m, 0, 100000); finite(props.summit_gap_m, 0, 100000);
     if (Math.abs(props.start_gap_m - distanceMeters(paths[0][0], hutById.get(props.hut_id).geometry.coordinates)) > 1
       || Math.abs(props.summit_gap_m - distanceMeters(paths[0].at(-1), peakById.get(props.peak_id).geometry.coordinates)) > 1) fail();
     const elevations = props.profile_elevations_m;
-    if (elevations === null) { if (props.profile_source !== null) fail(); }
+    if (elevations === null) { if (props.profile_source !== null || props.source === VIA_TRAILS) fail(); }
     else {
       if (props.geometry_kind !== "routed" || !Array.isArray(elevations) || elevations.length !== paths[0].length || props.profile_source !== "BRouter elevation samples") fail();
       elevations.forEach(height => finite(height, 500, 3000));
     }
+    validateTrailShares(props, trailProperties);
     ids.add(props.id);
+    perPeak.set(props.peak_id, perPeak.get(props.peak_id) + 1);
   }
-  if (quality?.mountain !== "Vitosha" || quality.schema_version !== 2 || quality.peak_count !== summits.features.length
-    || quality.hut_count !== shelters.features.length || quality.hut_route_count !== routes.length) fail();
+  if ([...perPeak.values()].some(count => count !== 3)) fail();
+  if (quality?.mountain !== "Vitosha" || quality.schema_version !== 3 || quality.peak_count !== summits.features.length
+    || quality.hut_count !== shelters.features.length || quality.hut_route_count !== routes.length || quality.marked_trail_count !== trails.length
+    || typeof quality.license !== "string" || !quality.license.includes("ODbL 1.0")) fail();
   if (quality.route_counts?.routed !== routes.filter(route => route.properties.geometry_kind === "routed").length
       || quality.route_counts?.approximate !== routes.filter(route => route.properties.geometry_kind === "approximate").length
-      || quality.route_counts?.with_elevation_profile !== routes.filter(route => route.properties.profile_elevations_m !== null).length) fail();
-  for (const timestamp of [quality.source_timestamps?.peaks, quality.source_timestamps?.huts]) {
-    if (timestamp !== null && (typeof timestamp !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(timestamp) || !Number.isFinite(Date.parse(timestamp)))) fail();
+      || quality.route_counts?.with_elevation_profile !== routes.filter(route => route.properties.profile_elevations_m !== null).length
+      || quality.route_counts?.via_marked_trails !== routes.filter(route => route.properties.source === VIA_TRAILS).length) fail();
+  const detailCounts = new Map();
+  for (const hut of shelters.features) for (const field of Object.keys(hut.properties.details)) detailCounts.set(field, (detailCounts.get(field) ?? 0) + 1);
+  if (!record(quality.hut_detail_field_counts) || Object.keys(quality.hut_detail_field_counts).length !== detailCounts.size
+    || [...detailCounts].some(([field, count]) => quality.hut_detail_field_counts[field] !== count)) fail();
+  for (const key of ["peaks", "huts", "hut_details", "marked_trails"]) {
+    const timestamp = quality.source_timestamps?.[key];
+    const newCapture = key === "hut_details" || key === "marked_trails";
+    if (newCapture && (!timestamp || !snapshotSources.has(quality.capture_sources?.[key]))) fail();
+    if (timestamp !== null && (typeof timestamp !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/.test(timestamp) || !Number.isFinite(Date.parse(timestamp)))) fail();
   }
-  return { peaks: summits.features, huts: shelters.features, hutRoutes: routes, quality };
+  return { peaks: summits.features, huts: shelters.features, hutRoutes: routes, markedTrails: trails, quality };
 }
 
 export async function loadExplorerData({ base = "/data", signal, fetchImpl = fetch, timeoutMs = 10000 } = {}) {
@@ -80,10 +160,10 @@ export async function loadExplorerData({ base = "/data", signal, fetchImpl = fet
   if (signal?.aborted) relay();
   else signal?.addEventListener("abort", relay, { once: true });
   try {
-    const [peaks, huts, hutRoutes, quality] = await Promise.all(FILES.map(file => requestJson(`${base}/${file}`, {
+    const [peaks, huts, hutRoutes, markedTrails, quality] = await Promise.all(FILES.map(file => requestJson(`${base}/${file}`, {
       signal: controller.signal, fetchImpl, timeoutMs, maxBytes: 2 * 1024 * 1024,
     })));
-    return validateExplorerData({ peaks, huts, hutRoutes, quality });
+    return validateExplorerData({ peaks, huts, hutRoutes, markedTrails, quality });
   } finally {
     controller.abort();
     signal?.removeEventListener("abort", relay);

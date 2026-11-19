@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { loadExplorerData, validateExplorerData } from "../src/explorer-data.js";
 import { jsonResponse } from "./fixtures.js";
 
-const names = { peaks: "peaks.geojson", huts: "huts.geojson", hutRoutes: "hut-routes.geojson", quality: "data-quality.json" };
+const names = { peaks: "peaks.geojson", huts: "huts.geojson", hutRoutes: "hut-routes.geojson", markedTrails: "marked-trails.geojson", quality: "data-quality.json" };
 const dataset = Object.fromEntries(await Promise.all(Object.entries(names).map(async ([key, file]) => [key, JSON.parse(await readFile(new URL(`../public/data/${file}`, import.meta.url)))])));
 
 test("the generated real dataset satisfies the client contract", () => {
@@ -12,6 +12,7 @@ test("the generated real dataset satisfies the client contract", () => {
   assert.equal(result.peaks.length, 17);
   assert.equal(result.huts.length, 16);
   assert.equal(result.hutRoutes.length, 51);
+  assert.ok(result.markedTrails.length >= 5);
 });
 
 test("client rejects swapped coordinates, malformed places and dangling or duplicate route IDs", () => {
@@ -38,6 +39,25 @@ test("client rejects swapped coordinates, malformed places and dangling or dupli
   assert.throws(() => validateExplorerData({}), /Invalid/);
 });
 
+test("schema 3 requires trail geometries, correct provenance and bounded data shares", () => {
+  const mutations = [
+    data => data.quality.schema_version = 2,
+    data => data.quality.license = "",
+    data => data.markedTrails.features[0].properties.colour = "invalid",
+    data => data.markedTrails.features[0].geometry.coordinates[0][0] = [23.0, 42.5],
+    data => data.markedTrails.features.push(data.markedTrails.features[0]),
+    data => data.huts.features[0].properties.details.website = { value: "https://example.test/", source: "unsourced", checked: null },
+    data => data.hutRoutes.features[0].properties.marked_share = 2,
+    data => data.hutRoutes.features[0].properties.marked_trails = [{ trail_id: "trail-0", colour: null, ref: null, share: 0.1 }],
+    data => data.hutRoutes.features[0].properties.ranking_mode = "route-relation-count",
+  ];
+  for (const mutate of mutations) {
+    const copy = structuredClone(dataset);
+    mutate(copy);
+    assert.throws(() => validateExplorerData(copy), /Invalid Vitosha dataset/);
+  }
+});
+
 test("data loader requests the correct static root with bounded parallel requests", async () => {
   const requested = [];
   const result = await loadExplorerData({ base: "/public/data", fetchImpl: async url => {
@@ -46,7 +66,7 @@ test("data loader requests the correct static root with bounded parallel request
     return jsonResponse(dataset[key]);
   } });
   assert.equal(result.hutRoutes.length, 51);
-  assert.equal(requested.length, 4);
+  assert.equal(requested.length, 5);
   assert.equal(requested.every(url => url.startsWith("/public/data/")), true);
 });
 
@@ -56,7 +76,7 @@ test("data loading fails predictably and cancels siblings when one file is unava
     signals.push(options.signal);
     return url.endsWith("peaks.geojson") ? jsonResponse({}, 404) : new Promise(() => {});
   } }), error => error.status === 404);
-  assert.equal(signals.length, 4);
+  assert.equal(signals.length, 5);
   assert.equal(signals.slice(1).every(signal => signal.aborted), true);
   await assert.rejects(loadExplorerData({ timeoutMs: 15, fetchImpl: () => new Promise(() => {}) }), error => error.name === "TimeoutError");
 });

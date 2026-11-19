@@ -2,14 +2,14 @@
 // are intercepted or archived by this worker.
 const PREFIX = "vitosha-offline-v1-", CACHE = PREFIX + OFFLINE_PACK.id;
 const META = "/__vitosha_offline_ready__";
-const allowed = path => path === "/index.html" || /^\/data\/(?:peaks|huts|hut-routes)\.geojson$/.test(path) || path === "/data/data-quality.json"
+const allowed = path => path === "/index.html" || /^\/data\/(?:peaks|huts|hut-routes|marked-trails)\.geojson$/.test(path) || path === "/data/data-quality.json"
   || /^\/assets\/[\w.-]+\.(?:js|css)$/.test(path) || /^\/vendor\/fonts\/[\w.-]+\.(?:css|woff2)$/.test(path) || path === "/vendor/cesium/Widgets/widgets.css";
 if (OFFLINE_PACK.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(OFFLINE_PACK.id) || !Array.isArray(OFFLINE_PACK.files)
   || OFFLINE_PACK.files.length > 80 || OFFLINE_PACK.bytes > 8 * 1024 * 1024
   || OFFLINE_PACK.files.some(file => !allowed(file.path) || !/^[a-f0-9]{64}$/.test(file.sha256) || !Number.isSafeInteger(file.bytes) || file.bytes < 1 || file.bytes > 2 * 1024 * 1024)
   || new Set(OFFLINE_PACK.files.map(file => file.path)).size !== OFFLINE_PACK.files.length
   || !Number.isSafeInteger(OFFLINE_PACK.bytes) || OFFLINE_PACK.bytes !== OFFLINE_PACK.files.reduce((sum, file) => sum + file.bytes, 0)
-  || !["/index.html", "/data/peaks.geojson", "/data/huts.geojson", "/data/hut-routes.geojson", "/data/data-quality.json"].every(path => OFFLINE_PACK.files.some(file => file.path === path))
+  || !["/index.html", "/data/peaks.geojson", "/data/huts.geojson", "/data/hut-routes.geojson", "/data/marked-trails.geojson", "/data/data-quality.json"].every(path => OFFLINE_PACK.files.some(file => file.path === path))
   || !OFFLINE_PACK.files.some(file => /^\/assets\/.+\.js$/.test(file.path))) throw new Error("Invalid offline facts pack");
 const files = new Set(OFFLINE_PACK.files.map(file => file.path));
 async function completeFetch(request, timeout = 10000, maxBytes = 2 * 1024 * 1024) {

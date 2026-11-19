@@ -45,6 +45,8 @@ export async function inspectRelease(directory) {
   const html = await readFile(join(directory, "index.html"), "utf8");
   if (/<script\b[^>]*type=["']importmap["']/i.test(html)) throw new Error("Production HTML must use the bundled application, not source import maps");
   const critical = ["data/peaks.geojson", "data/huts.geojson", "data/hut-routes.geojson", "data/data-quality.json", "vendor/cesium/Cesium.js", "vendor/cesium/Widgets/widgets.css", "vendor/fonts/fonts.css", "runtime-config.js"];
+  const dataQuality = JSON.parse(await readFile(join(directory, "data/data-quality.json"), "utf8"));
+  if (dataQuality.schema_version === 3) critical.push("data/marked-trails.geojson");
   for (const [, tag, attributes] of html.matchAll(/<(script|link)\b([^>]+)>/gi)) {
     if (tag.toLowerCase() === "link" && !/rel=["']stylesheet["']/i.test(attributes)) continue;
     const url = attributes.match(/(?:src|href)=["']([^"']+)["']/i)?.[1];
@@ -60,7 +62,7 @@ export async function inspectRelease(directory) {
   if (/name=["']vitosha-offline-version["']/i.test(html)) {
     const versions = [...html.matchAll(/<meta name="vitosha-offline-version" content="([a-f0-9]{64})">/g)];
     const pack = JSON.parse(await readFile(join(directory, "offline-pack.json"), "utf8"));
-    const allowed = path => path === "/index.html" || /^\/data\/(?:peaks|huts|hut-routes)\.geojson$/.test(path) || path === "/data/data-quality.json"
+    const allowed = path => path === "/index.html" || /^\/data\/(?:peaks|huts|hut-routes|marked-trails)\.geojson$/.test(path) || path === "/data/data-quality.json"
       || /^\/assets\/[\w.-]+\.(?:js|css)$/.test(path) || /^\/vendor\/fonts\/[\w.-]+\.(?:css|woff2)$/.test(path) || path === "/vendor/cesium/Widgets/widgets.css";
     if (versions.length !== 1 || pack.schemaVersion !== 1 || pack.id !== versions[0][1] || !Array.isArray(pack.files) || pack.files.length > 80
       || new Set(pack.files.map(file => file.path)).size !== pack.files.length

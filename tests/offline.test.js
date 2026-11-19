@@ -11,7 +11,8 @@ import { ownedWorker, prepareOfflinePack, offlineWorkerStatus } from "../src/off
 const origin = "https://vitosha.example", hash = body => createHash("sha256").update(body).digest("hex");
 const source = await readFile(new URL("../src/offline-worker.js", import.meta.url), "utf8");
 const bodies = { "/index.html": "<!doctype html><head></head><body>Vitosha</body>", "/assets/app-abcdefgh.js": "const app = true;",
-  "/data/peaks.geojson": "{\"peaks\":17}", "/data/huts.geojson": "{\"huts\":16}", "/data/hut-routes.geojson": "{\"routes\":51}", "/data/data-quality.json": "{}" };
+  "/data/peaks.geojson": "{\"peaks\":17}", "/data/huts.geojson": "{\"huts\":16}", "/data/hut-routes.geojson": "{\"routes\":51}",
+  "/data/marked-trails.geojson": "{\"trails\":5}", "/data/data-quality.json": "{}" };
 const makePack = id => ({ schemaVersion: 1, id: id.repeat(64), files: Object.entries(bodies).map(([path, body]) => ({ path, bytes: Buffer.byteLength(body), sha256: hash(body) })), bytes: Object.values(bodies).reduce((sum, body) => sum + Buffer.byteLength(body), 0) });
 function harness(pack = makePack("a"), store = new Map(), { shortDeadlines = false } = {}) {
   const handlers = new Map(), calls = []; let network = true, badPath = "", quotaPath = "", streamPath = "", errorPath = "", claimed = 0, cancelled = 0;
@@ -38,6 +39,7 @@ test("worker prepares a verified complete pack and serves public facts when the 
   h.setNetwork(false);
   assert.equal(await (await h.request("/", { mode: "navigate" })).text(), bodies["/index.html"]);
   assert.equal(await (await h.request("/data/hut-routes.geojson")).text(), bodies["/data/hut-routes.geojson"]);
+  assert.equal(await (await h.request("/data/marked-trails.geojson")).text(), bodies["/data/marked-trails.geojson"]);
   assert.equal(await (await h.request("/assets/app-abcdefgh.js")).text(), bodies["/assets/app-abcdefgh.js"]);
   const config = await (await h.request("/runtime-config.js")).text();
   assert.match(config, /offlineLaunch:true/); assert.match(config, /weatherMode:"disabled"/); assert.doesNotMatch(config, /public-test-token/);
@@ -110,6 +112,7 @@ test("offline bundle is deterministic and excludes provider SDKs, configs, APIs 
   }
   const first = await prepareOfflineBundle(directory), second = await prepareOfflineBundle(directory);
   assert.deepEqual(second, first); assert.ok(first.files.every(file => !/runtime-config|Cesium\.js|\.gz|\/api\//.test(file.path)));
+  assert.ok(first.files.some(file => file.path === "/data/marked-trails.geojson"));
   for (const file of first.files) assert.equal(hash(await readFile(join(directory, file.path.slice(1)))), file.sha256);
   assert.match(await readFile(join(directory, "index.html"), "utf8"), /vitosha-offline-version/);
 });

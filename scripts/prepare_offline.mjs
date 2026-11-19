@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 const digest = body => createHash("sha256").update(body).digest("hex");
 export async function prepareOfflineBundle(directory, workerSource = new URL("../src/offline-worker.js", import.meta.url)) {
-  const paths = ["index.html", "data/peaks.geojson", "data/huts.geojson", "data/hut-routes.geojson", "data/data-quality.json", "vendor/fonts/fonts.css", "vendor/cesium/Widgets/widgets.css"];
+  const paths = ["index.html", "data/peaks.geojson", "data/huts.geojson", "data/hut-routes.geojson", "data/marked-trails.geojson", "data/data-quality.json", "vendor/fonts/fonts.css", "vendor/cesium/Widgets/widgets.css"];
   for (const file of await readdir(join(directory, "assets"))) if (/^[\w.-]+\.(?:js|css)$/.test(file)) paths.push(`assets/${file}`);
   for (const file of await readdir(join(directory, "vendor/fonts"))) if (/^[\w.-]+\.woff2$/.test(file)) paths.push(`vendor/fonts/${file}`);
   paths.sort();

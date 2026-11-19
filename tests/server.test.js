@@ -22,6 +22,7 @@ async function fixture(t, overrides = {}) {
     "data/peaks.geojson": JSON.stringify({ type: "FeatureCollection", features: [peak] }),
     "data/huts.geojson": '{"type":"FeatureCollection","features":[]}',
     "data/hut-routes.geojson": '{"type":"FeatureCollection","features":[]}',
+    "data/marked-trails.geojson": '{"type":"FeatureCollection","features":[]}',
     "data/data-quality.json": '{}', "runtime-config.js": 'window.__VITOSHA_CONFIG__ = {};',
     "vendor/cesium/Cesium.js": 'var Cesium = {};', "vendor/cesium/Widgets/widgets.css": '.cesium-widget{}',
     "vendor/fonts/fonts.css": '@font-face{font-family:fixture}',
@@ -218,6 +219,7 @@ test("release inspection rejects executable CDNs, source import maps and environ
 
 test("advertised offline release is complete and revalidated, with updateable worker/catalog headers", async t => {
   const { root, request } = await fixture(t);
+  await writeFile(join(root, "data/data-quality.json"), '{"schema_version":3}');
   await prepareOfflineBundle(root);
   await inspectRelease(root);
   for (const path of ["/offline-worker.js", "/offline-pack.json"]) {
