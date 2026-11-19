@@ -22,6 +22,8 @@ The updated user objective permits Cesium ion or Mapbox when it improves Vitosha
 - Validate data: `python scripts/validate_data.py`
 - Regenerate data from cached Overpass captures: `python scripts/build_vitosha_data.py`
 - Refresh route geometry too: `python scripts/build_vitosha_data.py --refresh-routes`
+- Refresh the hut tags and marked hiking relations: `python scripts/fetch_osm_captures.py --huts --routes`
+- Select the Geofabrik Bulgaria fallback explicitly: `python scripts/fetch_osm_captures.py --source geofabrik --huts --routes`
 
 ## Invariants
 
@@ -35,6 +37,10 @@ The updated user objective permits Cesium ion or Mapbox when it improves Vitosha
 - `public/vendor` is generated from the pinned npm dependencies. Edit the generator, not generated files.
 - Preserve source-preview cache-version URLs when changing previously served modules. Production application files use Vite content hashes; Python previews need explicit version changes for updated source modules/styles.
 - Keep the base imagery free of city and road labels; map labels should identify Vitosha peaks only.
+- Huts are always shown as unlabelled icon markers by default. The panel hut list is their keyboard equivalent.
+- Marked trails are informational OSM route relations. They never rank or select approaches.
+- Hut details carry a per-field source (OSM or manual) and are never invented. Maintain manual records in `work/hut-details.curated.json`.
+- Never regenerate data without the committed BRouter cache or `--refresh-routes`.
 - Keep true 1× terrain height scale. Normals, stylized directional daylight and finer screen-space tile detail are presentation/refinement, not proof of higher source resolution or live sunlight.
 - Include the real hut and summit markers when framing a route; a route's endpoint gaps must not hide them. Stop layout auto-framing after native map gestures until the next explicit focus action.
 - Trail reports remain device-local. Do not imply synchronization, moderation, or live safety validation.
@@ -46,6 +52,7 @@ The updated user objective permits Cesium ion or Mapbox when it improves Vitosha
 - Route previews are informational planning context, never turn-by-turn or safety navigation.
 - `public/data` is generated; change the builder or cached inputs, then regenerate.
 - Explorer v2 layout (`src/explorer-v2.css`): full-bleed map, top search combobox, one task-ordered panel (summit → approaches → plan → weather → library → data) that becomes a three-height bottom sheet on phones. Overlay panels carry `data-map-occluder` so camera framing avoids them.
+- Explorer v2 overview switches between summit and hut lists. Its legend controls the hut and marked trail layers. Hut and trail details use a map-anchored card on desktop and the existing bottom sheet on mobile. Include the legend in framing and keep the trail geometry in one ground primitive below the approach entities.
 
 ## Verification
 

@@ -8,8 +8,9 @@ A static-first 3D hiking explorer for Vitosha Mountain, adapted from the Pirin P
 - Terrain vertex normals, consistent stylized daylight and finer screen-space tile detail
 - Panel-aware summit/route framing that preserves normal picking and stops auto-framing on a manual map gesture
 - 17 high Vitosha summits with OSM coordinates and elevations
-- 16 huts and shelters
-- Three approach previews per summit, using BRouter/OSM where routable
+- 16 always-visible hut and shelter markers, a keyboard-accessible hut list and bilingual detail cards
+- 29 marked hiking trails from OpenStreetMap, with a layer toggle, route colours and trail details
+- Three approach previews per summit, with BRouter/OSM profiles and marked-trail overlap
 - Search, height/A–Z sorting, summit fly-to, route focus and show-all modes
 - Expandable model summit forecast, with deadlines, caching and truthful stale-state handling
 - Device-local fallen-tree trail reports
@@ -65,9 +66,13 @@ npm audit --audit-level=high
 
 ## Data and safety
 
-Peak and hut metadata is generated from cached OpenStreetMap Overpass captures in `work/`. The current generated dataset has 29 modelled BRouter/OSM approach lines and 22 approximate geometric sketches. The UI distinguishes them, shows endpoint gaps, and describes the three candidates as selected by proximity, not popularity or safety. Approximate sketches are dashed and have neither invented height samples nor GPX export. The 29 profiles use cached BRouter elevations; ascent/descent are unfiltered sums and may include model noise. None is a recorded or field-verified track.
+Peak and hut metadata is generated from cached OpenStreetMap captures in `work/`. The current dataset contains 17 peaks, 16 huts and shelters, 29 marked hiking trail relations, and 51 BRouter approaches with cached elevation profiles. Each peak keeps three starts selected by proximity. The marked-trail overlap measures how much of the approach lies within 20 m of recorded OSM lines. Trail relations can overlap and the markings lack a field check. Elevation sums are unfiltered model values. When a refresh leaves a geometric sketch, it appears dashed and has no profile or GPX export.
 
-Ordinary data regeneration is offline and requires the cached captures. Network route refresh happens only with the explicit `--refresh-routes` option. Source timestamps and remaining data limitations are recorded in generated `public/data/data-quality.json`.
+Run `python scripts/build_vitosha_data.py` to regenerate offline from the checked-in OSM captures and BRouter cache. Use `python scripts/build_vitosha_data.py --refresh-routes` to ask BRouter for new routes. A missing cache stops ordinary generation with the required refresh command. If BRouter is temporarily unavailable during a refresh, existing cached geometry remains available. Update the tag and relation snapshots with `python scripts/fetch_osm_captures.py --huts --routes`. The downloader can use a Geofabrik Bulgaria extract with the pinned pyosmium wheel in a venv outside the repository. Schema 3 records the capture sources and dates in `public/data/data-quality.json`.
+
+To add a locally confirmed hut fact, open `work/hut-details.curated.json`, find the hut's stable ID and fill a field's value, source and check date. For example, a verified bed count of 40 can use `{"value": 40, "source": "manual", "checked": "2026-11-19"}`. Leave unknown facts null and run the offline builder followed by `npm run check:data`. Manual facts override matching OSM tags.
+
+The files in `public/data/` derived from OpenStreetMap are available under [ODbL 1.0](https://www.openstreetmap.org/copyright).
 
 The app is planning context only. It does not provide turn-by-turn navigation, live trail verification, emergency guidance, or shared community reporting. Plans and fallen-tree notes stay in this browser's local storage. Notes are reachable from the personal library: click/tap the loaded map, or use **Note at coordinates** to explicitly enter latitude and longitude around Vitosha in WGS84. The numeric fields start blank, reject missing/swapped/out-of-area input and work without a renderer; they neither infer an incident location nor verify it. The versioned workspace validates imported fields and preserves the old report key; corrupt storage is not silently overwritten. Exports are generated on the device, with no upload of personal notes. Save a private JSON backup before clearing browser data. A share link contains only public summit/route IDs and language; localhost links do not give other people access to the app.
 
@@ -79,7 +84,7 @@ JavaScript, Cesium workers, icons and fonts are pinned and bundled locally; the 
 
 ## Offline planning, not offline navigation
 
-In the built app over HTTPS or localhost, use **Prepare offline facts** in the details panel before leaving the connection. The action installs a bounded service worker pack containing the interface, fonts and four public datasets, not satellite imagery, terrain, the Cesium executable, runtime credentials, forecasts, APIs or personal notes. Current packs have 11 files and about 0.6 MiB. Each complete response is size/hash-checked; readiness is recorded only after every required file is stored. Failed installation, quota errors or missing cached resources must not claim readiness. A refresh checks the current release and can repair an evicted current pack when connected. An older complete pack remains available after a failed newer installation.
+In the built app over HTTPS or localhost, use **Prepare offline facts** in the details panel before leaving the connection. The service worker stores the interface, fonts and five public datasets in a 12-file pack of about 1.02 MiB. Each complete response is size/hash-checked. Readiness is recorded only after every required file is stored. A refresh can repair an evicted current pack when connected. An older complete pack remains available after a failed newer installation.
 
 On an offline launch, search, summit/approach facts, modelled profiles, saved plans, local note reading and client-side exports remain available. Map-only controls and map-picked note placement require the loaded 3D map; explicit coordinate entry does not. Forecast numbers are not presented as current while offline. The reconnect button reloads with fresh, network-only operator configuration; provider tiles/forecasts are never archived by this worker. Pack preparation time and OSM capture dates are shown separately, neither claiming a field inspection.
 
@@ -106,6 +111,9 @@ The updated product objective allows Cesium or Mapbox. A separate temporary Mapb
 - `src/focus-management.js` — native modal lifecycle, dynamic keyboard focus order and safe restoration
 - `src/i18n.js` — paired owned-interface translations and locale formatting
 - `src/explorer-data.js` — bounded loading and runtime data contract
+- `src/huts.js` / `src/hut-details.js` — hut index, sorting and sourced display values
+- `src/map-popup.js` / `src/map-popup.css` — hut and trail cards for desktop and mobile
+- `src/marked-trail-layer.js` — batched Cesium terrain layer and trail picking
 - `src/offline-worker.js` / `src/offline.js` / `src/offline-ui.js` — scoped public pack, verified preparation/recovery and bilingual status
 - `server/` — built-artifact host, public config, health and forecast proxy
 - `scripts/prepare_assets.mjs` — local, engine-only Cesium and browser dependency generation
@@ -114,6 +122,8 @@ The updated product objective allows Cesium or Mapbox. A separate temporary Mapb
 - `tests/` — route stability, data, focus lifecycle, coordinate entry, contrast palettes, offline, forecast and HTTP regression tests
 - `public/data/` — generated GeoJSON/JSON
 - `scripts/build_vitosha_data.py` — data and route builder
+- `scripts/fetch_osm_captures.py` — explicit OSM snapshot refresher with Geofabrik fallback
+- `work/hut-details.curated.json` — maintainer-sourced hut facts and legacy site links
 - `scripts/validate_data.py` — integrity checks
 - `docs/product-plan.md` — implemented scope and boundaries
 - `docs/release-plan.md` — full objective, traceability and remaining work
