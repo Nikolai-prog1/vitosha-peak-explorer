@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import htm from "htm";
-import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=explorer-v2-3";
+import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Tent, TreePine, X } from "@vitosha/icons";
+import { createCesiumMap } from "./cesium-map.js?v=vitosha-trails-20261119";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-planning-20261005-2";
-import { translate, placeName, formatNumber } from "./i18n.js?v=explorer-v2-4";
+import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-trails-20261119";
+import { hutsSorted, hutKindKey } from "./huts.js?v=vitosha-trails-20261119";
+import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-cover-20261108";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-cover-20261108";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-cover-20261108";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-cover-20261108";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-cover-20261108";
-import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-cover-20261108";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-trails-20261119";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-trails-20261119";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-trails-20261119";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-trails-20261119";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-trails-20261119";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-trails-20261119";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
@@ -56,23 +58,36 @@ function makePeakMarkerElement(selected, label) {
   element.type = "button";
   element.tabIndex = -1; // The summit list is the complete, unobscured keyboard equivalent.
   element.className = `map-peak-marker${selected ? " selected" : ""}`;
-  element.innerHTML = selected
-    ? `<svg viewBox="0 0 36 36" aria-hidden="true">
-        <defs><linearGradient id="active-peak-blue" x1="5" y1="30" x2="29" y2="5" gradientUnits="userSpaceOnUse"><stop stop-color="#1576ff"/><stop offset="1" stop-color="#79e7ff"/></linearGradient></defs>
-        <path d="M2.8 29.2 12.7 11l4.1 6.1L22.4 5l10.8 24.2H2.8Z" fill="url(#active-peak-blue)" stroke="#e9fbff" stroke-width="2" stroke-linejoin="round"/>
-        <path d="m12.7 11 2.8 4.2 1.3 1.9 2-4.3 3.6-7.8 3.5 7.9-3.2-1.5-2.6 1.8-2.6-1.4-2 1.2-2.8-2Z" fill="#f5fdff" fill-opacity=".92"/>
-        <path d="m7.5 27 6.2-9.2 3.3 4.8 4.2-6.1 6.3 10.5" fill="none" stroke="#083d83" stroke-opacity=".55" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>`
-    : `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3.5 26.5 16 4.5l12.5 22H3.5Z" fill="rgba(238,241,232,.82)" stroke="#173f34" stroke-width="2.2" stroke-linejoin="round"/><path d="m16 4.5 4.4 7.8-3.1-1.4-3 1.4L16 4.5Z" fill="#173f34" fill-opacity=".92"/></svg>`;
+  element.innerHTML = peakMarkerSvg(selected);
   const caption = document.createElement("span"); caption.className = "map-peak-label"; caption.textContent = label; element.append(caption);
   return element;
 }
-function makeHutMarkerElement(color, active) {
+function makeHutMarkerElement(hut) {
   const element = document.createElement("button");
-  element.tabIndex = -1; // Approach controls provide the same action outside the moving map.
-  element.type = "button"; element.className = `map-hut-marker${active ? " active" : ""}`; element.style.setProperty("--marker-color", color);
-  element.innerHTML = `<svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 15.5 17 5l13 10.5v13H4v-13Z" fill="${color}" stroke="#061016" stroke-width="2" stroke-linejoin="round"/><path d="M12 28v-8h10v8" fill="#071218"/><path d="M3 16 17 4l14 12" fill="none" stroke="#fff4c8" stroke-width="2.2" stroke-linecap="round"/></svg>`;
+  element.tabIndex = -1;
+  element.type = "button";
+  element.className = "map-hut-marker neutral";
+  element.innerHTML = hutMarkerSvg(hut.properties.kind);
   return element;
+}
+
+function MapLegend({ t, open, onToggle, showHuts, onShowHuts, mapReady, inert }) {
+  const rows = [
+    ["summit", peakMarkerSvg(false)],
+    ["selectedSummit", peakMarkerSvg(true, "legend-active-peak")],
+    ["hutKindHut", hutMarkerSvg("hut")],
+    ["hutKindShelter", hutMarkerSvg("shelter")],
+    ["modelledApproach", null, "routed"],
+    ["approximate", null, "sketch"],
+    ["personalNote", REPORT_MARKER_SVG, "note"],
+  ];
+  return html`<details className="v2-legend" inert=${inert} data-map-occluder open=${open} onToggle=${event => onToggle(event.currentTarget.open)}>
+    <summary>${t("mapLegend")}<${Icon} component=${ChevronDown} size=${15}/></summary>
+    <ul>${rows.map(([key, svg, style]) => html`<li key=${key}><span className=${`legend-symbol ${style || ""}`} aria-hidden="true" dangerouslySetInnerHTML=${svg ? { __html: svg } : undefined}></span>${t(key)}</li>`)}</ul>
+    <div className="v2-layer-options">
+      <label><input type="checkbox" checked=${showHuts} disabled=${!mapReady} onChange=${event => onShowHuts(event.target.checked)}/>${t("hutLayer")}</label>
+    </div>
+  </details>`;
 }
 // Pointer coordinates change on every mouse move; keep that state out of App so
 // moving the mouse re-renders only this text, not the whole explorer.
@@ -100,10 +115,14 @@ function App() {
   const [pendingFocus, setPendingFocus] = useState(null);
   const reportPlacementActiveRef = useRef(false), initialLinkChecked = useRef(false), initialCameraFramed = useRef(false), importRevision = useRef(0);
   const peakMarkersRef = useRef([]), hutMarkersRef = useRef([]), reportMarkersRef = useRef([]);
+  const hutMarkerClickRef = useRef(null);
   const { data, phase: dataPhase, retry: retryData } = useExplorerData();
   const [language, setLanguage] = useState(() => parsePlanHash(window.location.hash).language || readLanguage(browserStorage()));
   const [selectedPeakId, setSelectedPeakId] = useState(() => parsePlanHash(window.location.hash).peakId || null);
   const [selectedHutId, setSelectedHutId] = useState(null), [query, setQuery] = useState(""), [sortMode, setSortMode] = useState("elevation-desc");
+  const [overviewView, setOverviewView] = useState("summits");
+  const [hutSort, setHutSort] = useState("elevation-desc");
+  const [showHuts, setShowHuts] = useState(true), [legendOpen, setLegendOpen] = useState(!isMobile);
   const [comboOpen, setComboOpen] = useState(false), [activeIndex, setActiveIndex] = useState(0);
   const [routeViewMode, setRouteViewMode] = useState("none"), [sheet, setSheet] = useState("half");
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(false), [weatherExpanded, setWeatherExpanded] = useState(true);
@@ -141,6 +160,7 @@ function App() {
   const routeCandidates = useMemo(() => routeOptions.map(entry => ({ ...entry, visible: routeViewMode === "all" || (routeViewMode === "single" && entry.feature.properties.id === activeHutId), active: routeViewMode === "single" && entry.feature.properties.id === activeHutId })), [activeHutId, routeOptions, routeViewMode]);
   const visibleRouteCandidates = useMemo(() => routeCandidates.filter(candidate => candidate.visible), [routeCandidates]);
   const activeRoute = routeCandidates.find(candidate => candidate.active) || null;
+  const listedHuts = useMemo(() => hutsSorted(data.huts, hutSort, language), [data.huts, hutSort, language]);
   const activeTrailReport = trailReports.find(report => report.id === activeReportId) || null;
   const clearMarkers = ref => { ref.current.forEach(marker => marker.remove()); ref.current = []; };
   const resetView = useCallback(() => { mapRef.current?.resetView(); setMapStatus("map3d"); }, []);
@@ -148,6 +168,18 @@ function App() {
   const focusRouteCandidates = useCallback((candidates, summit = selectedPeak) => { const entries = Array.isArray(candidates) ? candidates : [candidates]; mapRef.current?.focusRoutes(entries, summit); setMapStatus(entries.length > 1 ? "routesAll" : "routeShown"); }, [selectedPeak]);
   const selectPeak = useCallback(peak => { setSelectedPeakId(peak.properties.id); setSelectedHutId(null); setRouteViewMode("none"); setDetailsPanelCollapsed(false); setSheet(current => current === "peek" ? "half" : current); if (summitPanelRef.current) summitPanelRef.current.scrollTop = 0; focusPeak(peak); }, [focusPeak]);
   const selectRoute = useCallback(candidate => { setSelectedHutId(candidate.feature.properties.id); setRouteViewMode("single"); focusRouteCandidates(candidate); }, [focusRouteCandidates]);
+  const focusHut = hut => {
+    if (!mapRef.current) return;
+    mapRef.current.focusHut(hut);
+    setMapStatus("map3d");
+  };
+  useLayoutEffect(() => {
+    hutMarkerClickRef.current = hut => {
+      const candidate = routeCandidates.find(entry => entry.feature === hut);
+      if (candidate) selectRoute(candidate);
+      else focusHut(hut);
+    };
+  });
   const pickFromCombo = peak => { selectPeak(peak); setQuery(""); setComboOpen(false); searchRef.current?.blur(); };
   const comboKey = event => {
     if (event.key === "ArrowDown") { event.preventDefault(); setComboOpen(true); setActiveIndex(index => Math.min(index + 1, filteredPeaks.length - 1)); }
@@ -168,6 +200,7 @@ function App() {
     changed(); media.addEventListener("change", changed);
     return () => media.removeEventListener("change", changed);
   }, []);
+  useEffect(() => { setLegendOpen(!isMobile); }, [isMobile]);
   useEffect(() => {
     if (!comboOpen) return undefined;
     const outside = event => { if (!comboRef.current?.contains(event.target)) setComboOpen(false); };
@@ -244,7 +277,7 @@ function App() {
     else if (selectedPeak) focusPeak(selectedPeak);
     else mapRef.current.resetView(0);
   }, [mapPhase, dataPhase, activeRoute, selectedPeak, data.peaks, focusPeak, focusRouteCandidates]);
-  useEffect(() => { if (mapPhase === "ready") mapRef.current?.refreshLayout(); }, [mapPhase, detailsPanelCollapsed, sheet, language]);
+  useEffect(() => { if (mapPhase === "ready") mapRef.current?.refreshLayout(); }, [mapPhase, detailsPanelCollapsed, sheet, language, legendOpen]);
   useEffect(() => {
     const map = mapRef.current; if (!map || mapPhase !== "ready") return;
     clearMarkers(peakMarkersRef);
@@ -264,19 +297,34 @@ function App() {
   useEffect(() => {
     const map = mapRef.current; if (!map || mapPhase !== "ready") return;
     clearMarkers(hutMarkersRef);
-    visibleRouteCandidates.forEach(candidate => {
-      const props = candidate.feature.properties, element = makeHutMarkerElement(ROUTE_COLORS[candidate.rank], candidate.active);
-      element.title = placeName(candidate.feature, language); element.setAttribute("aria-label", element.title);
-      element.addEventListener("click", event => { event.stopPropagation(); selectRoute(candidate); });
-      hutMarkersRef.current.push(map.addMarker(element, candidate.feature.geometry.coordinates, props.elevation_m ?? candidate.routeFeature.properties.profile_elevations_m?.[0] ?? 1900));
+    data.huts.forEach(hut => {
+      const element = makeHutMarkerElement(hut);
+      element.addEventListener("click", event => { event.stopPropagation(); hutMarkerClickRef.current?.(hut); });
+      const marker = map.addMarker(element, hut.geometry.coordinates, hut.properties.elevation_m);
+      hutMarkersRef.current.push({ ...marker, hut });
     });
-  }, [mapPhase, visibleRouteCandidates, language, selectRoute]);
+  }, [mapPhase, data.huts]);
+  useEffect(() => {
+    const map = mapRef.current; if (!map || mapPhase !== "ready") return;
+    const byHut = new Map(routeCandidates.map(candidate => [candidate.feature.properties.id, candidate]));
+    for (const { element, hut } of hutMarkersRef.current) {
+      const candidate = byHut.get(hut.properties.id);
+      const state = candidate?.active ? "active" : candidate ? "candidate" : selectedPeak ? "dimmed" : "neutral";
+      element.className = `map-hut-marker ${state}`;
+      if (candidate) element.style.setProperty("--marker-color", ROUTE_COLORS[candidate.rank]);
+      else element.style.removeProperty("--marker-color");
+      element.hidden = !showHuts;
+      element.title = placeName(hut, language);
+      element.setAttribute("aria-label", element.title);
+    }
+    map.refreshMarkers();
+  }, [mapPhase, data.huts, routeCandidates, selectedPeak, language, showHuts]);
   useEffect(() => {
     const map = mapRef.current; if (!map || mapPhase !== "ready") return;
     clearMarkers(reportMarkersRef);
     trailReports.filter(report => !report.resolvedAt).forEach(report => {
       const element = document.createElement("button"); element.type = "button"; element.className = `map-report-marker${report.id === activeReportId ? " active" : ""}`;
-      element.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16M6 17l5-6-2 1 3-7 3 7-2-1 5 6"/></svg>';
+      element.innerHTML = REPORT_MARKER_SVG;
       element.tabIndex = -1; // Every note has a keyboard-accessible personal-library entry.
       element.title = `${t("reportHeading")} · ${t(report.severity)}`; element.setAttribute("aria-label", element.title);
       element.addEventListener("click", event => { event.stopPropagation(); setActionError(""); setActiveReportId(report.id); });
@@ -443,7 +491,23 @@ function App() {
         <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong><div className="v2-hero-actions"><button type="button" className="v2-icon" title=${t("clearSelection")} aria-label=${t("clearSelection")} onClick=${clearSelection}><${Icon} component=${X}/></button>${isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`}</div></div>
       </header>` : html`<header className="v2-hero"><div><small>${t("overviewEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${t("brandName")}</h1><p>${t("overviewLead")}</p></div></header>`}
       <div id="summit-content" className="v2-content" hidden=${!panelOpen}>
-      ${selectedPeak ? null : html`<section className="v2-section" aria-labelledby="all-summits-heading"><div className="v2-section-head"><h2 id="all-summits-heading">${t("allSummits")}</h2><span className="v2-muted">${t("summitCount", { count: data.peaks.length })}</span></div><ul className="v2-summit-list">${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => selectPeak(peak)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}</span><b>${metre(peak.properties.elevation_m)}</b></button></li>`)}</ul></section>`}
+      ${selectedPeak ? null : html`<section className="v2-section" aria-label=${t("overviewPlaces")}>
+        <div className="v2-place-switch" role="group" aria-label=${t("overviewPlaces")}>
+          <button type="button" aria-pressed=${overviewView === "summits"} onClick=${() => setOverviewView("summits")}>${t("overviewSummits", { count: data.peaks.length })}</button>
+          <button type="button" aria-pressed=${overviewView === "huts"} onClick=${() => setOverviewView("huts")}>${t("overviewHuts", { count: data.huts.length })}</button>
+        </div>
+        ${overviewView === "huts" ? html`
+          <div className="v2-sort v2-hut-sort" role="group" aria-label=${t("sortHuts")}>
+            <button type="button" aria-pressed=${hutSort === "elevation-desc"} onClick=${() => setHutSort("elevation-desc")}>${t("elevation")}</button>
+            <button type="button" aria-pressed=${hutSort === "name"} onClick=${() => setHutSort("name")}>${t("alphabetical")}</button>
+          </div>
+          <ul className="v2-summit-list v2-hut-list">${listedHuts.map(hut => html`<li key=${hut.properties.id}>
+            <button type="button" onClick=${() => focusHut(hut)}>
+              <${Icon} component=${hut.properties.kind === "shelter" ? Tent : House} size=${17}/>
+              <span>${placeName(hut, language)}<small>${t(hutKindKey(hut))}</small></span><b>${metre(hut.properties.elevation_m)}</b>
+            </button></li>`)}</ul>`
+          : html`<ul className="v2-summit-list">${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => selectPeak(peak)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}</span><b>${metre(peak.properties.elevation_m)}</b></button></li>`)}</ul>`}
+      </section>`}
       ${selectedPeak ? html`
         <section className="v2-section" aria-labelledby="approaches-heading">
           <div className="v2-section-head"><h2 id="approaches-heading">${t("whereToStart")}</h2><button type="button" className="v2-link" aria-pressed=${routeViewMode === "all"} disabled=${!routeCandidates.length || mapPhase !== "ready"} onClick=${toggleAllRoutes}>${t(routeViewMode === "all" ? "hideFromMap" : "showOnMapAll")}</button></div>
@@ -459,6 +523,7 @@ function App() {
       </div>
     </aside>
 
+    <${MapLegend} t=${t} open=${legendOpen} onToggle=${setLegendOpen} showHuts=${showHuts} onShowHuts=${setShowHuts} mapReady=${mapPhase === "ready"} inert=${showCover}/>
     <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
       <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
       <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>

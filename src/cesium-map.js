@@ -190,13 +190,14 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   let settleUntil = 0;
   const keepRendering = () => { if (performance.now() < settleUntil) viewer.scene.requestRender(); };
   viewer.scene.preUpdate.addEventListener(keepRendering);
+  const markerDirection = new Cesium.Cartesian3();
   const updateMarkers = () => {
     const camera = viewer.camera;
     const labelBounds = [];
     const orderedMarkers = [...markers].sort((left, right) => Number(right.element.classList.contains("selected")) - Number(left.element.classList.contains("selected")));
     for (const marker of orderedMarkers) {
-      const direction = Cesium.Cartesian3.subtract(marker.position, camera.positionWC, new Cesium.Cartesian3());
-      const ahead = Cesium.Cartesian3.dot(direction, camera.directionWC) > 0;
+      const direction = Cesium.Cartesian3.subtract(marker.position, camera.positionWC, markerDirection);
+      const ahead = !marker.element.hidden && Cesium.Cartesian3.dot(direction, camera.directionWC) > 0;
       const pixel = ahead ? Cesium.SceneTransforms.worldToWindowCoordinates(viewer.scene, marker.position) : null;
       const visible = pixel && pixel.x >= -40 && pixel.y >= -40 && pixel.x <= container.clientWidth + 40 && pixel.y <= container.clientHeight + 40;
       marker.element.style.display = visible ? "grid" : "none";
@@ -238,18 +239,23 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   return {
     viewer,
     refreshLayout: framing.layoutChanged,
+    refreshMarkers() { viewer.scene.requestRender(); },
     setOverview(peaks) { const points = peaks.map(placeFramePoint).filter(Boolean); if (points.length) overviewPoints = points; },
     resetView(duration = 1.2) { framing.request(overviewPoints, { heading: HOME.heading, pitch: HOME.pitch, minimumRange: 8000 }, duration); },
     focusPeak(peak, close) {
       const point = placeFramePoint(peak);
       if (point) framing.request([point], { heading: close ? -12 : -26, pitch: close ? -28 : -42, minimumRange: close ? 2800 : 6800 });
     },
+    focusHut(hut) {
+      const point = placeFramePoint(hut);
+      if (point) framing.request([point], { minimumRange: 3500 });
+    },
     focusRoutes(entries, summit) {
       const points = routeFramePoints(entries, summit);
       if (points.length) framing.request(points);
     },
     addMarker(element, coordinates, height = 1900) {
-      const position = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], height + 14);
+      const position = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], (height ?? 1900) + 14);
       const marker = { element, position, label: element.querySelector(".map-peak-label"), remove() { markers.delete(marker); element.remove(); } };
       markers.add(marker);
       overlay.append(element);

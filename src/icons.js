@@ -12,6 +12,8 @@ export { default as CloudSun } from "lucide-react/dist/esm/icons/cloud-sun.mjs";
 export { default as CircleHelp } from "lucide-react/dist/esm/icons/circle-question-mark.mjs";
 export { default as Compass } from "lucide-react/dist/esm/icons/compass.mjs";
 export { default as ExternalLink } from "lucide-react/dist/esm/icons/external-link.mjs";
+export { default as House } from "lucide-react/dist/esm/icons/house.mjs";
+export { default as Tent } from "lucide-react/dist/esm/icons/tent.mjs";
 export { default as LocateFixed } from "lucide-react/dist/esm/icons/locate-fixed.mjs";
 export { default as MapPinned } from "lucide-react/dist/esm/icons/map-pinned.mjs";
 export { default as Moon } from "lucide-react/dist/esm/icons/moon.mjs";

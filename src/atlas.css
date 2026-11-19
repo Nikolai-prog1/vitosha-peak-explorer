@@ -246,9 +246,19 @@ button:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visibl
   text-shadow: 0 1px 2px #061016; white-space: nowrap; pointer-events: none;
 }
 .map-peak-marker.selected .map-peak-label { color: #dcf7ff; background: rgba(4, 37, 72, .88); font-size: 11px; }
+.map-hut-marker, .legend-symbol {
+  --hut-ink: #101827;
+  --hut-fill: #e5b76c;
+  --hut-edge: #fff4d9;
+}
 .map-hut-marker { width: 30px; height: 30px; }
-.map-hut-marker svg { width: 28px; height: 28px; }
-.map-hut-marker.active svg { transform: scale(1.14); }
+.map-hut-marker svg { width: 23px; height: 23px; }
+.map-hut-marker.dimmed { opacity: .45; }
+.map-hut-marker.candidate { z-index: 1; }
+.map-hut-marker.active { z-index: 2; }
+.map-hut-marker.candidate svg, .map-hut-marker.active svg { width: 28px; height: 28px; }
+.map-hut-marker.active svg { transform: scale(1.16); }
+.map-hut-marker:hover { opacity: 1; }
 
 .trail-report-launcher, .trail-report-placement {
   position: fixed; z-index: 18; top: 18px; left: 50%; transform: translateX(-50%);

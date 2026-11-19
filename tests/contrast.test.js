@@ -42,3 +42,10 @@ test("input boundaries retain 3:1 against their field and worst-case panel backg
   const backgrounds = [color("#f7f9f2"), ...imageryCorners.map(image => composite(variable("panel"), image))];
   for (const background of backgrounds) atLeast(variable("control-line"), background, 3, "field boundary");
 });
+
+test("hut symbols have a contrasting outline or interior in neutral and approach colors", () => {
+  const outline = variable("hut-ink");
+  for (const fill of [variable("hut-fill"), variable("hut-edge"), ...["#ff6b2c", "#2f80ed", "#a259ff"].map(color)]) {
+    atLeast(fill, outline, 3, "hut symbol");
+  }
+});
