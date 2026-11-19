@@ -13,9 +13,10 @@ import json
 import math
 import re
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 
@@ -25,6 +26,7 @@ DATA = ROOT / "public" / "data"
 PEAK_SOURCE = WORK / "vitosha-peaks-overpass.json"
 POI_SOURCE = WORK / "vitosha-pois-overpass.json"
 ROUTE_CACHE = WORK / "brouter-cache"
+ROUTE_WORKERS = 2
 
 PEAK_LIMIT = 17
 ROUTES_PER_PEAK = 3
@@ -216,50 +218,76 @@ def route_cache_path(peak, hut):
     return ROUTE_CACHE / f"{peak['properties']['id']}--{hut['properties']['id']}.geojson"
 
 
-def fetch_route(peak, hut, refresh):
-    cache = route_cache_path(peak, hut)
-    if cache.exists() and not refresh:
-        payload = read_json(cache)
-    elif refresh:
-        start = hut["geometry"]["coordinates"]
-        end = peak["geometry"]["coordinates"]
-        params = urllib.parse.urlencode(
-            {
-                "lonlats": f"{start[0]},{start[1]}|{end[0]},{end[1]}",
-                "profile": "hiking-beta",
-                "alternativeidx": 0,
-                "format": "geojson",
-            }
-        )
-        request = urllib.request.Request(
-            f"https://brouter.de/brouter?{params}",
-            headers={"User-Agent": "VitoshaPeakExplorer/1.0"},
-        )
+class MissingRouteCache(Exception):
+    pass
+
+
+def request_route(points):
+    params = urllib.parse.urlencode({
+        "lonlats": "|".join(f"{lon},{lat}" for lon, lat in points),
+        "profile": "hiking-beta",
+        "alternativeidx": 0,
+        "format": "geojson",
+    })
+    request = urllib.request.Request(
+        f"https://brouter.de/brouter?{params}",
+        headers={"User-Agent": "VitoshaPeakExplorer/1.0"},
+    )
+    try:
         with urllib.request.urlopen(request, timeout=45) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-        cache.parent.mkdir(parents=True, exist_ok=True)
-        write_json(cache, payload)
-    else:
-        raise FileNotFoundError("No cached route; use --refresh-routes for an explicit network refresh")
+            return json.load(response)
+    except urllib.error.HTTPError as error:
+        if error.code == 400:
+            with error:
+                message = error.read(1024).decode("utf-8", errors="replace").strip()
+            return {"no_route_http": 400, "message": message}
+        raise
+
+
+def route_geometry(payload):
+    if payload.get("no_route_http") == 400:
+        return None
     feature = payload["features"][0]
-    coordinates = [[round(point[0], 7), round(point[1], 7)] for point in feature["geometry"]["coordinates"]]
+    points = feature["geometry"]["coordinates"]
+    if feature["geometry"]["type"] != "LineString" or len(points) < 2:
+        raise ValueError("Invalid BRouter LineString")
+    coordinates = [[round(point[0], 7), round(point[1], 7)] for point in points]
     props = feature.get("properties", {})
-    elevations = [round(point[2], 1) for point in feature["geometry"]["coordinates"]] if all(
+    elevations = [round(point[2], 1) for point in points] if all(
         len(point) >= 3 and isinstance(point[2], (int, float)) and math.isfinite(point[2])
-        and 500 <= point[2] <= 3000 for point in feature["geometry"]["coordinates"]
+        and 500 <= point[2] <= 3000 for point in points
     ) else None
-    return coordinates, round(float(props.get("track-length", 0)) / 1000, 1), "BRouter hiking-beta over OSM trails", elevations
+    return coordinates, round(float(props["track-length"]) / 1000, 1), elevations
 
 
 def make_route(peak, hut, rank, refresh):
-    try:
-        coordinates, distance_km, source, elevations = fetch_route(peak, hut, refresh)
-    except Exception as error:  # Network failure must not make local generation impossible.
-        coordinates = fallback_path(hut["geometry"]["coordinates"], peak["geometry"]["coordinates"], rank)
+    start, end = hut["geometry"]["coordinates"], peak["geometry"]["coordinates"]
+    cache = route_cache_path(peak, hut)
+    failure = "HTTPError"
+    if refresh:
+        try:
+            payload = request_route([start, end])
+        except (urllib.error.URLError, TimeoutError, OSError) as error:
+            geometry = None
+            failure = type(error).__name__
+            print(f"BRouter refresh failed for {cache.stem}: {error}", flush=True)
+        else:
+            geometry = route_geometry(payload)
+            write_json(cache, payload)
+    else:
+        try:
+            geometry = route_geometry(read_json(cache))
+        except FileNotFoundError as error:
+            raise MissingRouteCache(f"No cached route for {cache.stem}. Run with --refresh-routes.") from error
+    if geometry is None:
+        coordinates = fallback_path(start, end, rank)
         distance_km = round(sum(haversine_km(coordinates[index - 1], coordinates[index]) for index in range(1, len(coordinates))), 1)
-        source = f"Approximate fallback; BRouter unavailable ({type(error).__name__})"
+        source = f"Approximate fallback; BRouter unavailable ({failure})"
         elevations = None
-    direct_km = round(haversine_km(hut["geometry"]["coordinates"], peak["geometry"]["coordinates"]), 1)
+    else:
+        coordinates, distance_km, elevations = geometry
+        source = "BRouter hiking-beta over OSM trails"
+    direct_km = round(haversine_km(start, end), 1)
     return {
         "type": "Feature",
         "properties": {
@@ -273,8 +301,8 @@ def make_route(peak, hut, rank, refresh):
             "ranking_mode": "nearest-routable-huts",
             "source": source,
             "geometry_kind": "routed" if source.startswith("BRouter") else "approximate",
-            "start_gap_m": round(haversine_km(coordinates[0], hut["geometry"]["coordinates"]) * 1000),
-            "summit_gap_m": round(haversine_km(coordinates[-1], peak["geometry"]["coordinates"]) * 1000),
+            "start_gap_m": round(haversine_km(coordinates[0], start) * 1000),
+            "summit_gap_m": round(haversine_km(coordinates[-1], end) * 1000),
             "profile_elevations_m": elevations,
             "profile_source": "BRouter elevation samples" if elevations else None,
         },
@@ -287,13 +315,10 @@ def build_routes(peaks, huts, refresh):
     for peak in peaks:
         nearest = sorted(huts, key=lambda hut: haversine_km(peak["geometry"]["coordinates"], hut["geometry"]["coordinates"]))[:ROUTES_PER_PEAK]
         for rank, hut in enumerate(nearest):
-            jobs.append((peak, hut, rank))
-    routes = []
-    with ThreadPoolExecutor(max_workers=6) as pool:
-        futures = {pool.submit(make_route, peak, hut, rank, refresh): (peak, hut) for peak, hut, rank in jobs}
-        for future in as_completed(futures):
-            routes.append(future.result())
-    return sorted(routes, key=lambda feature: (feature["properties"]["peak_id"], feature["properties"]["distance_km"]))
+            jobs.append((peak, hut, rank, refresh))
+    with ThreadPoolExecutor(max_workers=ROUTE_WORKERS) as pool:
+        routes = list(pool.map(lambda job: make_route(*job), jobs))
+    return sorted(routes, key=lambda feature: (feature["properties"]["peak_id"], feature["properties"]["distance_km"], feature["properties"]["id"]))
 
 
 def main():
@@ -304,7 +329,10 @@ def main():
     hut_capture = read_json(POI_SOURCE)
     peaks = build_peaks(peak_capture)
     huts = build_huts(hut_capture)
-    routes = build_routes(peaks, huts, args.refresh_routes)
+    try:
+        routes = build_routes(peaks, huts, args.refresh_routes)
+    except MissingRouteCache as error:
+        parser.exit(1, f"{error}\n")
     write_json(DATA / "peaks.geojson", {"type": "FeatureCollection", "features": peaks})
     write_json(DATA / "huts.geojson", {"type": "FeatureCollection", "features": huts})
     write_json(DATA / "hut-routes.geojson", {"type": "FeatureCollection", "features": routes})

@@ -8,6 +8,7 @@ public/vendor/
 work/*
 !work/vitosha-peaks-overpass.json
 !work/vitosha-pois-overpass.json
+!work/brouter-cache/
 docs/qa/pirin-reference-1440x900.png
 docs/qa/pirin-reference-live-1440x900.png
 docs/qa/vitosha-implementation-1440x900.png
