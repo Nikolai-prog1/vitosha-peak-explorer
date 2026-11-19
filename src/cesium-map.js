@@ -1,5 +1,6 @@
 import { withAbort } from "./requests.js?v=vitosha-planning-20261005";
-import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, routeFramePoints } from "./map-framing.js?v=vitosha-camera-20261005-1";
+import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, popupPlacement, routeFramePoints } from "./map-framing.js?v=vitosha-trails-20261119-3";
+import { createMarkedTrailLayer } from "./marked-trail-layer.js?v=vitosha-trails-20261119-3";
 
 const HOME = { longitude: 23.283, latitude: 42.5585, height: 2000, range: 11000, heading: -24, pitch: -43 };
 let cesiumLoadPromise;
@@ -19,7 +20,7 @@ export function loadCesium() {
       reject(new Error("Картният модул не се зареди / Map module did not load"));
     };
     const timeout = window.setTimeout(fail, 20000);
-    script.src = `${base}Cesium.js?v=1.146-engine-3`;
+    script.src = `${base}Cesium.js?v=vitosha-trails-20261119-3`;
     script.async = true;
     script.onerror = fail;
     script.onload = () => {
@@ -51,7 +52,7 @@ function pickedCoordinates(viewer, movement) {
   const position = ray && viewer.scene.globe.pick(ray, viewer.scene);
   if (!position) return null;
   const point = Cesium.Cartographic.fromCartesian(position);
-  return { lon: Cesium.Math.toDegrees(point.longitude), lat: Cesium.Math.toDegrees(point.latitude) };
+  return { lon: Cesium.Math.toDegrees(point.longitude), lat: Cesium.Math.toDegrees(point.latitude), height: point.height };
 }
 
 export function createRouteLayer(Cesium, entities) {
@@ -153,13 +154,12 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   viewTarget(viewer, HOME);
 
   const panelElements = [...container.parentElement.querySelectorAll(".peak-panel, .summit-panel, .mobile-command, .map-readout, [data-map-occluder]"), ...container.querySelectorAll(".cesium-widget-credits")];
-  const readViewport = () => {
-    const bounds = container.getBoundingClientRect();
-    const occluders = panelElements.filter(element => element.getClientRects().length).map(element => {
+  const occluderRects = bounds => panelElements.filter(element => element.getClientRects().length).map(element => {
       const rect = element.getBoundingClientRect();
       return { left: rect.left - bounds.left, top: rect.top - bounds.top, right: rect.right - bounds.left, bottom: rect.bottom - bounds.top };
-    });
-    return availableMapViewport(container.clientWidth, container.clientHeight, occluders);
+  });
+  const readViewport = () => {
+    return availableMapViewport(container.clientWidth, container.clientHeight, occluderRects(container.getBoundingClientRect()));
   };
   const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const framing = createFrameScheduler({ readViewport, requestFrame: callback => window.requestAnimationFrame(callback), cancelFrame: id => window.cancelAnimationFrame(id),
@@ -185,36 +185,86 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   container.append(overlay);
   const markers = new Set();
   const setRouteLayer = createRouteLayer(Cesium, viewer.entities);
+  const trails = createMarkedTrailLayer(Cesium, viewer.scene);
   // Ground-clamped routes build over several frames, so keep rendering briefly
   // after a change; afterwards the scene goes back to rendering on demand.
   let settleUntil = 0;
   const keepRendering = () => { if (performance.now() < settleUntil) viewer.scene.requestRender(); };
   viewer.scene.preUpdate.addEventListener(keepRendering);
   const markerDirection = new Cesium.Cartesian3();
+  const markerPixel = new Cesium.Cartesian2();
   const updateMarkers = () => {
     const camera = viewer.camera;
     const labelBounds = [];
+    const viewWidth = container.clientWidth, viewHeight = container.clientHeight;
     const orderedMarkers = [...markers].sort((left, right) => Number(right.element.classList.contains("selected")) - Number(left.element.classList.contains("selected")));
     for (const marker of orderedMarkers) {
+      if (marker.groundPoint) {
+        const sampled = viewer.scene.globe.getHeight(marker.groundPoint);
+        if (Number.isFinite(sampled) && marker.groundPoint.height !== sampled + 14) {
+          marker.groundPoint.height = sampled + 14;
+          viewer.scene.globe.ellipsoid.cartographicToCartesian(marker.groundPoint, marker.position);
+        }
+      }
       const direction = Cesium.Cartesian3.subtract(marker.position, camera.positionWC, markerDirection);
       const ahead = !marker.element.hidden && Cesium.Cartesian3.dot(direction, camera.directionWC) > 0;
-      const pixel = ahead ? Cesium.SceneTransforms.worldToWindowCoordinates(viewer.scene, marker.position) : null;
-      const visible = pixel && pixel.x >= -40 && pixel.y >= -40 && pixel.x <= container.clientWidth + 40 && pixel.y <= container.clientHeight + 40;
-      marker.element.style.display = visible ? "grid" : "none";
+      const pixel = ahead ? Cesium.SceneTransforms.worldToWindowCoordinates(viewer.scene, marker.position, markerPixel) : null;
+      const visible = Boolean(pixel && pixel.x >= -40 && pixel.y >= -40 && pixel.x <= viewWidth + 40 && pixel.y <= viewHeight + 40);
+      if (marker.visible !== visible) marker.element.style.display = visible ? "grid" : "none";
+      marker.visible = visible;
       if (!visible) continue;
-      marker.element.style.transform = `translate3d(${pixel.x}px, ${pixel.y}px, 0) translate(-50%, -100%)`;
+      if (marker.x !== pixel.x || marker.y !== pixel.y) {
+        marker.element.style.transform = `translate3d(${pixel.x}px, ${pixel.y}px, 0) translate(-50%, -100%)`;
+        marker.x = pixel.x;
+        marker.y = pixel.y;
+      }
       const label = marker.label;
       if (!label) continue;
       const selected = marker.element.classList.contains("selected");
       const width = Math.min(145, label.textContent.length * 6.5 + 12);
       const bounds = { left: pixel.x - width / 2, right: pixel.x + width / 2, top: pixel.y + 1, bottom: pixel.y + 19 };
       const overlaps = labelBounds.some((other) => bounds.left < other.right && bounds.right > other.left && bounds.top < other.bottom && bounds.bottom > other.top);
-      const show = selected || (container.clientWidth >= 760 && !overlaps);
+      const show = selected || (viewWidth >= 760 && !overlaps);
       label.style.display = show ? "block" : "none";
       if (show) labelBounds.push(bounds);
     }
   };
   viewer.scene.postRender.addEventListener(updateMarkers);
+
+  const popupPixel = new Cesium.Cartesian2();
+  const globeOccluder = new Cesium.EllipsoidalOccluder(viewer.scene.globe.ellipsoid);
+  function trackPopup(element, anchor, onVisible) {
+    const { lon, lat, height, marker } = anchor;
+    const position = marker?.position ?? Cesium.Cartesian3.fromDegrees(lon, lat, height ?? 1900);
+    let shown = false, active = true;
+    const update = () => {
+      if (!active || !element.isConnected) return;
+      const camera = viewer.camera, bounds = container.getBoundingClientRect();
+      globeOccluder.cameraPosition = camera.positionWC;
+      const toAnchor = Cesium.Cartesian3.subtract(position, camera.positionWC, markerDirection);
+      const canSee = Cesium.Cartesian3.dot(toAnchor, camera.directionWC) > 0
+        && globeOccluder.isPointVisible(position);
+      const pixel = canSee && Cesium.SceneTransforms.worldToWindowCoordinates(viewer.scene, position, popupPixel);
+      const target = pixel && popupPlacement({ x: pixel.x, y: pixel.y - (marker ? 12 : 0) },
+        { width: element.offsetWidth, height: element.offsetHeight },
+        { width: bounds.width, height: bounds.height }, occluderRects(bounds));
+      if (!target) {
+        element.dataset.positioned = "false";
+        return;
+      }
+      element.style.transform = `translate3d(${target.left + bounds.left}px, ${target.top + bounds.top}px, 0)`;
+      element.style.setProperty("--popup-arrow", `${target.arrow}px`);
+      element.dataset.side = target.side;
+      element.dataset.positioned = "true";
+      if (!shown) { shown = true; onVisible(); }
+    };
+    const remove = viewer.scene.postRender.addEventListener(update);
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
+    [...panelElements, container, element].forEach(node => observer?.observe(node));
+    update();
+    viewer.scene.requestRender();
+    return () => { active = false; observer?.disconnect(); remove(); };
+  }
 
   const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
   let pendingMove, moveFrame = 0;
@@ -233,13 +283,14 @@ export async function createCesiumMap(container, accessToken, callbacks) {
   }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
   handler.setInputAction((event) => {
     const point = pickedCoordinates(viewer, event.position);
-    if (point) callbacks.onClick?.(point);
+    callbacks.onClick?.(point, point ? trails.pick(event.position) : null);
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
   return {
     viewer,
     refreshLayout: framing.layoutChanged,
     refreshMarkers() { viewer.scene.requestRender(); },
+    trackPopup,
     setOverview(peaks) { const points = peaks.map(placeFramePoint).filter(Boolean); if (points.length) overviewPoints = points; },
     resetView(duration = 1.2) { framing.request(overviewPoints, { heading: HOME.heading, pitch: HOME.pitch, minimumRange: 8000 }, duration); },
     focusPeak(peak, close) {
@@ -248,7 +299,12 @@ export async function createCesiumMap(container, accessToken, callbacks) {
     },
     focusHut(hut) {
       const point = placeFramePoint(hut);
-      if (point) framing.request([point], { minimumRange: 3500 });
+      if (!point) return;
+      if (hut.properties.elevation_m === null) {
+        const height = viewer.scene.globe.getHeight(Cesium.Cartographic.fromDegrees(point[0], point[1]));
+        if (Number.isFinite(height)) point[2] = height + 14;
+      }
+      framing.request([point], { minimumRange: 3500 });
     },
     focusRoutes(entries, summit) {
       const points = routeFramePoints(entries, summit);
@@ -256,7 +312,8 @@ export async function createCesiumMap(container, accessToken, callbacks) {
     },
     addMarker(element, coordinates, height = 1900) {
       const position = Cesium.Cartesian3.fromDegrees(coordinates[0], coordinates[1], (height ?? 1900) + 14);
-      const marker = { element, position, label: element.querySelector(".map-peak-label"), remove() { markers.delete(marker); element.remove(); } };
+      const groundPoint = height === null ? Cesium.Cartographic.fromDegrees(coordinates[0], coordinates[1], 1914) : null;
+      const marker = { element, position, groundPoint, label: element.querySelector(".map-peak-label"), remove() { markers.delete(marker); element.remove(); } };
       markers.add(marker);
       overlay.append(element);
       updateMarkers();
@@ -267,11 +324,17 @@ export async function createCesiumMap(container, accessToken, callbacks) {
       settleUntil = performance.now() + 3000;
       viewer.scene.requestRender();
     },
+    setMarkedTrails(features) {
+      trails.setFeatures(features);
+      settleUntil = performance.now() + 3000;
+    },
+    styleMarkedTrails(show, dimmed) { trails.setStyle(show, dimmed); },
     destroy() {
       framing.destroy(); resizeObserver?.disconnect(); window.removeEventListener("resize", framing.layoutChanged);
       handler.destroy();
       window.cancelAnimationFrame(moveFrame);
       viewer.scene.preUpdate.removeEventListener(keepRendering);
+      trails.destroy();
       viewer.scene.postRender.removeEventListener(updateMarkers);
       markers.forEach((marker) => marker.remove());
       viewer.destroy();

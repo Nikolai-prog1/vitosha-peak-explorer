@@ -1,9 +1,10 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import htm from "htm";
 import { CheckCircle2, ChevronDown, ChevronUp, ExternalLink, MapPinned, Mountain, TreePine, X } from "@vitosha/icons";
-import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119";
+import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-3";
 import { profileGeometry } from "./planning.js?v=vitosha-camera-20261005-2";
-import { openModalDialog } from "./focus-management.js?v=vitosha-accessibility-20261005-2";
+import { VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-trails-20261119-3";
+import { openModalDialog } from "./focus-management.js?v=vitosha-trails-20261119-3";
 import { NOTE_COORDINATE_BOUNDS } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
 
 const html = htm.bind(React.createElement);
@@ -24,7 +25,7 @@ export const ApproachPlanner = React.memo(function ApproachPlanner({ language, p
   const props = route.routeFeature.properties, routed = props.geometry_kind === "routed";
   return html`<section className="approach-planner" aria-labelledby="approach-heading">
     <h3 id="approach-heading">${placeName(route.feature, language)} → ${placeName(peak, language)}</h3>
-    <p className=${routed ? "provenance-note" : "provenance-note approximate-note"}>${t(routed ? "routedNote" : "approximateNote")}</p>
+    <p className=${routed ? "provenance-note" : "provenance-note approximate-note"}>${t(!routed ? "approximateNote" : props.source === VIA_MARKED_TRAILS ? "routedViaNote" : "routedNote")}</p>
     <div className="endpoint-gaps"><span>${t("startGap", { distance: metres(props.start_gap_m) })}</span><span>${t("summitGap", { distance: metres(props.summit_gap_m) })}</span>${props.start_gap_m > 50 || props.summit_gap_m > 50 ? html`<strong>${t("gapWarning")}</strong>` : null}</div>
     ${facts && chart ? html`<section className="elevation-profile">
       <button type="button" className="profile-toggle" aria-expanded=${expanded} aria-controls="approach-profile" onClick=${() => setExpanded(value => !value)}><span><${Mountain} size=${16} aria-hidden="true" />${t("profile")}</span><${expanded ? ChevronUp : ChevronDown} size=${16} aria-hidden="true" /></button>

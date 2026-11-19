@@ -96,6 +96,7 @@
 .v2-panel:focus { outline: none; }
 .v2-panel.collapsed { bottom: auto; overflow: hidden; }
 .v2-hero { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; gap: 12px; padding: 22px 22px 18px; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.v2-hero[hidden], .v2-content[hidden] { display: none; }
 .v2-panel.collapsed .v2-hero { border-bottom: 0; }
 .v2-hero small { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); }
 .v2-hero h1 { margin: 4px 0 0; font-size: 32px; line-height: 1.08; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); overflow-wrap: anywhere; }
@@ -220,10 +221,15 @@
 .legend-symbol svg { width: 20px; height: 20px; }
 .legend-symbol.routed::before, .legend-symbol.sketch::before { content: ""; width: 18px; border-top: 3px solid var(--brand); }
 .legend-symbol.sketch::before { border-top-style: dashed; }
+.legend-symbol.marked::before { content: ""; width: 18px; height: 3px; border: 1px solid #10151f; border-radius: 2px; background: linear-gradient(90deg, #db4249 33%, #4c9eef 33% 66%, #f3cf62 66%); }
 .legend-symbol.note svg { border: 1px solid currentColor; border-radius: 50%; color: #8c3433; fill: none; stroke: currentColor; stroke-width: 2; }
 .v2-layer-options { display: grid; padding: 5px 12px 7px; border-top: 1px solid var(--rule); }
 .v2-layer-options label { display: flex; align-items: center; min-height: 30px; gap: 8px; font-weight: 700; cursor: pointer; }
 .v2-layer-options input { width: 16px; height: 16px; accent-color: var(--brand); }
+.approach-markings { display: grid; gap: 4px; padding: 0 12px 8px; color: var(--ink-3); font-size: 11px; }
+.approach-markings ul { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.approach-markings li { display: inline-flex; gap: 4px; align-items: baseline; padding: 2px 6px; color: var(--ink-2); background: var(--paper-2); border-radius: 5px; }
+.approach-markings i { display: inline-block; width: 8px; height: 8px; flex: 0 0 8px; background: var(--trail-color); border: 1px solid #51535b; border-radius: 50%; }
 .v2-home-button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); font: inherit; font-size: 14px; font-weight: 800; box-shadow: var(--shadow); cursor: pointer; }
 .v2-home-button:hover:not(:disabled) { background: #1b2638; }
 .v2-home-button:disabled { opacity: 0.5; cursor: default; }
@@ -264,8 +270,8 @@
   .v2-hero-side strong { font-size: 22px; }
   .v2-section, .v2-drawer > summary { padding-left: 18px; padding-right: 18px; }
   .v2-drawer-body { padding: 0 18px 16px; }
-  .v2-map-controls { bottom: auto; top: 72px; right: 10px; }
-  .v2-legend { bottom: auto; top: 72px; right: 62px; max-height: min(42vh, 330px); overflow: auto; }
+  .v2-map-controls { bottom: auto; top: 98px; right: 10px; }
+  .v2-legend { bottom: auto; top: 98px; right: 62px; max-height: min(40vh, 330px); overflow: auto; }
   .v2-home-button { width: 44px; padding: 0; justify-content: center; }
   .v2-home-button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .v2-readout { display: none; }
@@ -366,6 +372,7 @@
 .x-home-footer > span { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .x-home-footer b { color: #c3c7cc; font-weight: 600; }
 .x-home-footer i { height: 16px; border-left: 1px solid #ffffff2b; }
+.x-home-footer a { color: var(--x-gold-light); text-underline-offset: 3px; }
 @media (max-width: 760px) {
   .x-home-header { flex-wrap: wrap; gap: 4px 14px; min-height: 0; padding: 12px 18px 0; }
   .x-home-wordmark { gap: 9px; font-size: 24px; }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import htm from "htm";
 import { X } from "@vitosha/icons";
-import { PlanningDialog } from "./planning-ui.js?v=vitosha-trails-20261119";
+import { PlanningDialog } from "./planning-ui.js?v=vitosha-trails-20261119-3";
 import { createTextFile } from "./planning.js?v=vitosha-camera-20261005-2";
-import { translate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119";
+import { translate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-3";
 
 const html = htm.bind(React.createElement);
 
