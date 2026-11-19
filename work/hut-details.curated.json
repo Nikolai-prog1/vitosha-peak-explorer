@@ -1,0 +1,597 @@
+{
+  "schema_version": 1,
+  "huts": {
+    "hut-2885252059": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-266281246": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-432984797": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-boerica",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-430238360": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-edelvays-vitosha",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-56057967": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-430238361": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-zvezdica",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-296397022": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-266281250": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-kumata",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-175034034": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-momina-skala",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-326138927": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-489835045": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-487390004": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-278783212": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-274090337": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-55188093": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-aleko",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-392680123": {
+      "website": {
+        "value": "https://www.btsbg.org/hizhi/hizha-selimica",
+        "source": "manual",
+        "checked": "2026-11-19"
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    }
+  }
+}
