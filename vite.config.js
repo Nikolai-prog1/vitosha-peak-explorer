@@ -14,7 +14,13 @@ export function sourcePreviewCachePlugin() {
 }
 
 export default defineConfig(({ command }) => ({
-  resolve: { alias: { "@vitosha/icons": fileURLToPath(new URL("./src/icons.js", import.meta.url)) } },
+  resolve: {
+    alias: { "@vitosha/icons": fileURLToPath(new URL("./src/icons.js", import.meta.url)) },
+    dedupe: ["react", "react-dom"],
+  },
+  // Include the aliased icon entry in the first scan so its React consumers and
+  // the renderer share one optimized graph on a cold development start.
+  optimizeDeps: { entries: ["index.html", "src/icons.js"], include: ["react", "react-dom/client", "htm"] },
   plugins: [sourcePreviewCachePlugin(), {
     name: "static-python-compatibility",
     transformIndexHtml: {
