@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { BoundingSphere, Cartesian2, Cartesian3, Cartesian4, Ellipsoid, FixedFrameTransforms, GeographicProjection, Matrix4 } from "@cesium/core";
 import { Camera, SceneMode } from "@cesium/engine";
-import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, routeFramePoints } from "../src/map-framing.js";
+import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, popupPlacement, routeFramePoints } from "../src/map-framing.js";
 
 const Cesium = { BoundingSphere, Cartesian3, FixedFrameTransforms, Matrix4 };
 const near = (actual, expected, tolerance = 0.0001) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} != ${expected}`);
@@ -133,4 +133,14 @@ test("a covering chooser defers an explicit frame until a usable map area reappe
   h.scheduler.request([[23, 42]]); h.tick(); assert.equal(h.applied.length, 0);
   h.setViewport(availableMapViewport(390, 844, mobilePanels)); h.scheduler.layoutChanged(); h.tick();
   assert.equal(h.applied.length, 1); assert.equal(h.applied[0].duration, 1.2);
+});
+test("map cards prefer above their anchor and flip away from real panel bounds", () => {
+  const viewport = { width: 1440, height: 900 };
+  const card = { width: 360, height: 330 };
+  assert.equal(popupPlacement({ x: 900, y: 490 }, card, viewport).side, "above");
+  assert.equal(popupPlacement({ x: 900, y: 100 }, card, viewport).side, "below");
+  const placement = popupPlacement({ x: 425, y: 440 }, card, viewport, [{ left: 16, right: 415, top: 82, bottom: 884 }]);
+  assert.equal(placement.side, "right");
+  assert.ok(placement.left > 415);
+  assert.equal(popupPlacement({ x: -1, y: 490 }, card, viewport), null);
 });

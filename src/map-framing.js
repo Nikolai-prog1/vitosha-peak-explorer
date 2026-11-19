@@ -22,6 +22,35 @@ export function availableMapViewport(width, height, occluders = [], gap = 12) {
   return best ? { ...best, width, height } : null;
 }
 
+export function popupPlacement(anchor, size, viewport, occluders = []) {
+  const { x, y } = anchor;
+  const { width: viewportWidth, height: viewportHeight } = viewport;
+  const { width, height } = size;
+  const margin = 12, gap = 15, corner = 16;
+  if (x < 0 || x > viewportWidth || y < 0 || y > viewportHeight
+    || width + margin * 2 > viewportWidth || height + margin * 2 > viewportHeight) return null;
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const free = (left, top) => {
+    const right = left + width, bottom = top + height;
+    const bounds = { left: left - 6, top: top - 6, right: right + 6, bottom: bottom + 6 };
+    return left >= margin && top >= margin && right <= viewportWidth - margin && bottom <= viewportHeight - margin
+      && !occluders.some(rect => overlaps(rect, bounds));
+  };
+  const horizontal = clamp(x - width / 2, margin, viewportWidth - margin - width);
+  const vertical = clamp(y - height / 2, margin, viewportHeight - margin - height);
+  const lefts = [horizontal, ...occluders.flatMap(rect => [rect.left - width - 6, rect.right + 6])];
+  const tops = [vertical, ...occluders.flatMap(rect => [rect.top - height - 6, rect.bottom + 6])];
+  for (const [side, top] of [["above", y - gap - height], ["below", y + gap]]) {
+    const left = lefts.find(candidate => x - candidate >= corner && x - candidate <= width - corner && free(candidate, top));
+    if (left !== undefined) return { left, top, side, arrow: x - left };
+  }
+  for (const [side, left] of [["right", x + gap], ["left", x - gap - width]]) {
+    const top = tops.find(candidate => y - candidate >= corner && y - candidate <= height - corner && free(left, candidate));
+    if (top !== undefined) return { left, top, side, arrow: y - top };
+  }
+  return null;
+}
+
 const usablePoint = point => Array.isArray(point) && Number.isFinite(point[0]) && Number.isFinite(point[1])
   && Math.abs(point[0]) <= 180 && Math.abs(point[1]) <= 90;
 const altitude = (value, fallback = 1900) => Number.isFinite(value) ? value : fallback;

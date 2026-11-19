@@ -11,6 +11,11 @@ export function dialogTabStops(dialog) {
   return [...dialog.querySelectorAll(TABBABLE)].filter(element => element.tabIndex >= 0 && canFocus(element));
 }
 
+export function restoreFocus(preferred, fallback) {
+  const target = canFocus(preferred) ? preferred : fallback?.();
+  if (canFocus(target)) target.focus();
+}
+
 // Native showModal makes the background inert for pointer, keyboard and screen
 // reader users. Keep explicit edge handling for dynamic disclosures/file views.
 export function openModalDialog(dialog, { onClose, initialFocus, returnFocus } = {}) {
@@ -36,8 +41,7 @@ export function openModalDialog(dialog, { onClose, initialFocus, returnFocus } =
     dialog.removeEventListener("keydown", onKey);
     dialog.removeEventListener("cancel", onCancel);
     if (dialog.open) dialog.close();
-    const target = canFocus(previous) ? previous : returnFocus?.();
-    if (canFocus(target)) target.focus();
+    restoreFocus(previous, returnFocus);
   };
 }
 
