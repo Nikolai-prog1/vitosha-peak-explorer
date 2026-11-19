@@ -1,0 +1,322 @@
+{
+  "capture_source": "overpass",
+  "elements": [
+    {
+      "id": 274090337,
+      "lat": 42.5948516,
+      "lon": 23.2248564,
+      "tags": {
+        "ele": "1631",
+        "name": "х. Трендафила",
+        "name:en": "Trendafila cottage",
+        "source": "bgtopomaps",
+        "tourism": "alpine_hut"
+      },
+      "type": "node"
+    },
+    {
+      "id": 2885252059,
+      "lat": 42.5483448,
+      "lon": 23.3180664,
+      "tags": {
+        "ele": "1860",
+        "name": "х. Физкултурник",
+        "name:bg": "Проф. Ив. Стайков",
+        "old_name": "x. Купена",
+        "tourism": "alpine_hut"
+      },
+      "type": "node"
+    },
+    {
+      "center": {
+        "lat": 42.5825921,
+        "lon": 23.2921287
+      },
+      "id": 55188093,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "check_date": "2022-12-11",
+        "contact:facebook": "https://www.facebook.com/moten.aleko",
+        "contact:instagram": "https://www.instagram.com/hijaaleko",
+        "description": "Собственик: БТС Състояние: Работи",
+        "ele": "1810",
+        "email": "info@motensport.com",
+        "image": "https://photos.app.goo.gl/ACLTVnKC3weabn3C7",
+        "importance": "Bulgarian 100",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "internet_access:ssid": "Aleco WiFi",
+        "name": "хижа Алеко",
+        "name:en": "Aleko hut",
+        "opening_hours": "08:00-22:00",
+        "operator": "БТС",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "phone": "+359 2 967 1113",
+        "reservation": "yes",
+        "roof:shape": "gabled",
+        "source": "bgtopomaps;survey",
+        "toilets": "yes",
+        "tourism": "alpine_hut",
+        "website": "https://www.motensport.com/",
+        "wheelchair": "yes",
+        "wikidata": "Q4714733",
+        "wikipedia": "bg:Алеко (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6275869,
+        "lon": 23.2590561
+      },
+      "id": 56057967,
+      "tags": {
+        "abandoned:building": "yes",
+        "building": "yes",
+        "ele": "1420",
+        "fee": "no",
+        "internet_access": "no",
+        "name": "х. Есперанто",
+        "name:en": "Esperanto Hut",
+        "operator": "Ministry of Agriculture, Food and Forestry",
+        "tourism": "alpine_hut",
+        "wikidata": "Q89690503",
+        "wikipedia": "bg:Есперанто (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6230063,
+        "lon": 23.2513241
+      },
+      "id": 175034034,
+      "tags": {
+        "building": "yes",
+        "building:levels": "2",
+        "ele": "1486",
+        "name": "х. Момина скала",
+        "name:en": "Momina Skala Hut",
+        "phone": "+359 88 927 6647",
+        "tourism": "alpine_hut",
+        "website": "https://www.facebook.com/pages/%D0%A5%D0%B8%D0%B6%D0%B0%20%22%D0%9C%D0%BE%D0%BC%D0%B8%D0%BD%D0%B0%20%D0%A1%D0%BA%D0%B0%D0%BB%D0%B0%22/122391761177570/",
+        "wikidata": "Q89690609",
+        "wikipedia": "bg:Момина скала (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.5880999,
+        "lon": 23.2477595
+      },
+      "id": 266281246,
+      "tags": {
+        "amenity": "shelter",
+        "building": "yes",
+        "ele": "1784",
+        "name": "з. Конярника"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.5944989,
+        "lon": 23.2506402
+      },
+      "id": 266281250,
+      "tags": {
+        "building": "yes",
+        "building:levels": "4",
+        "ele": "1734",
+        "name": "х. Кумата",
+        "name:en": "Kumata Hut",
+        "phone": "+359 88 986 6100",
+        "tourism": "alpine_hut",
+        "website": "https://kumata.bg/",
+        "wikidata": "Q89690541",
+        "wikipedia": "bg:Кумата"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6222054,
+        "lon": 23.2600264
+      },
+      "id": 278783212,
+      "tags": {
+        "abandoned:building": "yes",
+        "building": "yes",
+        "ele": "1561",
+        "name": "х. Средец",
+        "name:en": "Sredets Hut",
+        "tourism": "alpine_hut",
+        "wikidata": "Q89689657"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6248522,
+        "lon": 23.2659046
+      },
+      "id": 296397022,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1470",
+        "name": "х. Камен дел",
+        "name:en": "Kamen Del Hut",
+        "phone": "+359 89 720 9797",
+        "tourism": "alpine_hut",
+        "website": "http://kamendel.info/",
+        "wikidata": "Q89690629",
+        "wikipedia": "bg:Камен дел (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6242494,
+        "lon": 23.2398473
+      },
+      "id": 326138927,
+      "tags": {
+        "building": "yes",
+        "building:levels": "2",
+        "currency:BCH": "yes",
+        "ele": "1368",
+        "name": "х. Планинец",
+        "name:en": "Planinets Hut",
+        "tourism": "alpine_hut",
+        "website": "https://www.facebook.com/planinec1",
+        "wikidata": "Q89690515",
+        "wikipedia": "bg:Планинец (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.572948,
+        "lon": 23.2035221
+      },
+      "id": 392680123,
+      "tags": {
+        "addr:city": "Кладница",
+        "addr:postcode": "2347",
+        "building": "hut",
+        "name": "хижа Селимица",
+        "name:en": "hut \"Selimitsa\"",
+        "phone": "+359 87 625 6286",
+        "tourism": "alpine_hut",
+        "website": "https://hija.selimica.com/",
+        "wikidata": "Q89690631",
+        "wikipedia": "bg:Селимица (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.5884876,
+        "lon": 23.2302633
+      },
+      "id": 430238360,
+      "tags": {
+        "building": "yes",
+        "building:levels": "2",
+        "ele": "1679",
+        "facebook": "https://www.facebook.com/Hizha.Edelvais",
+        "heating": "fireplace",
+        "name": "х. Еделвайс",
+        "name:en": "Edelvays Hut",
+        "phone": "+359 88 851 2381",
+        "tourism": "alpine_hut",
+        "wikidata": "Q89690612",
+        "wikipedia": "bg:Еделвайс (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.5885876,
+        "lon": 23.2343461
+      },
+      "id": 430238361,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1710",
+        "name": "х. Звездица",
+        "name:en": "Zvezditsa Hut",
+        "phone": "+359 88 852 9049",
+        "tourism": "alpine_hut",
+        "website": "http://hijazvezdica.com/",
+        "wikidata": "Q89690514",
+        "wikipedia": "bg:Звездица (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6025998,
+        "lon": 23.2542235
+      },
+      "id": 432984797,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1710",
+        "name": "х. Боерица",
+        "name:en": "Boeritsa Hut",
+        "tourism": "alpine_hut",
+        "wikidata": "Q89689327"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6176484,
+        "lon": 23.2446723
+      },
+      "id": 487390004,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1497",
+        "name": "х. Септември",
+        "name:en": "Septemvri Hut",
+        "phone": "+359 89 866 5267",
+        "tourism": "alpine_hut",
+        "website": "https://www.facebook.com/septemvrihut/",
+        "wikidata": "Q73091800",
+        "wikipedia": "bg:Септември (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.5771823,
+        "lon": 23.3169068
+      },
+      "id": 489835045,
+      "tags": {
+        "building": "yes",
+        "building:levels": "2",
+        "ele": "1576",
+        "name": "х. Погледец",
+        "name:en": "Pogledets Hut",
+        "operator": "БТПП",
+        "tourism": "alpine_hut",
+        "wikidata": "Q12290891",
+        "wikipedia": "bg:Погледец (хижа)"
+      },
+      "type": "way"
+    }
+  ],
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-19T13:27:19Z"
+  }
+}
