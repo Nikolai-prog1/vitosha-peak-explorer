@@ -1,9 +1,10 @@
 import json
 import math
 from pathlib import Path
-from build_vitosha_data import OSM_LICENSE, VIA_TRAIL_SOURCE, haversine_km
+from build_vitosha_data import OSM_LICENSE, PARK_SOURCE, VIA_TRAIL_SOURCE, haversine_km, read_json
 from hut_data import checked_date
-from marked_trails import OTHER_WAY_ROLES, TRAIL_COLOURS, TRAIL_NETWORKS
+from marked_trails import MIN_PARK_KM, MIN_PARK_SHARE, OTHER_WAY_ROLES, TRAIL_COLOURS, TRAIL_NETWORKS
+from park_boundary import PARK_BUFFER_M, ParkBoundary, select_park_relation
 from trail_geometry import VITOSHA_BOUNDS
 
 
@@ -16,8 +17,12 @@ def load(name):
         return json.load(handle)
 
 
-def validate_coordinates(coordinates, label):
+def validate_coordinate_pair(coordinates, label):
     assert len(coordinates) == 2 and all(type(value) in (int, float) and math.isfinite(value) for value in coordinates), f"{label}: invalid coordinates"
+
+
+def validate_coordinates(coordinates, label):
+    validate_coordinate_pair(coordinates, label)
     lon, lat = coordinates
     west, south, east, north = VITOSHA_BOUNDS
     assert west <= lon <= east and south <= lat <= north, f"{label}: outside Vitosha bounds"
@@ -38,6 +43,8 @@ huts = load("huts.geojson")["features"]
 routes = load("hut-routes.geojson")["features"]
 quality = load("data-quality.json")
 marked_trails = load("marked-trails.geojson")["features"]
+park_capture = read_json(PARK_SOURCE)
+park = ParkBoundary(select_park_relation(park_capture["elements"]))
 
 peak_ids = set()
 for peak in peaks:
@@ -73,6 +80,8 @@ for trail in marked_trails:
     assert props["colour"] is None or props["colour"] in TRAIL_COLOURS, f"{trail_id}: invalid marking colour"
     assert props["network"] is None or props["network"] in TRAIL_NETWORKS, f"{trail_id}: invalid network"
     assert type(props["clipped"]) is bool and 0 < props["length_km"] <= 1000
+    assert MIN_PARK_KM <= props["park_length_km"] <= props["relation_length_km"] + 0.000001, f"{trail_id}: invalid park length"
+    assert fraction(props["park_share"]) and props["park_share"] >= MIN_PARK_SHARE, f"{trail_id}: invalid park share"
     assert all(role["role"] in OTHER_WAY_ROLES and type(role["osm_way_id"]) is int and role["osm_way_id"] > 0 for role in props["way_roles"])
     assert props["alternative_way_count"] == sum(role["role"] == "alternative" for role in props["way_roles"])
     assert trail["type"] == "Feature" and trail["geometry"]["type"] == "MultiLineString"
@@ -81,7 +90,10 @@ for trail in marked_trails:
     for line in paths:
         assert len(line) >= 2 and any(point != line[0] for point in line[1:]), f"{trail_id}: invalid line"
         for point in line:
-            validate_coordinates(point, trail_id)
+            validate_coordinate_pair(point, trail_id)
+            assert park.contains(point), f"{trail_id}: point outside Vitosha Nature Park + {PARK_BUFFER_M} m: {point}"
+        for start, end in zip(line, line[1:]):
+            assert park.contains_segment(start, end), f"{trail_id}: segment leaves Vitosha Nature Park + {PARK_BUFFER_M} m: {start}–{end}"
     trails_by_id[trail_id] = props
 
 route_ids = set()
@@ -133,9 +145,16 @@ assert quality["hut_route_count"] == len(routes)
 assert quality["schema_version"] == 3
 assert quality["license"] == OSM_LICENSE
 assert quality["marked_trail_count"] == len(marked_trails) >= 5
-for key in ("marked_trails", "hut_details"):
+for key in ("marked_trails", "hut_details", "park_boundary"):
     assert quality["capture_sources"][key] in {"overpass", "geofabrik bulgaria-latest"}
     assert quality["source_timestamps"][key].endswith("Z")
+assert quality["source_timestamps"]["park_boundary"] == park_capture["osm3s"]["timestamp_osm_base"]
+assert quality["capture_sources"]["park_boundary"] == park_capture["capture_source"]
+trail_filter = quality["marked_trail_filter"]
+assert (trail_filter["park_relation_id"], trail_filter["buffer_m"]) == (park.relation_id, PARK_BUFFER_M)
+assert (trail_filter["min_park_length_km"], trail_filter["min_park_share"]) == (MIN_PARK_KM, MIN_PARK_SHARE)
+excluded = [entry["id"] for entry in trail_filter["excluded"]]
+assert len(excluded) == len(set(excluded)) and not set(excluded) & trails_by_id.keys(), "Excluded trail IDs overlap or repeat"
 expected_detail_counts = {}
 for hut in huts:
     for field in hut["properties"]["details"]:
@@ -146,4 +165,4 @@ assert quality["route_counts"]["approximate"] == sum(route["properties"]["geomet
 assert quality["route_counts"]["with_elevation_profile"] == sum(route["properties"]["profile_elevations_m"] is not None for route in routes)
 assert quality["route_counts"]["via_marked_trails"] == sum(route["properties"]["source"] == VIA_TRAIL_SOURCE for route in routes)
 
-print(f"Validated {len(peaks)} peaks, {len(huts)} huts, {len(routes)} approaches and {len(marked_trails)} marked trails.")
+print(f"Validated {len(peaks)} peaks, {len(huts)} huts, {len(routes)} approaches and {len(marked_trails)} marked trails within the park + {PARK_BUFFER_M} m.")

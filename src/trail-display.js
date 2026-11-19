@@ -5,3 +5,12 @@ export const TRAIL_COLORS = Object.freeze({
 
 export const VIA_MARKED_TRAILS = "BRouter hiking-beta via OSM marked trails";
 export function trailColor(colour) { return TRAIL_COLORS[colour] ?? "#bac2cb"; }
+
+export function visibleMarkings(route) {
+  return route.properties.marked_trails.filter(item => item.share >= 0.15);
+}
+
+export function contextualTrailIds({ hutRoutes, activeRoute, summitRoutes }) {
+  const routes = hutRoutes ?? (activeRoute ? [activeRoute] : summitRoutes);
+  return new Set(routes.flatMap(route => visibleMarkings(route).map(item => item.trail_id)));
+}

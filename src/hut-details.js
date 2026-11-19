@@ -1,4 +1,4 @@
-import { formatNumber, translate } from "./i18n.js?v=vitosha-trails-20261119-3";
+import { formatNumber, translate } from "./i18n.js?v=vitosha-trails-20261119-4";
 
 const FACTS = [
   ["capacity_beds", "hutBeds"], ["opening_hours", "hutHours"], ["drinking_water", "hutWater"],

@@ -21,8 +21,9 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from hut_data import enrich_huts
-from marked_trails import annotate_approaches, build_marked_trails
-from trail_geometry import VITOSHA_BOUNDS, sample_line, shortest_path, trail_graph
+from marked_trails import MIN_PARK_KM, MIN_PARK_SHARE, annotate_approaches, build_marked_trails
+from park_boundary import PARK_BUFFER_M, ParkBoundary, select_park_relation
+from trail_geometry import VITOSHA_BOUNDS, haversine_km, sample_line, shortest_path, trail_graph
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work"
@@ -31,6 +32,7 @@ PEAK_SOURCE = WORK / "vitosha-peaks-overpass.json"
 POI_SOURCE = WORK / "vitosha-pois-overpass.json"
 HUT_DETAIL_SOURCE = WORK / "vitosha-huts-details-overpass.json"
 MARKED_TRAIL_SOURCE = WORK / "vitosha-hiking-routes-overpass.json"
+PARK_SOURCE = WORK / "vitosha-park-boundary-overpass.json"
 CURATED_HUTS = WORK / "hut-details.curated.json"
 ROUTE_CACHE = WORK / "brouter-cache"
 ROUTE_WORKERS = 2
@@ -139,15 +141,6 @@ def element_coord(element):
         return [float(element["lon"]), float(element["lat"])]
     center = element.get("center") or {}
     return [float(center["lon"]), float(center["lat"])]
-
-
-def haversine_km(left, right):
-    lon1, lat1 = left[:2]
-    lon2, lat2 = right[:2]
-    d_lat = math.radians(lat2 - lat1)
-    d_lon = math.radians(lon2 - lon1)
-    a = math.sin(d_lat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(d_lon / 2) ** 2
-    return 6371 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
 
 def build_peaks(osm):
@@ -422,15 +415,17 @@ def main():
     hut_capture = read_json(POI_SOURCE)
     hut_details = read_json(HUT_DETAIL_SOURCE)
     trail_capture = read_json(MARKED_TRAIL_SOURCE)
+    park_capture = read_json(PARK_SOURCE)
     curated = read_json(CURATED_HUTS)
     peaks = build_peaks(peak_capture)
     huts = build_huts(hut_capture)
     enrich_huts(huts, hut_details, curated)
-    trails, raw_lines = build_marked_trails(trail_capture)
+    boundary = ParkBoundary(select_park_relation(park_capture["elements"]))
+    trails, raw_lines, excluded = build_marked_trails(trail_capture, boundary)
     collection = feature_collection(trails)
     if len(json.dumps(collection, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) + 1 > 600_000:
         print("Marked trails exceed 600 KB at 3 m; using 5 m simplification.")
-        trails, raw_lines = build_marked_trails(trail_capture, tolerance=5)
+        trails, raw_lines, excluded = build_marked_trails(trail_capture, boundary, tolerance=5)
         collection = feature_collection(trails)
     try:
         routes = build_routes(peaks, huts, args.refresh_routes)
@@ -448,12 +443,19 @@ def main():
         {
             "mountain": "Vitosha",
             "schema_version": 3,
-            "generated_from": ["OpenStreetMap Overpass", "BRouter hiking-beta", "OpenStreetMap route relations"],
+            "generated_from": ["OpenStreetMap Overpass", "BRouter hiking-beta", "OpenStreetMap route relations", "OpenStreetMap Vitosha Nature Park boundary"],
             "license": OSM_LICENSE,
             "peak_count": len(peaks),
             "hut_count": len(huts),
             "hut_route_count": len(routes),
             "marked_trail_count": len(trails),
+            "marked_trail_filter": {
+                "park_relation_id": boundary.relation_id,
+                "buffer_m": PARK_BUFFER_M,
+                "min_park_length_km": MIN_PARK_KM,
+                "min_park_share": MIN_PARK_SHARE,
+                "excluded": excluded,
+            },
             "hut_detail_field_counts": {
                 field: sum(field in hut["properties"]["details"] for hut in huts)
                 for field in sorted({field for hut in huts for field in hut["properties"]["details"]})
@@ -464,10 +466,12 @@ def main():
                 "huts": hut_capture.get("osm3s", {}).get("timestamp_osm_base"),
                 "hut_details": hut_details["osm3s"]["timestamp_osm_base"],
                 "marked_trails": trail_capture["osm3s"]["timestamp_osm_base"],
+                "park_boundary": park_capture["osm3s"]["timestamp_osm_base"],
             },
             "capture_sources": {
                 "hut_details": hut_details["capture_source"],
                 "marked_trails": trail_capture["capture_source"],
+                "park_boundary": park_capture["capture_source"],
             },
             "route_counts": {
                 "routed": sum(route["properties"]["geometry_kind"] == "routed" for route in routes),

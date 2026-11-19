@@ -286,6 +286,7 @@ export const MESSAGES = {
   summitsFromHere: ["Върхове оттук", "Summits from here"],
   markedTrail: ["Маркирана пътека", "Marked trail"],
   markedTrailLayer: ["Маркирани пътеки", "Marked trails"],
+  allMarkedTrailsLayer: ["Всички маркирани пътеки", "All marked trails"],
   markedTrailDistance: ["Дължина във Витоша", "Distance on Vitosha"],
   markedTrailNetwork: ["Ниво на мрежата", "Network level"],
   trailNetworkLwn: ["Местна", "Local"],

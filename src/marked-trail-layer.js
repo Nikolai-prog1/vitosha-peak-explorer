@@ -1,19 +1,29 @@
-import { trailColor } from "./trail-display.js?v=vitosha-trails-20261119-3";
+import { trailColor } from "./trail-display.js?v=vitosha-trails-20261119-4";
 
 export function createMarkedTrailLayer(Cesium, scene) {
   let features, primitive, instances = [];
-  let visible = true, opacity = 1, appliedOpacity = 1;
+  let visibleIds = new Set(), opacity = 1;
+  let appliedIds, appliedOpacity;
+  const isVisible = feature => visibleIds === null || visibleIds.has(feature.properties.id);
 
-  function updateOpacity() {
-    if (!primitive?.ready || opacity === appliedOpacity) return;
+  function applyStyle() {
+    if (!primitive?.ready || (visibleIds === appliedIds && opacity === appliedOpacity)) return;
     for (const { id, color } of instances) {
       const attributes = primitive.getGeometryInstanceAttributes(id);
-      attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color.withAlpha(color.alpha * opacity), attributes.color);
+      const show = isVisible(id.markedTrail);
+      if (Boolean(attributes.show[0]) !== show) {
+        attributes.show = Cesium.ShowGeometryInstanceAttribute.toValue(show, attributes.show);
+      }
+      if (opacity !== appliedOpacity) {
+        attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(color.withAlpha(color.alpha * opacity), attributes.color);
+      }
     }
+    primitive.show = visibleIds === null || visibleIds.size > 0;
+    appliedIds = visibleIds;
     appliedOpacity = opacity;
     scene.requestRender();
   }
-  const removeListener = scene.postRender.addEventListener(updateOpacity);
+  const removeListener = scene.postRender.addEventListener(applyStyle);
 
   function instance(feature, positions, width, color) {
     const id = { markedTrail: feature };
@@ -22,7 +32,10 @@ export function createMarkedTrailLayer(Cesium, scene) {
       geometry: new Cesium.GeometryInstance({
         id,
         geometry: new Cesium.GroundPolylineGeometry({ positions, width }),
-        attributes: { color: Cesium.ColorGeometryInstanceAttribute.fromColor(color.withAlpha(color.alpha * opacity)) },
+        attributes: {
+          color: Cesium.ColorGeometryInstanceAttribute.fromColor(color),
+          show: new Cesium.ShowGeometryInstanceAttribute(false),
+        },
       }),
     };
   }
@@ -51,21 +64,24 @@ export function createMarkedTrailLayer(Cesium, scene) {
         geometryInstances: instances.map(item => item.geometry),
         appearance: new Cesium.PolylineColorAppearance({ translucent: true }),
         classificationType: Cesium.ClassificationType.TERRAIN,
-        show: visible,
       }));
       scene.groundPrimitives.lowerToBottom(primitive);
-      appliedOpacity = opacity;
+      // Prepare the batch with every instance hidden. A focus change during
+      // worker preparation cannot display stale trails for a frame.
+      appliedIds = appliedOpacity = undefined;
+      applyStyle();
       scene.requestRender();
     },
-    setStyle(show, dimmed) {
-      visible = show;
+    setStyle(ids, dimmed) {
+      visibleIds = ids;
       opacity = dimmed ? 0.35 : 1;
-      if (primitive) primitive.show = visible;
-      updateOpacity();
+      applyStyle();
       scene.requestRender();
     },
     pick(position) {
-      return visible && primitive?.ready ? scene.pick(position)?.id?.markedTrail ?? null : null;
+      if (!primitive?.ready || !primitive.show) return null;
+      const picked = scene.pick(position)?.id?.markedTrail;
+      return picked && isVisible(picked) ? picked : null;
     },
     destroy() {
       removeListener();

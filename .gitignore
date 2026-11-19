@@ -11,6 +11,7 @@ work/*
 !work/brouter-cache/
 !work/vitosha-huts-details-overpass.json
 !work/vitosha-hiking-routes-overpass.json
+!work/vitosha-park-boundary-overpass.json
 !work/hut-details.curated.json
 docs/qa/pirin-reference-1440x900.png
 docs/qa/pirin-reference-live-1440x900.png

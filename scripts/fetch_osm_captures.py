@@ -14,7 +14,8 @@ import urllib.request
 import venv
 from pathlib import Path
 
-from build_vitosha_data import DATA, HUT_IDS, ROOT, WORK, read_json
+from build_vitosha_data import DATA, HUT_IDS, PARK_SOURCE, ROOT, WORK, read_json
+from park_boundary import ParkBoundary, is_vitosha_park, select_park_relation
 from trail_geometry import CAPTURE_BOUNDS, clip_segment
 
 OVERPASS = "https://overpass-api.de/api/interpreter"
@@ -22,6 +23,7 @@ GEOFABRIK = "https://download.geofabrik.de/europe"
 USER_AGENT = "VitoshaPeakExplorer/1.0 (+https://github.com/Nikolai-prog1/vitosha-peak-explorer)"
 OSMIUM_VERSION = "4.3.2"
 FILES = {
+    "park": PARK_SOURCE,
     "huts": WORK / "vitosha-huts-details-overpass.json",
     "routes": WORK / "vitosha-hiking-routes-overpass.json",
 }
@@ -46,6 +48,9 @@ def overpass_query(kind, hut_keys):
                             for osm_type in ("node", "way")
                             if (ids := sorted(osm_id for key_type, osm_id in hut_keys if key_type == osm_type)))
         return f"[out:json][timeout:60];({selectors});out tags center;"
+    if kind == "park":
+        # Body output retains the outer and inner member ways for ring assembly.
+        return '[out:json][timeout:120];relation["boundary"="protected_area"]["name"~"Витоша"];out body geom;'
     west, south, east, north = CAPTURE_BOUNDS
     # `out tags geom` omits relation members, including their way geometries.
     return f'[out:json][timeout:180];relation["type"="route"]["route"~"^(hiking|foot)$"]({south},{west},{north},{east});out body geom;'
@@ -96,7 +101,10 @@ def from_overpass(kinds, hut_keys):
                 raise ValueError(result["remark"])
             return snapshot(result["elements"], result["osm3s"]["timestamp_osm_base"], "overpass")
 
-        captures[kind] = retry_request(f"Overpass {kind}", fetch)
+        capture = retry_request(f"Overpass {kind}", fetch)
+        if kind == "park":
+            capture["elements"] = [select_park_relation(capture["elements"])]
+        captures[kind] = capture
     return captures
 
 
@@ -133,19 +141,22 @@ def extract_geofabrik(pbf, timestamp, kinds, hut_keys):
     import osmium
 
     relations = []
+    parks = []
     member_ids = set()
     ways = {}
     huts = []
 
-    class Routes(osmium.SimpleHandler):
+    class Relations(osmium.SimpleHandler):
         def relation(self, relation):
             tags = dict(relation.tags)
-            if tags.get("type") != "route" or tags.get("route") not in {"hiking", "foot"}:
+            is_park = "park" in kinds and is_vitosha_park(tags)
+            is_route = "routes" in kinds and tags.get("type") == "route" and tags.get("route") in {"hiking", "foot"}
+            if not (is_park or is_route):
                 return
             members = [{"type": "way", "ref": member.ref, "role": member.role}
                        for member in relation.members if member.type == "w"]
             member_ids.update(member["ref"] for member in members)
-            relations.append({"type": "relation", "id": relation.id, "tags": tags, "members": members})
+            (parks if is_park else relations).append({"type": "relation", "id": relation.id, "tags": tags, "members": members})
 
     class Geometry(osmium.SimpleHandler):
         def node(self, node):
@@ -165,8 +176,8 @@ def extract_geofabrik(pbf, timestamp, kinds, hut_keys):
                           for axis in ("lat", "lon")}
                 huts.append({"type": "way", "id": way.id, "center": center, "tags": dict(way.tags)})
 
-    if "routes" in kinds:
-        Routes().apply_file(pbf)
+    if "routes" in kinds or "park" in kinds:
+        Relations().apply_file(pbf)
     Geometry().apply_file(pbf, locations=True)
     intersecting = {
         way_id for way_id, points in ways.items()
@@ -176,10 +187,12 @@ def extract_geofabrik(pbf, timestamp, kinds, hut_keys):
     selected = []
     for relation in relations:
         if any(member["ref"] in intersecting for member in relation["members"]):
-            for member in relation["members"]:
-                member["geometry"] = ways.get(member["ref"], [])
             selected.append(relation)
-    return {kind: snapshot(huts if kind == "huts" else selected, timestamp, "geofabrik bulgaria-latest") for kind in kinds}
+    for relation in [*parks, *selected]:
+        for member in relation["members"]:
+            member["geometry"] = ways.get(member["ref"], [])
+    results = {"huts": huts, "routes": selected, "park": [select_park_relation(parks)] if "park" in kinds else []}
+    return {kind: snapshot(results[kind], timestamp, "geofabrik bulgaria-latest") for kind in kinds}
 
 
 def save_capture(path, capture):
@@ -196,6 +209,8 @@ def save_capture(path, capture):
 
 
 def verify_and_save(captures, hut_keys):
+    if "park" in captures:
+        ParkBoundary(select_park_relation(captures["park"]["elements"]))
     if "huts" in captures:
         elements = captures["huts"]["elements"]
         if len(elements) != len(hut_keys) or {(obj["type"], obj["id"]) for obj in elements} != hut_keys:
@@ -233,11 +248,12 @@ def main():
     parser.add_argument("--source", choices=("overpass", "geofabrik"), default="overpass")
     parser.add_argument("--huts", action="store_true")
     parser.add_argument("--routes", action="store_true")
+    parser.add_argument("--park", action="store_true", help="Capture the OSM boundary of Vitosha Nature Park")
     parser.add_argument("--run-dir", type=Path, default=ROOT.parent / "_codex", help="Geofabrik downloads and venv, outside the repository")
     args = parser.parse_args()
     kinds = [kind for kind in FILES if getattr(args, kind)]
     if not kinds:
-        parser.error("Choose --huts, --routes, or both")
+        parser.error("Choose at least one of --huts, --routes, and --park")
     run_dir = args.run_dir.resolve()
     if run_dir.is_relative_to(ROOT):
         parser.error("--run-dir must be outside the repository")

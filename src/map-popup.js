@@ -1,10 +1,10 @@
 import React from "react";
 import htm from "htm";
 import { House, Tent, X } from "@vitosha/icons";
-import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-trails-20261119-3";
-import { hutKindKey } from "./huts.js?v=vitosha-trails-20261119-3";
-import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-trails-20261119-3";
-import { trailColor } from "./trail-display.js?v=vitosha-trails-20261119-3";
+import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-trails-20261119-4";
+import { hutKindKey } from "./huts.js?v=vitosha-trails-20261119-4";
+import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-trails-20261119-4";
+import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-trails-20261119-4";
 
 const html = htm.bind(React.createElement);
 export const OSM_COPYRIGHT = "https://www.openstreetmap.org/copyright";
@@ -38,7 +38,7 @@ function HutFacts({ hut, language, t, approaches, peaks, routes, onApproach }) {
       <ul>${approaches.map(approach => {
         const peak = peaks.get(approach.peakId), route = routes.get(approach.routeId);
         if (!peak || !route) return null;
-        const markings = route.properties.marked_trails.filter(item => item.share >= 0.15);
+        const markings = visibleMarkings(route);
         return html`<li key=${approach.routeId}><button type="button" onClick=${() => onApproach(approach, hut)}>
           <strong>${placeName(peak, language)}</strong>
           <span>${formatNumber(approach.distanceKm, language)} ${t("kilometreUnit")} · ${t(approach.approximate ? "approximate" : "modelledApproach")}</span>

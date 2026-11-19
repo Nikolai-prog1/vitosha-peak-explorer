@@ -2,24 +2,24 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createRoot } from "react-dom/client";
 import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Tent, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=vitosha-trails-20261119-3";
+import { createCesiumMap } from "./cesium-map.js?v=vitosha-trails-20261119-4";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
-import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-trails-20261119-3";
-import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-3";
-import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-trails-20261119-3";
-import { formatWebsiteHref } from "./hut-details.js?v=vitosha-trails-20261119-3";
-import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119-3";
-import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-trails-20261119-3";
-import { restoreFocus } from "./focus-management.js?v=vitosha-trails-20261119-3";
-import { trailColor, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-trails-20261119-3";
+import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-trails-20261119-4";
+import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-4";
+import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-trails-20261119-4";
+import { formatWebsiteHref } from "./hut-details.js?v=vitosha-trails-20261119-4";
+import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119-4";
+import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-trails-20261119-4";
+import { restoreFocus } from "./focus-management.js?v=vitosha-trails-20261119-4";
+import { contextualTrailIds, trailColor, VIA_MARKED_TRAILS, visibleMarkings } from "./trail-display.js?v=vitosha-trails-20261119-4";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-trails-20261119-3";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-trails-20261119-3";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-trails-20261119-3";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-trails-20261119-3";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-trails-20261119-3";
-import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-trails-20261119-3";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-trails-20261119-4";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-trails-20261119-4";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-trails-20261119-4";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-trails-20261119-4";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-trails-20261119-4";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-trails-20261119-4";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
@@ -69,7 +69,7 @@ function makeHutMarkerElement(hut) {
   return element;
 }
 
-function MapLegend({ t, open, onToggle, showHuts, onShowHuts, showTrails, onShowTrails, mapReady, inert }) {
+function MapLegend({ t, open, onToggle, showHuts, onShowHuts, showAllTrails, onShowAllTrails, mapReady, inert }) {
   const rows = [
     ["summit", peakMarkerSvg(false)],
     ["selectedSummit", peakMarkerSvg(true, "legend-active-peak")],
@@ -85,7 +85,7 @@ function MapLegend({ t, open, onToggle, showHuts, onShowHuts, showTrails, onShow
     <ul>${rows.map(([key, svg, style]) => html`<li key=${key}><span className=${`legend-symbol ${style || ""}`} aria-hidden="true" dangerouslySetInnerHTML=${svg ? { __html: svg } : undefined}></span>${t(key)}</li>`)}</ul>
     <div className="v2-layer-options">
       <label><input type="checkbox" checked=${showHuts} disabled=${!mapReady} onChange=${event => onShowHuts(event.target.checked)}/>${t("hutLayer")}</label>
-      <label><input type="checkbox" checked=${showTrails} disabled=${!mapReady} onChange=${event => onShowTrails(event.target.checked)}/>${t("markedTrailLayer")}</label>
+      <label><input type="checkbox" checked=${showAllTrails} disabled=${!mapReady} onChange=${event => onShowAllTrails(event.target.checked)}/>${t("allMarkedTrailsLayer")}</label>
     </div>
   </details>`;
 }
@@ -125,7 +125,7 @@ function App() {
   const [mapPopup, setMapPopup] = useState(null);
   const [hutSort, setHutSort] = useState("elevation-desc");
   const [showHuts, setShowHuts] = useState(true), [legendOpen, setLegendOpen] = useState(!isMobile);
-  const [showMarkedTrails, setShowMarkedTrails] = useState(true);
+  const [showAllTrails, setShowAllTrails] = useState(false);
   const [comboOpen, setComboOpen] = useState(false), [activeIndex, setActiveIndex] = useState(0);
   const [routeViewMode, setRouteViewMode] = useState("none"), [sheet, setSheet] = useState("half");
   const [detailsPanelCollapsed, setDetailsPanelCollapsed] = useState(false), [weatherExpanded, setWeatherExpanded] = useState(true);
@@ -167,6 +167,14 @@ function App() {
   const peakIndex = useMemo(() => new Map(data.peaks.map(peak => [peak.properties.id, peak])), [data.peaks]);
   const routeIndex = useMemo(() => new Map(data.hutRoutes.map(route => [route.properties.id, route])), [data.hutRoutes]);
   const trailIndex = useMemo(() => new Map(data.markedTrails.map(trail => [trail.properties.id, trail])), [data.markedTrails]);
+  const popupHutId = mapPopup?.kind === "hut" ? mapPopup.feature.properties.id : null;
+  const contextualIds = useMemo(() => {
+    const hutRoutes = popupHutId === null ? undefined :
+      (hutIndex.get(popupHutId)?.approaches ?? []).map(approach => routeIndex.get(approach.routeId)).filter(Boolean);
+    return contextualTrailIds({ hutRoutes, activeRoute: activeRoute?.routeFeature,
+      summitRoutes: routeOptions.map(option => option.routeFeature) });
+  }, [popupHutId, hutIndex, routeIndex, activeRoute?.routeFeature, routeOptions]);
+  const visibleTrailIds = showAllTrails ? null : contextualIds;
   const popupInPanel = Boolean(mapPopup && (isMobile || mapPhase !== "ready"));
   const activeTrailReport = trailReports.find(report => report.id === activeReportId) || null;
   const clearMarkers = ref => { ref.current.forEach(marker => marker.remove()); ref.current = []; };
@@ -359,8 +367,8 @@ function App() {
   }, [mapPhase, data.markedTrails]);
   const dimMarkedTrails = Boolean(activeRoute);
   useEffect(() => {
-    if (mapPhase === "ready") mapRef.current?.styleMarkedTrails(showMarkedTrails, dimMarkedTrails);
-  }, [mapPhase, showMarkedTrails, dimMarkedTrails]);
+    if (mapPhase === "ready") mapRef.current?.styleMarkedTrails(visibleTrailIds, dimMarkedTrails);
+  }, [mapPhase, visibleTrailIds, dimMarkedTrails]);
   useEffect(() => {
     const map = mapRef.current; if (!map || mapPhase !== "ready") return;
     clearMarkers(hutMarkersRef);
@@ -466,7 +474,10 @@ function App() {
   const panelOpen = isMobile || !detailsPanelCollapsed;
   const toggleAllRoutes = () => { if (routeViewMode === "all") { setRouteViewMode("none"); setSelectedHutId(null); } else { setSelectedHutId(null); setRouteViewMode("all"); focusRouteCandidates(routeCandidates); } };
   const showHutLayer = show => { setShowHuts(show); if (!show && mapPopup?.kind === "hut" && !mapPopup.trigger) setMapPopup(null); };
-  const showTrailLayer = show => { setShowMarkedTrails(show); if (!show && mapPopup?.kind === "trail") setMapPopup(null); };
+  const showTrailLayer = show => {
+    setShowAllTrails(show);
+    if (!show && mapPopup?.kind === "trail" && !contextualIds.has(mapPopup.feature.properties.id)) setMapPopup(null);
+  };
   const renderPopup = embedded => html`<${MapPopup} key=${mapPopup.feature.properties.id} popup=${mapPopup} embedded=${embedded} popupRef=${popupRef} onClose=${closeMapPopup}
     onApproach=${selectHutApproach} language=${language} hutIndex=${hutIndex} peaks=${peakIndex} routes=${routeIndex}/>`;
 
@@ -479,7 +490,7 @@ function App() {
   const approachRows = routeCandidates.map(candidate => {
     const props = candidate.feature.properties, approximate = candidate.routeFeature.properties.geometry_kind === "approximate", facts = candidate.facts;
     const route = candidate.routeFeature.properties;
-    const markings = route.marked_trails.filter(item => item.share >= 0.15);
+    const markings = visibleMarkings(candidate.routeFeature);
     const website = formatWebsiteHref(props.details.website?.value);
     const websiteSearch = `https://www.google.com/search?q=${encodeURIComponent(placeName(candidate.feature, language) + " hut official website")}`;
     return html`<li key=${props.id} className=${`approach-row ${candidate.active ? "active" : ""} ${approximate ? "approximate" : ""}`} style=${{ "--route": ROUTE_COLORS[candidate.rank] }}>
@@ -609,7 +620,7 @@ function App() {
 
     ${mapPopup && !popupInPanel ? renderPopup(false) : null}
     <${MapLegend} t=${t} open=${legendOpen} onToggle=${setLegendOpen} showHuts=${showHuts} onShowHuts=${showHutLayer}
-      showTrails=${showMarkedTrails} onShowTrails=${showTrailLayer} mapReady=${mapPhase === "ready"} inert=${showCover}/>
+      showAllTrails=${showAllTrails} onShowAllTrails=${showTrailLayer} mapReady=${mapPhase === "ready"} inert=${showCover}/>
     <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
       <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
       <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>

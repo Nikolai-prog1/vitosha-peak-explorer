@@ -1,6 +1,6 @@
 import { withAbort } from "./requests.js?v=vitosha-planning-20261005";
-import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, popupPlacement, routeFramePoints } from "./map-framing.js?v=vitosha-trails-20261119-3";
-import { createMarkedTrailLayer } from "./marked-trail-layer.js?v=vitosha-trails-20261119-3";
+import { availableMapViewport, cameraFramePose, createFrameScheduler, placeFramePoint, popupPlacement, routeFramePoints } from "./map-framing.js?v=vitosha-trails-20261119-4";
+import { createMarkedTrailLayer } from "./marked-trail-layer.js?v=vitosha-trails-20261119-4";
 
 const HOME = { longitude: 23.283, latitude: 42.5585, height: 2000, range: 11000, heading: -24, pitch: -43 };
 let cesiumLoadPromise;
@@ -20,7 +20,7 @@ export function loadCesium() {
       reject(new Error("Картният модул не се зареди / Map module did not load"));
     };
     const timeout = window.setTimeout(fail, 20000);
-    script.src = `${base}Cesium.js?v=vitosha-trails-20261119-3`;
+    script.src = `${base}Cesium.js?v=vitosha-trails-20261119-4`;
     script.async = true;
     script.onerror = fail;
     script.onload = () => {
@@ -328,7 +328,7 @@ export async function createCesiumMap(container, accessToken, callbacks) {
       trails.setFeatures(features);
       settleUntil = performance.now() + 3000;
     },
-    styleMarkedTrails(show, dimmed) { trails.setStyle(show, dimmed); },
+    styleMarkedTrails(ids, dimmed) { trails.setStyle(ids, dimmed); },
     destroy() {
       framing.destroy(); resizeObserver?.disconnect(); window.removeEventListener("resize", framing.layoutChanged);
       handler.destroy();

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import htm from "htm";
-import { loadCesium } from "./cesium-map.js?v=vitosha-trails-20261119-3";
+import { loadCesium } from "./cesium-map.js?v=vitosha-trails-20261119-4";
 import { withAbort } from "./requests.js?v=vitosha-planning-20261005";
-import { translate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-3";
+import { translate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-4";
 
 const html = htm.bind(React.createElement);
 

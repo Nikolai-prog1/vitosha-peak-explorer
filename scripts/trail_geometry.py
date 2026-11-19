@@ -41,6 +41,15 @@ def metres(point):
     return (point[0] - 23.30) * LON_SCALE, (point[1] - 42.58) * METRES_PER_DEGREE
 
 
+def haversine_km(left, right):
+    lon1, lat1 = left[:2]
+    lon2, lat2 = right[:2]
+    d_lat = math.radians(lat2 - lat1)
+    d_lon = math.radians(lon2 - lon1)
+    a = math.sin(d_lat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(d_lon / 2) ** 2
+    return 6371 * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+
 def point_segment_distance_sq(point, start, end):
     dx, dy = end[0] - start[0], end[1] - start[1]
     length_sq = dx * dx + dy * dy
@@ -48,7 +57,7 @@ def point_segment_distance_sq(point, start, end):
     return (point[0] - start[0] - fraction * dx) ** 2 + (point[1] - start[1] - fraction * dy) ** 2
 
 
-def simplify_line(line, tolerance):
+def simplify_line(line, tolerance, segment_allowed):
     """Douglas–Peucker, with original endpoints retained."""
     projected = [metres(point) for point in line]
     retained = {0, len(line) - 1}
@@ -59,33 +68,13 @@ def simplify_line(line, tolerance):
             continue
         furthest = max(range(start + 1, end),
                        key=lambda i: point_segment_distance_sq(projected[i], projected[start], projected[end]))
-        if point_segment_distance_sq(projected[furthest], projected[start], projected[end]) > tolerance ** 2:
+        if (point_segment_distance_sq(projected[furthest], projected[start], projected[end]) > tolerance ** 2
+                or not segment_allowed(line[start], line[end])):
             retained.add(furthest)
             pending.extend(((start, furthest), (furthest, end)))
     if len(retained) == 2 and line[0] == line[-1]:
         retained.add(max(range(1, len(line) - 1), key=lambda i: math.dist(projected[i], projected[0])))
     return [line[index] for index in sorted(retained)]
-
-
-def clipped_way(geometry):
-    points = [None if not point else (round(point["lon"], 7), round(point["lat"], 7)) for point in geometry]
-    west, south, east, north = VITOSHA_BOUNDS
-    clipped = any(point and not (west <= point[0] <= east and south <= point[1] <= north) for point in points)
-    lines = []
-    current = []
-    for start, end in zip(points, points[1:]):
-        if start and start == end:
-            continue
-        segment = clip_segment(start, end, VITOSHA_BOUNDS) if start and end else None
-        if segment and current and current[-1] == segment[0]:
-            current.append(segment[1])
-        else:
-            if current:
-                lines.append(current)
-            current = list(segment) if segment else []
-    if current:
-        lines.append(current)
-    return lines, clipped
 
 
 def stitch_lines(lines):

@@ -9,7 +9,7 @@ A static-first 3D hiking explorer for Vitosha Mountain, adapted from the Pirin P
 - Panel-aware summit/route framing that preserves normal picking and stops auto-framing on a manual map gesture
 - 17 high Vitosha summits with OSM coordinates and elevations
 - 16 always-visible hut and shelter markers, a keyboard-accessible hut list and bilingual detail cards
-- 29 marked hiking trails from OpenStreetMap, with a layer toggle, route colours and trail details
+- 19 marked OpenStreetMap hiking trails clipped to Vitosha Nature Park and its 300 m buffer, with route colours and trail details
 - Three approach previews per summit, with BRouter/OSM profiles and marked-trail overlap
 - Search, height/A–Z sorting, summit fly-to, route focus and show-all modes
 - Expandable model summit forecast, with deadlines, caching and truthful stale-state handling
@@ -66,9 +66,11 @@ npm audit --audit-level=high
 
 ## Data and safety
 
-Peak and hut metadata is generated from cached OpenStreetMap captures in `work/`. The current dataset contains 17 peaks, 16 huts and shelters, 29 marked hiking trail relations, and 51 BRouter approaches with cached elevation profiles. Each peak keeps three starts selected by proximity. The marked-trail overlap measures how much of the approach lies within 20 m of recorded OSM lines. Trail relations can overlap and the markings lack a field check. Elevation sums are unfiltered model values. When a refresh leaves a geometric sketch, it appears dashed and has no profile or GPX export.
+Peak and hut metadata is generated from cached OpenStreetMap captures in `work/`. The current dataset contains 17 peaks, 16 huts and shelters, 19 marked hiking trail relations, and 51 BRouter approaches with cached elevation profiles. Each peak keeps three starts selected by proximity. A marked relation needs at least 2 km and at least 25% of its length inside Vitosha Nature Park. The published lines are clipped to the park and its 300 m buffer. The marked-trail overlap measures how much of the approach lies within 20 m of the retained OSM lines. Trail relations can overlap and the markings lack a field check. Elevation sums are unfiltered model values. When a refresh leaves a geometric sketch, it appears dashed and has no profile or GPX export.
 
-Run `python scripts/build_vitosha_data.py` to regenerate offline from the checked-in OSM captures and BRouter cache. Use `python scripts/build_vitosha_data.py --refresh-routes` to ask BRouter for new routes. A missing cache stops ordinary generation with the required refresh command. If BRouter is temporarily unavailable during a refresh, existing cached geometry remains available. Update the tag and relation snapshots with `python scripts/fetch_osm_captures.py --huts --routes`. The downloader can use a Geofabrik Bulgaria extract with the pinned pyosmium wheel in a venv outside the repository. Schema 3 records the capture sources and dates in `public/data/data-quality.json`.
+The overview starts with the marked trails hidden. Selecting a summit or approach or opening a hut card shows the marked trails covering at least 15% of the relevant approaches. Use **All marked trails** in the map legend to turn on the full layer for the current session.
+
+Run `python scripts/build_vitosha_data.py` to regenerate offline from the checked-in OSM captures and BRouter cache. Use `python scripts/build_vitosha_data.py --refresh-routes` to ask BRouter for new routes. A missing cache stops ordinary generation with the required refresh command. If BRouter is temporarily unavailable during a refresh, existing cached geometry remains available. Update the tag, route and park snapshots with `python scripts/fetch_osm_captures.py --huts --routes --park`. The downloader can use a Geofabrik Bulgaria extract with the pinned pyosmium wheel in a venv outside the repository. Schema 3 records the capture sources, dates and relation filtering in `public/data/data-quality.json`.
 
 To add a locally confirmed hut fact, open `work/hut-details.curated.json`, find the hut's stable ID and fill a field's value, source and check date. For example, a verified bed count of 40 can use `{"value": 40, "source": "manual", "checked": "2026-11-19"}`. Leave unknown facts null and run the offline builder followed by `npm run check:data`. Manual facts override matching OSM tags.
 
@@ -84,7 +86,7 @@ JavaScript, Cesium workers, icons and fonts are pinned and bundled locally; the 
 
 ## Offline planning, not offline navigation
 
-In the built app over HTTPS or localhost, use **Prepare offline facts** in the details panel before leaving the connection. The service worker stores the interface, fonts and five public datasets in a 12-file pack of about 1.02 MiB. Each complete response is size/hash-checked. Readiness is recorded only after every required file is stored. A refresh can repair an evicted current pack when connected. An older complete pack remains available after a failed newer installation.
+In the built app over HTTPS or localhost, use **Prepare offline facts** in the details panel before leaving the connection. The service worker stores the interface, fonts and five public datasets in a 12-file pack. Each complete response is size/hash-checked. Readiness is recorded only after every required file is stored. A refresh can repair an evicted current pack when connected. An older complete pack remains available after a failed newer installation.
 
 On an offline launch, search, summit/approach facts, modelled profiles, saved plans, local note reading and client-side exports remain available. Map-only controls and map-picked note placement require the loaded 3D map; explicit coordinate entry does not. Forecast numbers are not presented as current while offline. The reconnect button reloads with fresh, network-only operator configuration; provider tiles/forecasts are never archived by this worker. Pack preparation time and OSM capture dates are shown separately, neither claiming a field inspection.
 
