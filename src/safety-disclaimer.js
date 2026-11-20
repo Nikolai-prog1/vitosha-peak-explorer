@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import htm from "htm";
-import { PlanningDialog } from "./planning-ui.js?v=vitosha-polish-20261120";
+import { PlanningDialog } from "./planning-ui.js?v=vitosha-polish-20261120-2";
 
 const html = htm.bind(React.createElement);
 // Shown before the map starts loading. Bulgarian first; the toggle only changes

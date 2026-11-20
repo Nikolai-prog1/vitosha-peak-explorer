@@ -64,3 +64,14 @@ test("trail cards explain loose ends from the park cut and from gaps in the OSM 
     assert.equal(notes(trail).length, Number(trail.properties.clipped) + Number(trail.properties.piece_count > 1), trail.properties.id);
   }
 });
+
+test("contact and map links use the same noun labels with a separate source tag", () => {
+  const aleko = huts.find(hut => hut.properties.details.website && hut.properties.details.phone && hut.properties.details.email);
+  const markup = render({ kind: "hut", feature: aleko });
+  const actions = markup.match(/<div class="map-popup-actions">(.*?)<\/div>/s)[1];
+  const links = [...actions.matchAll(/<a\b[^>]*>(.*?)<\/a>/gs)].map(match => match[1]);
+  assert.deepEqual(links.map(link => link.match(/^<span>([^<]+)<\/span>|^([^<]+)$/).slice(1).find(Boolean)), ["Сайт", "Телефон", "Имейл", "OpenStreetMap"]);
+  for (const link of links.slice(0, 3)) assert.match(link, /^<span>[^<]+<\/span><small class="map-popup-source"[^>]*>(?:OSM|Ръчно)<\/small>$/);
+  const trail = render({ kind: "trail", feature: trails[0] }).match(/<div class="map-popup-actions">(.*?)<\/div>/s)[1];
+  assert.deepEqual([...trail.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]), ["Waymarked Trails", "OpenStreetMap"]);
+});

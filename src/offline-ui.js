@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import htm from "htm";
-import { translate, formatDate, formatNumber } from "./i18n.js?v=vitosha-polish-20261120";
+import { translate, formatDate, formatNumber } from "./i18n.js?v=vitosha-polish-20261120-2";
 import { ownedWorker, offlineWorkerStatus, prepareOfflinePack } from "./offline.js?v=vitosha-offline-20261005-2";
 const html = htm.bind(React.createElement);
 export function useOfflineFacts(offlineLaunch) {

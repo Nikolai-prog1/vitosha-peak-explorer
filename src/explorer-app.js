@@ -5,21 +5,22 @@ import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, Loca
 import { createCesiumMap } from "./cesium-map.js?v=vitosha-polish-20261120";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-polish-20261120";
-import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-polish-20261120";
-import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-polish-20261120";
-import { formatWebsiteHref } from "./hut-details.js?v=vitosha-polish-20261120";
+import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-polish-20261120-2";
+import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-polish-20261120-2";
+import { formatWebsiteHref } from "./hut-details.js?v=vitosha-polish-20261120-2";
 import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119-4";
-import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-polish-20261120";
+import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-polish-20261120-2";
+import { MapLegend } from "./map-legend.js?v=vitosha-polish-20261120-2";
 import { restoreFocus } from "./focus-management.js?v=vitosha-trails-20261119-4";
 import { contextualTrailIds, trailColor, VIA_MARKED_TRAILS, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-polish-20261120";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-polish-20261120";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-polish-20261120";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-polish-20261120";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-polish-20261120";
-import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-polish-20261120";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-polish-20261120-2";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-polish-20261120-2";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-polish-20261120-2";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-polish-20261120-2";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-polish-20261120-2";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-polish-20261120-2";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
@@ -69,26 +70,6 @@ function makeHutMarkerElement(hut) {
   return element;
 }
 
-function MapLegend({ t, open, onToggle, showHuts, onShowHuts, showAllTrails, onShowAllTrails, mapReady, inert }) {
-  const rows = [
-    ["summit", peakMarkerSvg(false)],
-    ["selectedSummit", peakMarkerSvg(true, "legend-active-peak")],
-    ["hutKindHut", hutMarkerSvg("hut")],
-    ["hutKindShelter", hutMarkerSvg("shelter")],
-    ["modelledApproach", null, "routed"],
-    ["approximate", null, "sketch"],
-    ["markedTrail", null, "marked"],
-    ["personalNote", REPORT_MARKER_SVG, "note"],
-  ];
-  return html`<details className="v2-legend" inert=${inert} data-map-occluder open=${open} onToggle=${event => onToggle(event.currentTarget.open)}>
-    <summary>${t("mapLegend")}<${Icon} component=${ChevronDown} size=${15}/></summary>
-    <ul>${rows.map(([key, svg, style]) => html`<li key=${key}><span className=${`legend-symbol ${style || ""}`} aria-hidden="true" dangerouslySetInnerHTML=${svg ? { __html: svg } : undefined}></span>${t(key)}</li>`)}</ul>
-    <div className="v2-layer-options">
-      <label><input type="checkbox" checked=${showHuts} disabled=${!mapReady} onChange=${event => onShowHuts(event.target.checked)}/>${t("hutLayer")}</label>
-      <label><input type="checkbox" checked=${showAllTrails} disabled=${!mapReady} onChange=${event => onShowAllTrails(event.target.checked)}/>${t("allMarkedTrailsLayer")}</label>
-    </div>
-  </details>`;
-}
 // Pointer coordinates change on every mouse move; keep that state out of App so
 // moving the mouse re-renders only this text, not the whole explorer.
 function PointerCoordinates({ sinkRef }) {

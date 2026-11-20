@@ -99,10 +99,26 @@
 .map-popup-facts > div { min-width: 0; padding: 7px 8px; background: var(--paper-2); border-radius: 9px; }
 .map-popup-facts dt { color: var(--ink-3); font-size: 11px; font-weight: 750; }
 .map-popup-facts dd { margin: 3px 0 0; font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
-.map-popup-source { margin-left: 3px; color: #58461f; font-size: 10px; font-weight: 750; white-space: nowrap; }
+/* One source tag everywhere: facts, contact actions and notes. */
+.map-popup-source {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  color: #58461f;
+  background: #ebe3cf;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.4;
+  text-decoration: none;
+  vertical-align: 1px;
+  white-space: nowrap;
+}
 .map-popup-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .map-popup-actions a {
   display: inline-flex;
+  gap: 6px;
+  text-decoration: none;
   min-height: 34px;
   align-items: center;
   padding: 4px 8px;
@@ -113,6 +129,7 @@
   font-weight: 800;
 }
 .map-popup-actions a:hover { background: var(--brand-soft); }
+.map-popup-actions a .map-popup-source { margin-left: 0; vertical-align: baseline; }
 .map-popup-approaches h3 { margin: 0 0 5px; font-size: 13px; }
 .map-popup-approaches ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
 .map-popup-approaches button {

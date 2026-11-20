@@ -1,9 +1,9 @@
 import React from "react";
 import htm from "htm";
 import { House, Tent, X } from "@vitosha/icons";
-import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-polish-20261120";
-import { hutKindKey } from "./huts.js?v=vitosha-polish-20261120";
-import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-polish-20261120";
+import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-polish-20261120-2";
+import { hutKindKey } from "./huts.js?v=vitosha-polish-20261120-2";
+import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-polish-20261120-2";
 import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 
 const html = htm.bind(React.createElement);
@@ -31,7 +31,7 @@ function HutFacts({ hut, language, t, approaches, peaks, routes, onApproach }) {
       const record = details[field], href = safeHref(record?.value);
       if (!href) return null;
       return html`<a key=${field} href=${href} target=${field === "website" ? "_blank" : undefined} rel=${field === "website" ? "noopener noreferrer" : undefined} title=${record.value}>
-        ${t(label)} <${Source} record=${record} language=${language} t=${t}/></a>`;
+        <span>${t(label)}</span><${Source} record=${record} language=${language} t=${t}/></a>`;
     })}<a href=${osm} target="_blank" rel="noopener noreferrer">${t("showInOsm")}</a></div>
     ${approaches.length ? html`<section className="map-popup-approaches" aria-labelledby="popup-approaches-title">
       <h3 id="popup-approaches-title">${t("summitsFromHere")}</h3>
@@ -68,7 +68,7 @@ function TrailFacts({ feature, language, t }) {
     ${notes.length ? html`<ul className="map-popup-notes">${notes.map(note => html`<li key=${note}>${note}</li>`)}</ul>` : null}
     <div className="map-popup-actions">
       <a href=${props.wmt_url} target="_blank" rel="noopener noreferrer">${t("showInWaymarked")}</a>
-      <a href=${props.osm_url} target="_blank" rel="noopener noreferrer">OpenStreetMap</a>
+      <a href=${props.osm_url} target="_blank" rel="noopener noreferrer">${t("showInOsm")}</a>
     </div>
   </div>`;
 }
