@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "../src/hut-details.js";
+import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "../src/hut-details.js";
 
 const detail = (value, source = "osm", checked = null) => ({ value, source, checked });
 
@@ -39,4 +39,11 @@ test("the popup date reflects the latest checked manual value", () => {
     food: detail("yes", "manual", "2026-10-01"), phone: detail("123456", "osm", "2026-11-20") };
   assert.equal(latestCheckedDate(details), "2026-11-19");
   assert.equal(latestCheckedDate({ phone: details.phone }), null);
+});
+
+test("check dates format per language and fall back to the raw text when invalid", () => {
+  assert.equal(formatCheckedDate("2026-11-19", "en"), "19 Nov 2026");
+  assert.match(formatCheckedDate("2026-11-19", "bg"), /19\.11\.2026|19 ноем/);
+  assert.equal(formatCheckedDate("2026-13-45", "bg"), "2026-13-45");
+  assert.equal(formatCheckedDate("unknown", "en"), "unknown");
 });

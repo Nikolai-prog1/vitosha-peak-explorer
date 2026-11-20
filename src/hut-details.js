@@ -13,7 +13,10 @@ const VALUES = {
 };
 
 export function formatCheckedDate(value, language) {
-  return new Intl.DateTimeFormat(language === "en" ? "en-GB" : "bg-BG", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(value));
+  const date = new Date(value);
+  // One malformed date must not stop the rest of a card from rendering.
+  if (!Number.isFinite(date.getTime())) return String(value);
+  return new Intl.DateTimeFormat(language === "en" ? "en-GB" : "bg-BG", { dateStyle: "medium", timeZone: "UTC" }).format(date);
 }
 
 function knownValue(value, language) {
