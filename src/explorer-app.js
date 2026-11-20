@@ -453,6 +453,8 @@ function App() {
   const status = t(dataPhase === "ready" ? "dataReady" : dataPhase === "error" ? "dataError" : "dataLoading");
   const nearest = routeOptions[0];
   const panelOpen = isMobile || !detailsPanelCollapsed;
+  // Desktop panels fold to their header, both on the overview and on a summit.
+  const collapseButton = isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`;
   const toggleAllRoutes = () => { if (routeViewMode === "all") { setRouteViewMode("none"); setSelectedHutId(null); } else { setSelectedHutId(null); setRouteViewMode("all"); focusRouteCandidates(routeCandidates); } };
   const showHutLayer = show => { setShowHuts(show); if (!show && mapPopup?.kind === "hut" && !mapPopup.trigger) setMapPopup(null); };
   const showTrailLayer = show => {
@@ -563,8 +565,8 @@ function App() {
       ${popupInPanel ? renderPopup(true) : null}
       ${selectedPeak ? html`<header className="v2-hero" hidden=${popupInPanel}>
         <div><small>${t("summitEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${placeName(selectedPeak, language)}</h1>${nearest ? html`<p>${t("nearestStart", { hut: placeName(nearest.feature, language), distance: km(nearest.routeKm) })}</p>` : null}</div>
-        <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong><div className="v2-hero-actions"><button type="button" className="v2-icon" title=${t("clearSelection")} aria-label=${t("clearSelection")} onClick=${clearSelection}><${Icon} component=${X}/></button>${isMobile ? null : html`<button type="button" className="v2-icon" title=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-label=${t(detailsPanelCollapsed ? "expandPanel" : "collapsePanel")} aria-expanded=${!detailsPanelCollapsed} aria-controls="summit-content" onClick=${() => setDetailsPanelCollapsed(value => !value)}><${Icon} component=${detailsPanelCollapsed ? ChevronDown : ChevronUp}/></button>`}</div></div>
-      </header>` : html`<header className="v2-hero" hidden=${popupInPanel}><div><small>${t("overviewEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${t("brandName")}</h1><p>${t("overviewLead")}</p></div></header>`}
+        <div className="v2-hero-side"><strong>${formatNumber(selectedPeak.properties.elevation_m, language, 0)}<small> ${t("metreUnit")}</small></strong><div className="v2-hero-actions"><button type="button" className="v2-icon" title=${t("clearSelection")} aria-label=${t("clearSelection")} onClick=${clearSelection}><${Icon} component=${X}/></button>${collapseButton}</div></div>
+      </header>` : html`<header className="v2-hero" hidden=${popupInPanel}><div><small>${t("overviewEyebrow")}</small><h1 ref=${summitHeadingRef} tabIndex="-1">${t("brandName")}</h1><p>${t("overviewLead")}</p></div>${collapseButton ? html`<div className="v2-hero-side">${collapseButton}</div>` : null}</header>`}
       <div id="summit-content" className="v2-content" hidden=${!panelOpen || popupInPanel}>
       ${selectedPeak ? null : html`<section className="v2-section" aria-label=${t("overviewPlaces")}>
         <div className="v2-place-switch" role="group" aria-label=${t("overviewPlaces")}>

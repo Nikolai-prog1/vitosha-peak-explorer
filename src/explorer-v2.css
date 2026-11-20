@@ -88,8 +88,9 @@
 .v2-chip-button:hover, .v2-sort button:hover { border-color: var(--ink-3); }
 
 /* Panel */
+/* Desktop grid: 16px edges; the panel column ends above a 44px bottom row shared by the Cesium credit and the map controls. */
 .v2-panel {
-  position: fixed; z-index: 20; top: 84px; left: 16px; bottom: 16px; width: 400px; box-sizing: border-box;
+  position: fixed; z-index: 20; top: 84px; left: 16px; bottom: 68px; width: 400px; box-sizing: border-box;
   display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;
   background: var(--panel); border-radius: var(--radius); box-shadow: var(--shadow); scrollbar-width: thin;
 }
@@ -203,7 +204,7 @@
 /* Map controls and readout */
 /* One dock and one light surface for every map control: legend above, then status and buttons in a row. */
 .v2-map-dock {
-  position: fixed; z-index: 20; right: 16px; bottom: 40px; max-width: calc(100vw - 32px);
+  position: fixed; z-index: 20; right: 16px; bottom: 16px; max-width: calc(100vw - 32px);
   display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none;
 }
 .v2-dock-row { display: flex; align-items: center; gap: 8px; }
@@ -260,7 +261,10 @@
 
 /* Map markers: route colors stay calm; hut marker follows the route color. */
 .v2 .map-peak-label { font-weight: 700; }
-.v2 .cesium-widget-credits { left: 432px !important; bottom: 8px !important; }
+.v2 .cesium-widget-credits {
+  left: 16px !important; bottom: 16px !important; height: 44px; max-width: 400px;
+  display: flex; align-items: center; gap: 6px; box-sizing: border-box;
+}
 
 /* Cover page */
 
@@ -278,6 +282,8 @@
     top: auto; left: 0; right: 0; bottom: 0; width: auto; border-radius: 22px 22px 0 0; z-index: 25;
     padding-bottom: env(safe-area-inset-bottom); transition: height 0.25s ease;
   }
+  /* The sheet stays docked to the bottom; the desktop fold (and note placement) must not lift it. */
+  .v2-panel.collapsed { bottom: 0; }
   .v2-panel.sheet-peek { height: 132px; overflow: hidden; }
   .v2-panel.sheet-half { height: 48dvh; }
   .v2-panel.sheet-full { height: calc(100dvh - 72px); }
@@ -294,7 +300,7 @@
   .v2-home-button { width: 44px; padding: 0; justify-content: center; }
   .v2-home-button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .v2-readout { display: none; }
-  .v2 .cesium-widget-credits { left: 8px !important; top: 66px; bottom: auto !important; }
+  .v2 .cesium-widget-credits { left: 8px !important; top: 66px; bottom: auto !important; height: auto; display: block; }
   .v2 .action-notice { top: 72px; left: 10px; right: 64px; }
 }
 @media (prefers-reduced-motion: reduce) {
