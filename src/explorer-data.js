@@ -1,11 +1,11 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
 import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
+import { TRAIL_COLORS, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-trails-20261119-4";
 
 export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], markedTrails: [], quality: null };
 const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "marked-trails.geojson", "data-quality.json"];
-const COLOURS = new Set(["red", "blue", "green", "yellow", "white", "black", "orange", "purple"]);
+const COLOURS = new Set(Object.keys(TRAIL_COLORS));
 const NETWORKS = new Set(["lwn", "rwn", "nwn", "iwn"]);
-const VIA_TRAILS = "BRouter hiking-beta via OSM marked trails";
 const snapshotSources = new Set(["overpass", "geofabrik bulgaria-latest"]);
 
 function fail() { throw new Error("Invalid Vitosha dataset"); }
@@ -124,7 +124,7 @@ export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, qua
     if (Math.abs(props.start_gap_m - distanceMeters(paths[0][0], hutById.get(props.hut_id).geometry.coordinates)) > 1
       || Math.abs(props.summit_gap_m - distanceMeters(paths[0].at(-1), peakById.get(props.peak_id).geometry.coordinates)) > 1) fail();
     const elevations = props.profile_elevations_m;
-    if (elevations === null) { if (props.profile_source !== null || props.source === VIA_TRAILS) fail(); }
+    if (elevations === null) { if (props.profile_source !== null || props.source === VIA_MARKED_TRAILS) fail(); }
     else {
       if (props.geometry_kind !== "routed" || !Array.isArray(elevations) || elevations.length !== paths[0].length || props.profile_source !== "BRouter elevation samples") fail();
       elevations.forEach(height => finite(height, 500, 3000));
@@ -140,7 +140,7 @@ export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, qua
   if (quality.route_counts?.routed !== routes.filter(route => route.properties.geometry_kind === "routed").length
       || quality.route_counts?.approximate !== routes.filter(route => route.properties.geometry_kind === "approximate").length
       || quality.route_counts?.with_elevation_profile !== routes.filter(route => route.properties.profile_elevations_m !== null).length
-      || quality.route_counts?.via_marked_trails !== routes.filter(route => route.properties.source === VIA_TRAILS).length) fail();
+      || quality.route_counts?.via_marked_trails !== routes.filter(route => route.properties.source === VIA_MARKED_TRAILS).length) fail();
   const detailCounts = new Map();
   for (const hut of shelters.features) for (const field of Object.keys(hut.properties.details)) detailCounts.set(field, (detailCounts.get(field) ?? 0) + 1);
   if (!record(quality.hut_detail_field_counts) || Object.keys(quality.hut_detail_field_counts).length !== detailCounts.size

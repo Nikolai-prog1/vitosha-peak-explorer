@@ -4,7 +4,7 @@ import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Tent, TreePine, X } from "@vitosha/icons";
 import { createCesiumMap } from "./cesium-map.js?v=vitosha-trails-20261119-4";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
-import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-trails-20261119-4";
+import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-polish-20261120";
 import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-4";
 import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-trails-20261119-4";
 import { formatWebsiteHref } from "./hut-details.js?v=vitosha-polish-20261120";
