@@ -98,6 +98,11 @@ HUT_IDS = {
     180212603,
 }
 
+# OSM names these tourist-society lodges as huts ("х."); use the names from the park directorate's list.
+HUT_NAMES = {
+    180212595: ("Червената шапчица (ТД „Композиторите“)", "Chervenata Shapchitsa Lodge (Composers' Club)"),
+    180212603: ("Творчески дом „Витоша“ (ТД „Витоша – БНР“)", "Vitosha Lodge (BNR Club)"),
+}
 HUT_ENGLISH = {
     "х. Трендафила": "Trendafila Hut",
     "хижа Алеко": "Aleko Hut",
@@ -203,6 +208,8 @@ def build_huts(osm):
         raw_name = tags.get("name:bg") or tags.get("name") or f"OSM {element['id']}"
         name_bg = clean_name(raw_name)
         name_en = tags.get("name:en") or HUT_ENGLISH.get(name_bg) or name_bg
+        if element["id"] in HUT_NAMES:
+            name_bg, name_en = HUT_NAMES[element["id"]]
         lon, lat = element_coord(element)
         elevation = tags.get("ele")
         try:
