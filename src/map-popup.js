@@ -94,7 +94,7 @@ export function MapPopup({ popup, embedded, popupRef, onClose, onApproach, langu
       ${isHut ? html`<${HutFacts} hut=${feature} language=${language} t=${t} approaches=${hutIndex.get(props.id)?.approaches || []}
         peaks=${peaks} routes=${routes} onApproach=${onApproach}/>` : html`<${TrailFacts} feature=${feature} language=${language} t=${t}/>`}
       <footer className="map-popup-footer">
-        ${isHut ? html`<a href=${OSM_COPYRIGHT} target="_blank" rel="noopener noreferrer">${t("dataOsmCredit")}</a>` : null}
+        <a href=${OSM_COPYRIGHT} target="_blank" rel="noopener noreferrer">${t("dataOsmCredit")}</a>
         ${date ? html`<span>${t("hutManualDate", { date: formatCheckedDate(date, language) })}</span>` : null}
         <span>${t(isHut ? "hutConditions" : "markedTrailNote")}</span>
       </footer>
