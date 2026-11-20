@@ -42,7 +42,7 @@ function HutFacts({ hut, language, t, approaches, peaks, routes, onApproach }) {
         return html`<li key=${approach.routeId}><button type="button" onClick=${() => onApproach(approach, hut)}>
           <strong>${placeName(peak, language)}</strong>
           <span>${formatNumber(approach.distanceKm, language)} ${t("kilometreUnit")} · ${t(approach.approximate ? "approximate" : "modelledApproach")}</span>
-          ${markings.length ? html`<span className="map-popup-marks" role="img" aria-label=${t("markedTrailLayer")}>${markings.map(item => html`<i key=${item.trail_id} aria-hidden="true" title=${item.ref || undefined} style=${{ "--trail-color": trailColor(item.colour) }}></i>`)}</span>` : null}
+          ${markings.length ? html`<span className="map-popup-marks" role="img" aria-label=${`${t("markedTrailLayer")}: ${markings.map(item => item.ref || t("markedTrail")).join(", ")}`}>${markings.map(item => html`<i key=${item.trail_id} aria-hidden="true" title=${item.ref || undefined} style=${{ "--trail-color": trailColor(item.colour) }}></i>`)}</span>` : null}
         </button></li>`;
       })}</ul>
     </section>` : null}

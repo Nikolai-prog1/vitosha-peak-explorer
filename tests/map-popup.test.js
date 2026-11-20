@@ -36,3 +36,17 @@ test("every external card link opens without an opener or referrer", () => {
   for (const anchor of blank) assert.match(anchor, /rel="noopener noreferrer"/);
   assert.doesNotMatch(markup, /href="(?:javascript|data):/i);
 });
+
+test("an approach's marking dots name the trails for assistive technology", async () => {
+  const routes = await load("hut-routes");
+  const route = routes.find(item => item.properties.marked_trails.filter(mark => mark.share >= 0.15).length >= 2);
+  const { hut_id: hutId, peak_id: peakId, id: routeId, distance_km: distanceKm } = route.properties;
+  const peak = (await load("peaks")).find(item => item.properties.id === peakId);
+  const markup = render({ kind: "hut", feature: huts.find(hut => hut.properties.id === hutId) }, {
+    hutIndex: new Map([[hutId, { approaches: [{ peakId, routeId, distanceKm, approximate: false }] }]]),
+    peaks: new Map([[peakId, peak]]), routes: new Map([[routeId, route]]),
+  });
+  const label = markup.match(/class="map-popup-marks" role="img" aria-label="([^"]+)"/)?.[1];
+  const expected = route.properties.marked_trails.filter(mark => mark.share >= 0.15).map(mark => mark.ref || "Маркирана пътека");
+  assert.equal(label, `Маркирани пътеки: ${expected.join(", ")}`);
+});
