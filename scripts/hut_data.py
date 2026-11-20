@@ -21,7 +21,9 @@ OSM_FIELDS = {
     "check_date": ("check_date",),
     "wikidata": ("wikidata",),
 }
-MANUAL_FIELDS = set(OSM_FIELDS) | {"water", "food", "season", "notes_bg", "notes_en", "payment"}
+MANUAL_FIELDS = set(OSM_FIELDS) | {"water", "food", "season", "notes_bg", "notes_en", "payment", "status"}
+# Operating status is a sourced manual fact; only a confirmed closure is recorded.
+HUT_STATUSES = {"closed"}
 # The browser rejects the whole dataset outside these bounds (src/explorer-data.js).
 MAX_TEXT = 3000
 MAX_LIST_ITEMS = 80
@@ -83,7 +85,7 @@ def manual_details(entries, hut_id):
         value, checked = record.get("value"), record.get("checked")
         if value is None:
             continue
-        if record.get("source") != "manual" or not valid_detail_value(value) or (checked is not None and checked_date(checked) != checked):
+        if record.get("source") != "manual" or not valid_detail_value(value) or (checked is not None and checked_date(checked) != checked)                 or (field == "status" and (value not in HUT_STATUSES or checked is None)):
             raise ValueError(f"{hut_id}: invalid value, source or checked date for {field}")
         name = "drinking_water" if field == "water" else field
         if name in merged:

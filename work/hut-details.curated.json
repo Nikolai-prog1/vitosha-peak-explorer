@@ -1,5 +1,8 @@
 {
   "schema_version": 1,
+  "sources": {
+    "manual-2026-11-20": "Vitosha Nature Park directorate hut list, https://park-vitosha.org/дейности/хижи/ (capacity, phone where OSM has none, operator of Kamen Del, closures)."
+  },
   "huts": {
     "hut-2885252059": {
       "website": {
@@ -102,14 +105,19 @@
         "checked": null
       },
       "notes_bg": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "notes_en": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "status": {
+        "value": "closed",
+        "source": "manual",
+        "checked": "2026-11-20"
       }
     },
     "hut-430238360": {
@@ -119,9 +127,9 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 18,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -176,14 +184,19 @@
         "checked": null
       },
       "notes_bg": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "notes_en": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "status": {
+        "value": "closed",
+        "source": "manual",
+        "checked": "2026-11-20"
       }
     },
     "hut-430238361": {
@@ -193,9 +206,9 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 120,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -230,9 +243,9 @@
         "checked": null
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 40,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -258,6 +271,11 @@
         "value": null,
         "source": null,
         "checked": null
+      },
+      "operator": {
+        "value": "ТД „Камен дел – Бояна 1934“",
+        "source": "manual",
+        "checked": "2026-11-20"
       }
     },
     "hut-266281250": {
@@ -267,9 +285,9 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 27,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -304,9 +322,9 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 35,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -341,9 +359,9 @@
         "checked": null
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 60,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -369,6 +387,11 @@
         "value": null,
         "source": null,
         "checked": null
+      },
+      "phone": {
+        "value": "0877 51 40 20",
+        "source": "manual",
+        "checked": "2026-11-20"
       }
     },
     "hut-489835045": {
@@ -415,9 +438,9 @@
         "checked": null
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 26,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -526,9 +549,9 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
-        "value": null,
-        "source": null,
-        "checked": null
+        "value": 110,
+        "source": "manual",
+        "checked": "2026-11-20"
       },
       "food": {
         "value": null,
@@ -563,6 +586,43 @@
         "checked": "2026-11-19"
       },
       "capacity_beds": {
+        "value": 23,
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-180212595": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
         "value": null,
         "source": null,
         "checked": null
@@ -591,6 +651,295 @@
         "value": null,
         "source": null,
         "checked": null
+      }
+    },
+    "hut-180212603": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "phone": {
+        "value": "0988 89 03 92",
+        "source": "manual",
+        "checked": "2026-11-20"
+      }
+    },
+    "hut-299130673": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": 20,
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "phone": {
+        "value": "0889 554 922",
+        "source": "manual",
+        "checked": "2026-11-20"
+      }
+    },
+    "hut-432984612": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": 24,
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "phone": {
+        "value": "0897 293 980",
+        "source": "manual",
+        "checked": "2026-11-20"
+      }
+    },
+    "hut-432984634": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": 27,
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      }
+    },
+    "hut-4641743876": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "phone": {
+        "value": "0898 63 39 62",
+        "source": "manual",
+        "checked": "2026-11-20"
+      }
+    },
+    "hut-474190455": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "notes_en": {
+        "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "status": {
+        "value": "closed",
+        "source": "manual",
+        "checked": "2026-11-20"
+      }
+    },
+    "hut-488455276": {
+      "website": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "capacity_beds": {
+        "value": 52,
+        "source": "manual",
+        "checked": "2026-11-20"
+      },
+      "food": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "water": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "season": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_bg": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "notes_en": {
+        "value": null,
+        "source": null,
+        "checked": null
+      },
+      "phone": {
+        "value": "0898 465 058",
+        "source": "manual",
+        "checked": "2026-11-20"
       }
     }
   }

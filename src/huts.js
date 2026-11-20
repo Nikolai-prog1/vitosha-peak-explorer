@@ -1,4 +1,20 @@
-import { placeName } from "./i18n.js?v=vitosha-polish-20261120-2";
+import { placeName } from "./i18n.js?v=vitosha-huts-20261120";
+
+// A summit's own approaches: its three nearest distinct open trailheads.
+export const PEAK_APPROACH = "nearest-routable-huts";
+// The nearest summit of an open hut that no summit lists; shown from the hut card.
+export const HUT_APPROACH = "hut-nearest-summit";
+
+// A summit lists its own approaches; a hut-only approach joins last, only while its hut is the chosen one.
+export function summitApproaches(hutRoutes, peakId, selectedHutId) {
+  const routes = hutRoutes.filter(route => route.properties.peak_id === peakId);
+  return [...routes.filter(route => route.properties.ranking_mode === PEAK_APPROACH),
+    ...routes.filter(route => route.properties.ranking_mode !== PEAK_APPROACH && route.properties.hut_id === selectedHutId)];
+}
+
+export function hutClosed(hut) {
+  return hut.properties.details?.status?.value === "closed";
+}
 
 export function buildHutIndex(huts, hutRoutes) {
   const index = new Map(huts.map(hut => [hut.properties.id, { hut, approaches: [] }]));

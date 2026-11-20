@@ -3,7 +3,6 @@
 import argparse
 import datetime as dt
 import json
-import re
 import shutil
 import subprocess
 import sys
@@ -14,7 +13,7 @@ import urllib.request
 import venv
 from pathlib import Path
 
-from build_vitosha_data import DATA, HUT_IDS, PARK_SOURCE, ROOT, WORK, read_json
+from build_vitosha_data import HUT_IDS, PARK_SOURCE, POI_SOURCE, ROOT, WORK, read_json
 from park_boundary import ParkBoundary, is_vitosha_park, select_park_relation
 from trail_geometry import CAPTURE_BOUNDS, clip_segment
 
@@ -30,15 +29,11 @@ FILES = {
 
 
 def hut_osm_keys():
-    keys = set()
-    for feature in read_json(DATA / "huts.geojson")["features"]:
-        props = feature["properties"]
-        match = re.fullmatch(r"OpenStreetMap (node|way) (\d+)", props["source_names"])
-        if not match or int(match[2]) != props["osm_id"]:
-            raise ValueError(f"Unknown OSM source for {props['id']}")
-        keys.add((match[1], int(match[2])))
+    # Read the configured huts from the POI capture so a newly added hut can be fetched before the first build.
+    keys = {(element["type"], element["id"]) for element in read_json(POI_SOURCE)["elements"]
+            if element["id"] in HUT_IDS and element["type"] in {"node", "way"}}
     if len(keys) != len(HUT_IDS) or {osm_id for _, osm_id in keys} != HUT_IDS:
-        raise ValueError("The current huts.geojson does not match the configured hut IDs")
+        raise ValueError("The POI capture does not contain exactly one node or way for each configured hut ID")
     return keys
 
 
@@ -214,7 +209,7 @@ def verify_and_save(captures, hut_keys):
     if "huts" in captures:
         elements = captures["huts"]["elements"]
         if len(elements) != len(hut_keys) or {(obj["type"], obj["id"]) for obj in elements} != hut_keys:
-            raise ValueError("The OSM detail capture does not contain the exact 16 configured hut objects")
+            raise ValueError(f"The OSM detail capture does not contain the exact {len(hut_keys)} configured hut objects")
     if "routes" in captures:
         with_geometry = sum(any(member["type"] == "way" and member.get("geometry") for member in relation.get("members", []))
                             for relation in captures["routes"]["elements"])

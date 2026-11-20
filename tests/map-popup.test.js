@@ -75,3 +75,14 @@ test("contact and map links use the same noun labels with a separate source tag"
   const trail = render({ kind: "trail", feature: trails[0] }).match(/<div class="map-popup-actions">(.*?)<\/div>/s)[1];
   assert.deepEqual([...trail.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]), ["Waymarked Trails", "OpenStreetMap"]);
 });
+
+test("a hut the park lists as closed says so first, with its manual source", () => {
+  const closed = huts.filter(hut => hut.properties.details.status);
+  assert.equal(closed.length, 3);
+  for (const hut of closed) {
+    const markup = render({ kind: "hut", feature: hut });
+    assert.match(markup, /<div class="map-popup-body"><p class="map-popup-status"><strong>Не работи<\/strong> <small class="map-popup-source"[^>]*>Ръчно<\/small><\/p>/);
+  }
+  const open = huts.find(hut => !hut.properties.details.status);
+  assert.doesNotMatch(render({ kind: "hut", feature: open }), /map-popup-status/);
+});

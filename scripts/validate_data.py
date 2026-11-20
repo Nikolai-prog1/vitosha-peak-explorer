@@ -1,8 +1,9 @@
 import json
 import math
 from pathlib import Path
-from build_vitosha_data import OSM_LICENSE, PARK_SOURCE, VIA_TRAIL_SOURCE, haversine_km, read_json
-from hut_data import checked_date, valid_detail_value
+from build_vitosha_data import (HUT_APPROACH_MODE, OSM_LICENSE, PARK_SOURCE, PEAK_APPROACH_MODE, ROUTES_PER_PEAK, START_CLUSTER_M,
+                                VIA_TRAIL_SOURCE, haversine_km, read_json)
+from hut_data import HUT_STATUSES, checked_date, valid_detail_value
 from marked_trails import MIN_PARK_KM, MIN_PARK_SHARE, OTHER_WAY_ROLES, TRAIL_COLOURS, TRAIL_NETWORKS
 from park_boundary import PARK_BUFFER_M, ParkBoundary, select_park_relation
 from trail_geometry import VITOSHA_BOUNDS
@@ -68,7 +69,10 @@ for hut in huts:
     for field, detail in props["details"].items():
         assert detail["source"] in {"osm", "manual"} and valid_detail_value(detail["value"]), f"{props['id']}: missing source or invalid value for {field}"
         assert detail["checked"] is None or checked_date(detail["checked"]) == detail["checked"], f"{props['id']}: invalid checked date for {field}"
+    status = props["details"].get("status")
+    assert status is None or (status["value"] in HUT_STATUSES and status["source"] == "manual" and status["checked"]), f"{props['id']}: unsourced status"
     hut_ids.add(props["id"])
+closed_huts = {hut["properties"]["id"] for hut in huts if "status" in hut["properties"]["details"]}
 
 trails_by_id = {}
 for trail in marked_trails:
@@ -98,7 +102,8 @@ for trail in marked_trails:
     trails_by_id[trail_id] = props
 
 route_ids = set()
-per_peak = {peak_id: 0 for peak_id in peak_ids}
+per_peak = {peak_id: [] for peak_id in peak_ids}
+routed_huts = set()
 for route in routes:
     props = route["properties"]
     assert props["id"] not in route_ids, f"duplicate route id {props['id']}"
@@ -125,7 +130,8 @@ for route in routes:
         assert props["profile_source"] is None, f"{props['id']}: source without a profile"
     assert props["source"] != VIA_TRAIL_SOURCE or elevations is not None, f"{props['id']}: via-trails route without elevations"
     assert "popularity_score" not in props and "hiking_relation_count" not in props, f"{props['id']}: unsupported ranking claims"
-    assert props["ranking_mode"] == "nearest-routable-huts", f"{props['id']}: unexpected approach selection mode"
+    assert props["ranking_mode"] in {PEAK_APPROACH_MODE, HUT_APPROACH_MODE}, f"{props['id']}: unexpected approach selection mode"
+    assert props["hut_id"] not in closed_huts, f"{props['id']}: approach starts at a closed hut"
     assert fraction(props["marked_share"]), f"{props['id']}: invalid marked share"
     seen = set()
     previous = props["marked_share"]
@@ -137,9 +143,17 @@ for route in routes:
         seen.add(trail_id)
         previous = share
     route_ids.add(props["id"])
-    per_peak[props["peak_id"]] += 1
+    if props["ranking_mode"] == PEAK_APPROACH_MODE:
+        per_peak[props["peak_id"]].append(hut_point)
+    else:
+        assert props["hut_id"] not in routed_huts, f"{props['id']}: a hut-only approach for a hut that already has one"
+    routed_huts.add(props["hut_id"])
 
-assert all(count == 3 for count in per_peak.values()), f"every peak needs three routes: {per_peak}"
+assert all(len(starts) == ROUTES_PER_PEAK for starts in per_peak.values()), f"every peak needs {ROUTES_PER_PEAK} approaches"
+for peak_id, starts in per_peak.items():
+    assert all(haversine_km(left, right) * 1000 >= START_CLUSTER_M for index, left in enumerate(starts) for right in starts[index + 1:]), f"{peak_id}: two approaches share a trailhead"
+assert routed_huts == hut_ids - closed_huts, f"open huts without an approach: {sorted(hut_ids - closed_huts - routed_huts)}"
+assert quality["approach_selection"] == {"per_peak": ROUTES_PER_PEAK, "start_cluster_m": START_CLUSTER_M, "closed_huts_excluded": True}
 assert quality["peak_count"] == len(peaks)
 assert quality["hut_count"] == len(huts)
 assert quality["hut_route_count"] == len(routes)

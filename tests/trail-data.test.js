@@ -14,12 +14,15 @@ from build_vitosha_data import HUT_IDS
 from fetch_osm_captures import hut_osm_keys, overpass_query
 keys = hut_osm_keys()
 assert {osm_id for _, osm_id in keys} == HUT_IDS
-assert {osm_id for kind, osm_id in keys if kind == "node"} == {2885252059, 274090337}
+assert {osm_id for kind, osm_id in keys if kind == "node"} == {2885252059, 274090337, 4641743876}
+import json
+huts = json.load(open("public/data/huts.geojson", encoding="utf-8"))["features"]
+assert keys == {(hut["properties"]["osm_type"], hut["properties"]["osm_id"]) for hut in huts}
 assert "out body geom" in overpass_query("routes", keys)
 assert '[timeout:120]' in overpass_query("park", keys)
 assert 'relation["boundary"="protected_area"]["name"~"\\u0412\\u0438\\u0442\\u043e\\u0448\\u0430"]' in overpass_query("park", keys)
 print(len(keys))
-`), "16");
+`), "24");
 });
 
 test("park clipping keeps split rings, interior holes and rounded 300-metre corners", () => {

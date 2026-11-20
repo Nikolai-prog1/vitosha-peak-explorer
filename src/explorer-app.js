@@ -4,28 +4,29 @@ import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Tent, TreePine, X } from "@vitosha/icons";
 import { createCesiumMap } from "./cesium-map.js?v=vitosha-polish-20261120";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
-import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-polish-20261120";
-import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-polish-20261120-2";
-import { buildHutIndex, hutsSorted, hutKindKey } from "./huts.js?v=vitosha-polish-20261120-2";
-import { formatWebsiteHref } from "./hut-details.js?v=vitosha-polish-20261120-2";
+import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-huts-20261120";
+import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-huts-20261120";
+import { buildHutIndex, hutClosed, hutsSorted, hutKindKey, PEAK_APPROACH, summitApproaches } from "./huts.js?v=vitosha-huts-20261120";
+import { formatWebsiteHref } from "./hut-details.js?v=vitosha-huts-20261120";
 import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119-4";
-import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-polish-20261120-2";
+import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-huts-20261120";
 import { MapLegend } from "./map-legend.js?v=vitosha-polish-20261120-2";
 import { restoreFocus } from "./focus-management.js?v=vitosha-trails-20261119-4";
 import { contextualTrailIds, trailColor, VIA_MARKED_TRAILS, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
-import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-polish-20261120-2";
-import { SummitWeather } from "./weather-ui.js?v=vitosha-polish-20261120-2";
-import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-polish-20261120-2";
-import { FileExportDialog } from "./file-export-ui.js?v=vitosha-polish-20261120-2";
-import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-polish-20261120-2";
-import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-polish-20261120-2";
+import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-huts-20261120";
+import { SummitWeather } from "./weather-ui.js?v=vitosha-huts-20261120";
+import { useOfflineFacts, OfflineFactsPanel } from "./offline-ui.js?v=vitosha-huts-20261120";
+import { FileExportDialog } from "./file-export-ui.js?v=vitosha-huts-20261120";
+import { SafetyDisclaimer } from "./safety-disclaimer.js?v=vitosha-huts-20261120";
+import { COVER_SUMMIT, CoverScene } from "./cover-scene.js?v=vitosha-huts-20261120";
 
 const html = htm.bind(React.createElement);
 const APP_CONFIG = getAppConfig();
 const COVER_BASE = `${appLocation().publicBase}assets`;
-const ROUTE_COLORS = ["#ff6b2c", "#2f80ed", "#a259ff"];
+// The fourth colour belongs to a hut-only approach chosen from a hut card.
+const ROUTE_COLORS = ["#ff6b2c", "#2f80ed", "#a259ff", "#0f8b6d"];
 function Icon({ component: Component, size = 17 }) { return html`<${Component} size=${size} strokeWidth=${1.9} aria-hidden="true" />`; }
 function browserStorage() { try { return window.localStorage; } catch { return null; } }
 function formatCoord(value) { return Number(value).toFixed(5); }
@@ -65,7 +66,7 @@ function makeHutMarkerElement(hut) {
   const element = document.createElement("button");
   element.tabIndex = -1;
   element.type = "button";
-  element.className = "map-hut-marker neutral";
+  element.className = `map-hut-marker neutral${hutClosed(hut) ? " closed" : ""}`;
   element.innerHTML = hutMarkerSvg(hut.properties.kind);
   return element;
 }
@@ -133,12 +134,12 @@ function App() {
   }, [data.peaks, query, sortMode, language]);
   const routeOptions = useMemo(() => {
     if (!selectedPeak) return [];
-    return data.hutRoutes.filter(route => route.properties.peak_id === selectedPeak.properties.id)
+    return summitApproaches(data.hutRoutes, selectedPeak.properties.id, selectedHutId)
       .map((route, rank) => {
         const hut = data.huts.find(item => item.properties.id === route.properties.hut_id), facts = routeFacts(route);
         return hut ? { id: route.properties.id, feature: hut, routeFeature: route, rank, path: route.geometry.coordinates[0], routeKm: route.properties.distance_km, trailNodeCount: route.properties.trail_node_count, source: route.properties.source, facts, difficulty: routeDifficulty(facts) } : null;
       }).filter(Boolean);
-  }, [data.hutRoutes, data.huts, selectedPeak]);
+  }, [data.hutRoutes, data.huts, selectedPeak, selectedHutId]);
   const activeHutId = routeOptions.some(entry => entry.feature.properties.id === selectedHutId) ? selectedHutId : null;
   const routeCandidates = useMemo(() => routeOptions.map(entry => ({ ...entry, visible: routeViewMode === "all" || (routeViewMode === "single" && entry.feature.properties.id === activeHutId), active: routeViewMode === "single" && entry.feature.properties.id === activeHutId })), [activeHutId, routeOptions, routeViewMode]);
   const visibleRouteCandidates = useMemo(() => routeCandidates.filter(candidate => candidate.visible), [routeCandidates]);
@@ -365,11 +366,11 @@ function App() {
     for (const { element, hut } of hutMarkersRef.current) {
       const candidate = byHut.get(hut.properties.id);
       const state = candidate?.active ? "active" : candidate ? "candidate" : selectedPeak ? "dimmed" : "neutral";
-      element.className = `map-hut-marker ${state}`;
+      element.className = `map-hut-marker ${state}${hutClosed(hut) ? " closed" : ""}`;
       if (candidate) element.style.setProperty("--marker-color", ROUTE_COLORS[candidate.rank]);
       else element.style.removeProperty("--marker-color");
       element.hidden = !showHuts;
-      element.title = placeName(hut, language);
+      element.title = hutClosed(hut) ? `${placeName(hut, language)} · ${t("hutClosed")}` : placeName(hut, language);
       element.setAttribute("aria-label", element.title);
     }
     map.refreshMarkers();
@@ -476,7 +477,7 @@ function App() {
     return html`<li key=${props.id} className=${`approach-row ${candidate.active ? "active" : ""} ${approximate ? "approximate" : ""}`} style=${{ "--route": ROUTE_COLORS[candidate.rank] }}>
       <button type="button" className="approach-select" aria-pressed=${candidate.active} onClick=${() => selectRoute(candidate)}>
         <span className="approach-head">
-          <span className="approach-name"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${t(approximate ? "sketchShort" : route.source === VIA_MARKED_TRAILS ? "modelledViaMarking" : "routedShort")}</small></span>
+          <span className="approach-name"><strong>${placeName(candidate.feature, language)}</strong><small>${metre(props.elevation_m)} · ${t(approximate ? "sketchShort" : route.source === VIA_MARKED_TRAILS ? "modelledViaMarking" : "routedShort")}${route.ranking_mode === PEAK_APPROACH ? "" : ` · ${t("hutApproachShort")}`}</small></span>
           ${difficultyBadge(candidate.difficulty)}
         </span>
         <span className="approach-stats">
@@ -578,7 +579,7 @@ function App() {
           <ul className="v2-summit-list v2-hut-list">${listedHuts.map(hut => html`<li key=${hut.properties.id}>
             <button type="button" onClick=${event => openHut(hut, event.currentTarget)}>
               <${Icon} component=${hut.properties.kind === "shelter" ? Tent : House} size=${17}/>
-              <span>${placeName(hut, language)}<small>${t(hutKindKey(hut))}</small></span><b>${metre(hut.properties.elevation_m)}</b>
+              <span>${placeName(hut, language)}<small>${t(hutKindKey(hut))}${hutClosed(hut) ? ` · ${t("hutClosed")}` : ""}</small></span><b>${metre(hut.properties.elevation_m)}</b>
             </button></li>`)}</ul>`
           : html`<ul className="v2-summit-list">${[...data.peaks].sort((left, right) => right.properties.elevation_m - left.properties.elevation_m).map(peak => html`<li key=${peak.properties.id}><button type="button" onClick=${() => selectPeak(peak)}><${Icon} component=${Mountain} size=${15}/><span>${placeName(peak, language)}</span><b>${metre(peak.properties.elevation_m)}</b></button></li>`)}</ul>`}
       </section>`}

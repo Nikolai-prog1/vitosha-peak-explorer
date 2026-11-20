@@ -10,8 +10,8 @@ const dataset = Object.fromEntries(await Promise.all(Object.entries(names).map(a
 test("the generated real dataset satisfies the client contract", () => {
   const result = validateExplorerData(dataset);
   assert.equal(result.peaks.length, 17);
-  assert.equal(result.huts.length, 16);
-  assert.equal(result.hutRoutes.length, 51);
+  assert.equal(result.huts.length, 24);
+  assert.equal(result.hutRoutes.length, 61);
   assert.ok(result.markedTrails.length >= 5);
 });
 
@@ -53,6 +53,16 @@ test("schema 3 requires trail geometries, correct provenance and bounded data sh
     data => data.hutRoutes.features[0].properties.marked_trails = [{ trail_id: "trail-0", colour: null, ref: null, share: 0.1 }],
     data => data.hutRoutes.features[0].properties.ranking_mode = "route-relation-count",
   ];
+  const closed = { value: "closed", source: "manual", checked: "2026-11-20" };
+  const startHut = data => data.huts.features.find(hut => hut.properties.id === data.hutRoutes.features[0].properties.hut_id);
+  mutations.push(
+    data => startHut(data).properties.details.status = closed,
+    data => data.huts.features[0].properties.details.status = { ...closed, value: "renovating" },
+    data => data.huts.features[0].properties.details.status = { ...closed, checked: null },
+    data => data.huts.features[0].properties.details.status = { ...closed, source: "osm" },
+    // A summit's own approach relabelled as hut-only leaves the summit with two.
+    data => data.hutRoutes.features.find(route => route.properties.ranking_mode === "nearest-routable-huts").properties.ranking_mode = "hut-nearest-summit",
+  );
   for (const mutate of mutations) {
     const copy = structuredClone(dataset);
     mutate(copy);
@@ -67,7 +77,7 @@ test("data loader requests the correct static root with bounded parallel request
     const key = Object.keys(names).find(key => url.endsWith(names[key]));
     return jsonResponse(dataset[key]);
   } });
-  assert.equal(result.hutRoutes.length, 51);
+  assert.equal(result.hutRoutes.length, 61);
   assert.equal(requested.length, 5);
   assert.equal(requested.every(url => url.startsWith("/public/data/")), true);
 });

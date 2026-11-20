@@ -250,6 +250,8 @@ export const MESSAGES = {
   sortHuts: ["Подредба на хижите", "Sort huts"],
   hutKindHut: ["Хижа", "Hut"],
   hutKindShelter: ["Заслон", "Shelter"],
+  hutClosed: ["Не работи", "Not operating"],
+  hutApproachShort: ["подход от хижата", "hut approach"],
   mapLegend: ["Легенда", "Legend"],
   hutLayer: ["Хижи и заслони", "Huts and shelters"],
   modelledApproach: ["Моделиран подход", "Modelled approach"],

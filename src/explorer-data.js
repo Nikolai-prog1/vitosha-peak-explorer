@@ -1,6 +1,7 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
 import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
 import { TRAIL_COLORS, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-polish-20261120";
+import { HUT_APPROACH, PEAK_APPROACH } from "./huts.js?v=vitosha-huts-20261120";
 
 export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], markedTrails: [], quality: null };
 const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "marked-trails.geojson", "data-quality.json"];
@@ -28,6 +29,8 @@ function dateOnly(value) {
 function validHutDetails(props) {
   if (!["hut", "shelter"].includes(props.kind) || !["node", "way"].includes(props.osm_type)
     || props.osm_url !== `https://www.openstreetmap.org/${props.osm_type}/${props.osm_id}` || !record(props.details)) fail();
+  const status = props.details.status;
+  if (status !== undefined && (status?.value !== "closed" || status.source !== "manual" || !status.checked)) fail();
   for (const detail of Object.values(props.details)) {
     if (!record(detail) || !["osm", "manual"].includes(detail.source) || (detail.checked !== null && !dateOnly(detail.checked))) fail();
     const value = detail.value;
@@ -105,6 +108,7 @@ export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, qua
   const peakById = new Map(summits.features.map(peak => [peak.properties.id, peak]));
   const hutById = new Map(shelters.features.map(hut => [hut.properties.id, hut]));
   const perPeak = new Map(summits.features.map(peak => [peak.properties.id, 0]));
+  const hutOnly = new Set();
   for (const route of routes) {
     const props = route?.properties;
     if (route?.type !== "Feature" || route.geometry?.type !== "MultiLineString" || !props
@@ -119,7 +123,10 @@ export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, qua
     if (props.trail_node_count !== paths[0].length) fail();
     if (typeof props.source !== "string" || !props.source.trim()) fail();
     if (!["routed", "approximate"].includes(props.geometry_kind) || (props.geometry_kind === "routed") !== props.source.startsWith("BRouter")) fail();
-    if (props.ranking_mode !== "nearest-routable-huts" || "popularity_score" in props || "hiking_relation_count" in props) fail();
+    if (![PEAK_APPROACH, HUT_APPROACH].includes(props.ranking_mode) || "popularity_score" in props || "hiking_relation_count" in props) fail();
+    // Closed huts are never trailheads; a hut-only approach exists at most once per hut.
+    if (hutById.get(props.hut_id).properties.details.status || (props.ranking_mode === HUT_APPROACH && hutOnly.has(props.hut_id))) fail();
+    if (props.ranking_mode === HUT_APPROACH) hutOnly.add(props.hut_id);
     finite(props.start_gap_m, 0, 100000); finite(props.summit_gap_m, 0, 100000);
     if (Math.abs(props.start_gap_m - distanceMeters(paths[0][0], hutById.get(props.hut_id).geometry.coordinates)) > 1
       || Math.abs(props.summit_gap_m - distanceMeters(paths[0].at(-1), peakById.get(props.peak_id).geometry.coordinates)) > 1) fail();
@@ -131,7 +138,7 @@ export function validateExplorerData({ peaks, huts, hutRoutes, markedTrails, qua
     }
     validateTrailShares(props, trailProperties);
     ids.add(props.id);
-    perPeak.set(props.peak_id, perPeak.get(props.peak_id) + 1);
+    if (props.ranking_mode === PEAK_APPROACH) perPeak.set(props.peak_id, perPeak.get(props.peak_id) + 1);
   }
   if ([...perPeak.values()].some(count => count !== 3)) fail();
   if (quality?.mountain !== "Vitosha" || quality.schema_version !== 3 || quality.peak_count !== summits.features.length

@@ -1,4 +1,4 @@
-import { formatNumber, translate } from "./i18n.js?v=vitosha-polish-20261120-2";
+import { formatNumber, translate } from "./i18n.js?v=vitosha-huts-20261120";
 
 const FACTS = [
   ["capacity_beds", "hutBeds"], ["opening_hours", "hutHours"], ["drinking_water", "hutWater"],

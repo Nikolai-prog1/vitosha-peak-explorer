@@ -43,6 +43,10 @@ UPGRADE_SKETCHES_VIA_TRAILS = True
 
 PEAK_LIMIT = 17
 ROUTES_PER_PEAK = 3
+# Huts closer than this share one trailhead; a summit lists only one of them.
+START_CLUSTER_M = 200
+PEAK_APPROACH_MODE = "nearest-routable-huts"
+HUT_APPROACH_MODE = "hut-nearest-summit"
 PEAK_MIN_ELEVATION = 1900
 VITOSHA_CORE = (23.20, 42.50, 23.35, 42.62)
 
@@ -83,6 +87,15 @@ HUT_IDS = {
     487390004,
     274090337,
     266281246,
+    # Added 2026-11-20 from the Vitosha Nature Park hut list; positions and tags from OSM.
+    488455276,
+    432984612,
+    299130673,
+    432984634,
+    474190455,
+    4641743876,
+    180212595,
+    180212603,
 }
 
 HUT_ENGLISH = {
@@ -104,6 +117,8 @@ HUT_ENGLISH = {
     "х. Средец": "Sredets Hut",
     "х. Септември": "Septemvri Hut",
     "Проф. Ив. Стайков": "Prof. Iv. Staykov Hut",
+    "Горски дом Тинтява": "Tintyava Forest Lodge",
+    'Творчески дом "Витоша" -БНР': "Vitosha BNR Lodge",
 }
 
 
@@ -274,10 +289,11 @@ def route_geometry(payload):
     return coordinates, round(float(props["track-length"]) / 1000, 1), elevations
 
 
-def make_route(peak, hut, rank, refresh):
+def make_route(peak, hut, rank, refresh, mode=PEAK_APPROACH_MODE):
     start, end = hut["geometry"]["coordinates"], peak["geometry"]["coordinates"]
     cache = route_cache_path(peak, hut)
-    if refresh:
+    # "missing" requests only pairs that have never been routed; cached lines stay as they are.
+    if refresh is True or (refresh == "missing" and not cache.exists()):
         try:
             payload = request_route([start, end])
         except OSError as error:
@@ -319,7 +335,7 @@ def make_route(peak, hut, rank, refresh):
             "direct_km": direct_km,
             "trail_node_count": len(coordinates),
             "confidence": 0.92 if source.startswith("BRouter") else 0.58,
-            "ranking_mode": "nearest-routable-huts",
+            "ranking_mode": mode,
             "source": source,
             "geometry_kind": "routed" if source.startswith("BRouter") else "approximate",
             "start_gap_m": round(haversine_km(coordinates[0], start) * 1000),
@@ -331,12 +347,50 @@ def make_route(peak, hut, rank, refresh):
     }
 
 
-def build_routes(peaks, huts, refresh):
-    jobs = []
+def hut_closed(hut):
+    return hut["properties"]["details"].get("status", {}).get("value") == "closed"
+
+
+def start_clusters(huts):
+    """Group open huts that share a trailhead (single linkage within START_CLUSTER_M)."""
+    parent = list(range(len(huts)))
+
+    def root(index):
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    for left in range(len(huts)):
+        for right in range(left + 1, len(huts)):
+            if haversine_km(huts[left]["geometry"]["coordinates"], huts[right]["geometry"]["coordinates"]) * 1000 < START_CLUSTER_M:
+                parent[root(left)] = root(right)
+    clusters = {}
+    for index, hut in enumerate(huts):
+        clusters.setdefault(root(index), []).append(hut)
+    return list(clusters.values())
+
+
+def select_approaches(peaks, huts):
+    """Each summit gets its three nearest distinct open trailheads; every other open hut gets its nearest summit."""
+    open_huts = [hut for hut in huts if not hut_closed(hut)]
+    clusters = start_clusters(open_huts)
+    distance = lambda peak, hut: haversine_km(peak["geometry"]["coordinates"], hut["geometry"]["coordinates"])
+    order = lambda peak, hut: (distance(peak, hut), hut["properties"]["id"])
+    pairs = []
     for peak in peaks:
-        nearest = sorted(huts, key=lambda hut: haversine_km(peak["geometry"]["coordinates"], hut["geometry"]["coordinates"]))[:ROUTES_PER_PEAK]
-        for rank, hut in enumerate(nearest):
-            jobs.append((peak, hut, rank, refresh))
+        starts = sorted((min(cluster, key=lambda hut: order(peak, hut)) for cluster in clusters), key=lambda hut: order(peak, hut))
+        pairs += [(peak, hut, rank, PEAK_APPROACH_MODE) for rank, hut in enumerate(starts[:ROUTES_PER_PEAK])]
+    linked = {hut["properties"]["id"] for _, hut, _, _ in pairs}
+    for hut in open_huts:
+        if hut["properties"]["id"] not in linked:
+            peak = min(peaks, key=lambda peak: (distance(peak, hut), peak["properties"]["id"]))
+            pairs.append((peak, hut, 0, HUT_APPROACH_MODE))
+    return pairs
+
+
+def build_routes(peaks, huts, refresh):
+    jobs = [(peak, hut, rank, refresh, mode) for peak, hut, rank, mode in select_approaches(peaks, huts)]
     with ThreadPoolExecutor(max_workers=ROUTE_WORKERS) as pool:
         routes = list(pool.map(lambda job: make_route(*job), jobs))
     return sorted(routes, key=lambda feature: (feature["properties"]["peak_id"], feature["properties"]["distance_km"], feature["properties"]["id"]))
@@ -361,7 +415,7 @@ def upgrade_approach(route, start, end, graph, refresh):
         return
     cache = ROUTE_CACHE / f"{props['id']}--via-trails.geojson"
     cached = read_json(cache) if cache.exists() else None
-    if refresh:
+    if refresh is True or (refresh == "missing" and (not cached or cached["waypoints"] != waypoints)):
         try:
             payload = request_route(waypoints)
         except OSError as error:
@@ -409,8 +463,11 @@ def feature_collection(features):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--refresh-routes", action="store_true", help="Refresh BRouter route geometry")
+    refresh = parser.add_mutually_exclusive_group()
+    refresh.add_argument("--refresh-routes", action="store_true", help="Refresh BRouter route geometry")
+    refresh.add_argument("--missing-routes", action="store_true", help="Request BRouter geometry only for approaches without a cache")
     args = parser.parse_args()
+    route_refresh = True if args.refresh_routes else "missing" if args.missing_routes else False
     peak_capture = read_json(PEAK_SOURCE)
     hut_capture = read_json(POI_SOURCE)
     hut_details = read_json(HUT_DETAIL_SOURCE)
@@ -428,11 +485,11 @@ def main():
         trails, raw_lines, excluded = build_marked_trails(trail_capture, boundary, tolerance=5)
         collection = feature_collection(trails)
     try:
-        routes = build_routes(peaks, huts, args.refresh_routes)
+        routes = build_routes(peaks, huts, route_refresh)
     except MissingRouteCache as error:
         parser.exit(1, f"{error}\n")
     if UPGRADE_SKETCHES_VIA_TRAILS:
-        upgrade_sketches(routes, peaks, huts, raw_lines, args.refresh_routes)
+        upgrade_sketches(routes, peaks, huts, raw_lines, route_refresh)
     annotate_approaches(routes, trails, raw_lines)
     write_json(DATA / "peaks.geojson", feature_collection(peaks))
     write_json(DATA / "huts.geojson", feature_collection(huts))
@@ -461,6 +518,11 @@ def main():
                 for field in sorted({field for hut in huts for field in hut["properties"]["details"]})
             },
             "peak_min_elevation_m": PEAK_MIN_ELEVATION,
+            "approach_selection": {
+                "per_peak": ROUTES_PER_PEAK,
+                "start_cluster_m": START_CLUSTER_M,
+                "closed_huts_excluded": True,
+            },
             "source_timestamps": {
                 "peaks": peak_capture.get("osm3s", {}).get("timestamp_osm_base"),
                 "huts": hut_capture.get("osm3s", {}).get("timestamp_osm_base"),

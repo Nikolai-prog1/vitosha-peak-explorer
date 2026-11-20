@@ -1,9 +1,9 @@
 import React from "react";
 import htm from "htm";
 import { House, Tent, X } from "@vitosha/icons";
-import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-polish-20261120-2";
-import { hutKindKey } from "./huts.js?v=vitosha-polish-20261120-2";
-import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-polish-20261120-2";
+import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-huts-20261120";
+import { hutKindKey } from "./huts.js?v=vitosha-huts-20261120";
+import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-huts-20261120";
 import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 
 const html = htm.bind(React.createElement);
@@ -25,6 +25,7 @@ function HutFacts({ hut, language, t, approaches, peaks, routes, onApproach }) {
   ];
   const note = details[language === "bg" ? "notes_bg" : "notes_en"] || details.description;
   return html`<div className="map-popup-body">
+    ${details.status ? html`<p className="map-popup-status"><strong>${t("hutClosed")}</strong> <${Source} record=${details.status} language=${language} t=${t}/></p>` : null}
     ${rows.length ? html`<dl className="map-popup-facts">${rows.map(row => html`
       <div key=${row.field}><dt>${row.label}</dt><dd>${row.display} <${Source} record=${row} language=${language} t=${t}/></dd></div>`)}</dl>` : null}
     <div className="map-popup-actions">${actions.map(([field, safeHref, label]) => {

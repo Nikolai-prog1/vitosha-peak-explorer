@@ -28,6 +28,17 @@
       "type": "node"
     },
     {
+      "id": 4641743876,
+      "lat": 42.5915413,
+      "lon": 23.2218007,
+      "tags": {
+        "name": "х. Филхармония",
+        "name:en": "Philharmonic hut",
+        "tourism": "alpine_hut"
+      },
+      "type": "node"
+    },
+    {
       "center": {
         "lat": 42.5825921,
         "lon": 23.2921287
@@ -109,6 +120,55 @@
     },
     {
       "center": {
+        "lat": 42.6068732,
+        "lon": 23.2282741
+      },
+      "id": 180212595,
+      "tags": {
+        "building": "yes",
+        "check_date": "2023-07-14",
+        "description": "Бивш почивен дом на Съюза на българските композитори (СБК), известен още като х. Композиторите.",
+        "ele": "1446",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "internet_access:ssid": "Little Red Riding Hood",
+        "name": "х Червената шапчица (х. Композиторите)",
+        "name:en": "Chalet Red Riding Hut",
+        "old_name": "х. Композиторите",
+        "operator": "\"Червената шапчица\" ООД",
+        "payment:cash": "yes",
+        "payment:debit_cards": "yes",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "payment:visa_electron": "yes",
+        "phone": "+359 89 999 8775",
+        "reservation": "recommended",
+        "smoking": "outside",
+        "tourism": "alpine_hut",
+        "website": "https://lrrhut.com/",
+        "wheelchair": "no",
+        "wikidata": "Q89689342",
+        "wikipedia": "bg:Червената шапчица (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6036394,
+        "lon": 23.2328246
+      },
+      "id": 180212603,
+      "tags": {
+        "building": "yes",
+        "ele": "1466",
+        "electrified": "yes",
+        "name": "Творчески дом \"Витоша\" -БНР",
+        "tourism": "alpine_hut"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
         "lat": 42.5880999,
         "lon": 23.2477595
       },
@@ -175,6 +235,25 @@
         "website": "http://kamendel.info/",
         "wikidata": "Q89690629",
         "wikipedia": "bg:Камен дел (хижа)"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6119446,
+        "lon": 23.2395072
+      },
+      "id": 299130673,
+      "tags": {
+        "building": "yes",
+        "building:levels": "4",
+        "ele": "1415",
+        "name": "х. Кукер",
+        "name:en": "Kuker Hut",
+        "tourism": "alpine_hut",
+        "website": "https://kukerbg.com/hija/index.php",
+        "wikidata": "Q89690526",
+        "wikipedia": "bg:Кукер (хижа)"
       },
       "type": "way"
     },
@@ -261,6 +340,42 @@
     },
     {
       "center": {
+        "lat": 42.6019682,
+        "lon": 23.253011
+      },
+      "id": 432984612,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1703",
+        "name": "х. Борова гора",
+        "name:en": "Borova Gora Hut",
+        "tourism": "alpine_hut",
+        "wikidata": "Q89689840"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6024031,
+        "lon": 23.2532941
+      },
+      "id": 432984634,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "ele": "1699",
+        "name": "х. Планинарска песен",
+        "name:en": "Planinarska Pesen Hut",
+        "phone": "+359 88 977 0759",
+        "tourism": "alpine_hut",
+        "website": "https://planinarska-pesen.com/",
+        "wikidata": "Q89689839"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
         "lat": 42.6025998,
         "lon": 23.2542235
       },
@@ -273,6 +388,20 @@
         "name:en": "Boeritsa Hut",
         "tourism": "alpine_hut",
         "wikidata": "Q89689327"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
+        "lat": 42.6193337,
+        "lon": 23.2585516
+      },
+      "id": 474190455,
+      "tags": {
+        "building": "yes",
+        "ele": "1586",
+        "name": "Горски дом Тинтява",
+        "tourism": "alpine_hut"
       },
       "type": "way"
     },
@@ -298,6 +427,23 @@
     },
     {
       "center": {
+        "lat": 42.6180583,
+        "lon": 23.227915
+      },
+      "id": 488455276,
+      "tags": {
+        "building": "yes",
+        "building:levels": "3",
+        "check_date": "2023-08-20",
+        "elevation": "1319",
+        "name": "х. Белите брези",
+        "name:en": "Belite Brezi Hut",
+        "tourism": "alpine_hut"
+      },
+      "type": "way"
+    },
+    {
+      "center": {
         "lat": 42.5771823,
         "lon": 23.3169068
       },
@@ -317,6 +463,6 @@
     }
   ],
   "osm3s": {
-    "timestamp_osm_base": "2026-11-19T13:27:19Z"
+    "timestamp_osm_base": "2026-11-20T08:06:34Z"
   }
 }
