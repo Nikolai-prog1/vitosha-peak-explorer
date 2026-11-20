@@ -269,7 +269,7 @@
   .v2-topbar { top: 10px; left: 10px; right: 10px; gap: 8px; }
   .v2-brand { padding: 6px; height: 48px; }
   .v2-brand > span:last-child { display: none; }
-  .v2-search { flex: 1; }
+  .v2-search { flex: 1; min-width: 0; }
   .v2-search-field { height: 48px; }
   .v2-search-count { display: none; }
   .v2-chip-button { height: 48px; min-width: 48px; margin-left: 0; }
