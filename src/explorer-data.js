@@ -1,6 +1,6 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
 import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
-import { TRAIL_COLORS, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-trails-20261119-4";
+import { TRAIL_COLORS, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-polish-20261120";
 
 export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], markedTrails: [], quality: null };
 const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "marked-trails.geojson", "data-quality.json"];

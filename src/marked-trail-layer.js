@@ -1,4 +1,4 @@
-import { trailColor } from "./trail-display.js?v=vitosha-trails-20261119-4";
+import { trailColor } from "./trail-display.js?v=vitosha-polish-20261120";
 
 export function createMarkedTrailLayer(Cesium, scene) {
   let features, primitive, instances = [];

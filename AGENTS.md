@@ -52,7 +52,7 @@ The updated user objective permits Cesium ion or Mapbox when it improves Vitosha
 - Route previews are informational planning context, never turn-by-turn or safety navigation.
 - `public/data` is generated; change the builder or cached inputs, then regenerate.
 - Explorer v2 layout (`src/explorer-v2.css`): full-bleed map, top search combobox, one task-ordered panel (summit → approaches → plan → weather → library → data) that becomes a three-height bottom sheet on phones. Overlay panels carry `data-map-occluder` so camera framing avoids them.
-- Explorer v2 overview switches between summit and hut lists. Its legend controls the hut layer and has an unchecked, session-only option for all marked trails. With that option off, show qualifying markings only for the current summit, selected approach or open hut card. Hut and trail details use a map-anchored card on desktop and the existing bottom sheet on mobile. Include the legend in framing and keep the trail geometry in one ground primitive below the approach entities.
+- Explorer v2 overview switches between summit and hut lists. Its legend controls the hut layer and has an unchecked, session-only option for all marked trails. With that option off, show qualifying markings only for the selected approach or open hut card; a selected summit alone shows none. Hut and trail details use a map-anchored card on desktop and the existing bottom sheet on mobile. Include the legend in framing and keep the trail geometry in one ground primitive below the approach entities.
 
 ## Verification
 

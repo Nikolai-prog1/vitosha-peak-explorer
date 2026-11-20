@@ -10,7 +10,10 @@ export function visibleMarkings(route) {
   return route.properties.marked_trails.filter(item => item.share >= 0.15);
 }
 
-export function contextualTrailIds({ hutRoutes, activeRoute, summitRoutes }) {
-  const routes = hutRoutes ?? (activeRoute ? [activeRoute] : summitRoutes);
+// A selected summit alone shows no markings: whole relations drawn for three
+// hidden approaches read as unrelated lines. An open hut card or a chosen
+// approach gives the markings a visible context.
+export function contextualTrailIds({ hutRoutes, activeRoute }) {
+  const routes = hutRoutes ?? (activeRoute ? [activeRoute] : []);
   return new Set(routes.flatMap(route => visibleMarkings(route).map(item => item.trail_id)));
 }

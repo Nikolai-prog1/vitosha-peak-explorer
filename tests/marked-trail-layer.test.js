@@ -69,13 +69,14 @@ test("marked trail halos and colours share one pickable batch across visibility 
   assert.equal(batches.size, 0);
 });
 
-test("visibility follows the open hut, selected approach or summit and discards shares below fifteen percent", () => {
+test("visibility follows the open hut or selected approach, not the summit alone, and discards shares below fifteen percent", () => {
   const route = (...pairs) => ({ properties: { marked_trails: pairs.map(([trail_id, share]) => ({ trail_id, share })) } });
   const activeRoute = route(["trail-1", 0.95], ["trail-2", 0.149]);
   const summitRoutes = [activeRoute, route(["trail-1", 0.2], ["trail-3", 0.15])];
   const hutRoutes = [route(["trail-4", 0.25], ["trail-2", 0.01])];
-  assert.deepEqual([...contextualTrailIds({ summitRoutes: [] })], []);
-  assert.deepEqual([...contextualTrailIds({ summitRoutes })], ["trail-1", "trail-3"]);
+  assert.deepEqual([...contextualTrailIds({})], []);
+  assert.deepEqual([...contextualTrailIds({ summitRoutes })], []);
+  assert.deepEqual([...contextualTrailIds({ activeRoute: null, summitRoutes })], []);
   assert.deepEqual([...contextualTrailIds({ activeRoute, summitRoutes })], ["trail-1"]);
   assert.deepEqual([...contextualTrailIds({ hutRoutes, activeRoute, summitRoutes })], ["trail-4"]);
   assert.deepEqual([...contextualTrailIds({ hutRoutes: [], activeRoute, summitRoutes })], []);

@@ -4,7 +4,7 @@ import { House, Tent, X } from "@vitosha/icons";
 import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-polish-20261120";
 import { hutKindKey } from "./huts.js?v=vitosha-polish-20261120";
 import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-polish-20261120";
-import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-trails-20261119-4";
+import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 
 const html = htm.bind(React.createElement);
 export const OSM_COPYRIGHT = "https://www.openstreetmap.org/copyright";

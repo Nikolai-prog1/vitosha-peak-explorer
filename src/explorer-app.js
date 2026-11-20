@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createRoot } from "react-dom/client";
 import htm from "htm";
 import { ChevronDown, ChevronUp, CircleHelp, CloudSun, ExternalLink, House, LocateFixed, MapPinned, Mountain, Navigation, RotateCcw, Search, Tent, TreePine, X } from "@vitosha/icons";
-import { createCesiumMap } from "./cesium-map.js?v=vitosha-trails-20261119-4";
+import { createCesiumMap } from "./cesium-map.js?v=vitosha-polish-20261120";
 import { appLocation, getAppConfig } from "./config.js?v=vitosha-pages-20261024-1";
 import { EMPTY_EXPLORER_DATA, loadExplorerData } from "./explorer-data.js?v=vitosha-polish-20261120";
 import { translate, placeName, formatNumber } from "./i18n.js?v=vitosha-polish-20261120";
@@ -11,7 +11,7 @@ import { formatWebsiteHref } from "./hut-details.js?v=vitosha-polish-20261120";
 import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js?v=vitosha-trails-20261119-4";
 import { MapPopup, OSM_COPYRIGHT } from "./map-popup.js?v=vitosha-polish-20261120";
 import { restoreFocus } from "./focus-management.js?v=vitosha-trails-20261119-4";
-import { contextualTrailIds, trailColor, VIA_MARKED_TRAILS, visibleMarkings } from "./trail-display.js?v=vitosha-trails-20261119-4";
+import { contextualTrailIds, trailColor, VIA_MARKED_TRAILS, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 import { routeFacts, routeDifficulty, parsePlanHash, sharedPlanUrl, createGpx, resolveSavedPlan } from "./planning.js?v=vitosha-camera-20261005-2";
 import { WORKSPACE_KEY, LEGACY_REPORTS_KEY, PREFERENCES_KEY, MAX_BACKUP_BYTES, readWorkspace, commitWorkspace, createBackup, parseBackup, mergeWorkspaces, readLanguage, writeLanguage, parseNoteCoordinates } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
 import { ApproachPlanner, PersonalLibrary, PlanningDialog, ReportDialog } from "./planning-ui.js?v=vitosha-polish-20261120";
@@ -171,9 +171,8 @@ function App() {
   const contextualIds = useMemo(() => {
     const hutRoutes = popupHutId === null ? undefined :
       (hutIndex.get(popupHutId)?.approaches ?? []).map(approach => routeIndex.get(approach.routeId)).filter(Boolean);
-    return contextualTrailIds({ hutRoutes, activeRoute: activeRoute?.routeFeature,
-      summitRoutes: routeOptions.map(option => option.routeFeature) });
-  }, [popupHutId, hutIndex, routeIndex, activeRoute?.routeFeature, routeOptions]);
+    return contextualTrailIds({ hutRoutes, activeRoute: activeRoute?.routeFeature });
+  }, [popupHutId, hutIndex, routeIndex, activeRoute?.routeFeature]);
   const visibleTrailIds = showAllTrails ? null : contextualIds;
   const popupInPanel = Boolean(mapPopup && (isMobile || mapPhase !== "ready"));
   const activeTrailReport = trailReports.find(report => report.id === activeReportId) || null;

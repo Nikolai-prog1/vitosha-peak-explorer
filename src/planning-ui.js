@@ -3,7 +3,7 @@ import htm from "htm";
 import { CheckCircle2, ChevronDown, ChevronUp, ExternalLink, MapPinned, Mountain, TreePine, X } from "@vitosha/icons";
 import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-polish-20261120";
 import { profileGeometry } from "./planning.js?v=vitosha-camera-20261005-2";
-import { VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-trails-20261119-4";
+import { VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-polish-20261120";
 import { openModalDialog } from "./focus-management.js?v=vitosha-trails-20261119-4";
 import { NOTE_COORDINATE_BOUNDS } from "./local-workspace.js?v=vitosha-accessibility-20261005-2";
 
