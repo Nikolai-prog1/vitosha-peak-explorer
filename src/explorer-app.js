@@ -544,7 +544,7 @@ function App() {
           : html`<${CoverScene} language=${language} accessToken=${APP_CONFIG.ionAccessToken} enabled=${coverSceneEnabled} onOpen=${() => enterExplorer(coverPeak)} onFail=${() => setCoverSceneFailed(true)}/>`}
         <div className="x-home-content">
           <p className="x-home-eyebrow">${t("coverEyebrow")}</p>
-          <h1 id="cover-title">${t("coverTitle").split("\n").map((line, index) => html`<${React.Fragment} key=${line}>${index ? html`<br/>` : null}${line}</${React.Fragment}>`)}</h1>
+          <h1 id="cover-title">${t("coverTitle").split("\n").map((line, index) => html`<${React.Fragment} key=${index}>${index ? html`<br/>` : null}${line}</${React.Fragment}>`)}</h1>
           <p className="x-home-lead">${t("coverLead")}</p>
           <div className="x-home-actions">
             <button ref=${coverEnterRef} type="button" className="primary" onClick=${() => enterExplorer()}>${t("coverEnter")}<span aria-hidden="true">→</span></button>
