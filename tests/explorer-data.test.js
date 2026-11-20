@@ -46,6 +46,8 @@ test("schema 3 requires trail geometries, correct provenance and bounded data sh
     data => data.markedTrails.features[0].properties.colour = "invalid",
     data => data.markedTrails.features[0].geometry.coordinates[0][0] = [23.0, 42.5],
     data => data.markedTrails.features.push(data.markedTrails.features[0]),
+    data => data.markedTrails.features[0].properties.clipped = "yes",
+    data => delete data.markedTrails.features[0].properties.clipped,
     data => data.huts.features[0].properties.details.website = { value: "https://example.test/", source: "unsourced", checked: null },
     data => data.hutRoutes.features[0].properties.marked_share = 2,
     data => data.hutRoutes.features[0].properties.marked_trails = [{ trail_id: "trail-0", colour: null, ref: null, share: 0.1 }],

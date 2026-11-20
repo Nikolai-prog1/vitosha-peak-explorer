@@ -1,4 +1,4 @@
-import { placeName } from "./i18n.js?v=vitosha-trails-20261119-4";
+import { placeName } from "./i18n.js?v=vitosha-polish-20261120";
 
 export function buildHutIndex(huts, hutRoutes) {
   const index = new Map(huts.map(hut => [hut.properties.id, { hut, approaches: [] }]));

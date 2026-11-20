@@ -63,7 +63,7 @@ function trailsById(trails) {
       || props.wmt_url !== `https://hiking.waymarkedtrails.org/#route?id=${relation}&type=relation`
       || (props.colour !== null && !COLOURS.has(props.colour)) || (props.network !== null && !NETWORKS.has(props.network))
       || !Array.isArray(lines) || !lines.length || lines.length > 20000
-      || !Number.isSafeInteger(props.piece_count) || props.piece_count < 1 || props.piece_count > lines.length) fail();
+      || !Number.isSafeInteger(props.piece_count) || props.piece_count < 1 || props.piece_count > lines.length || typeof props.clipped !== "boolean") fail();
     for (const field of ["name_bg", "name_en", "ref", "operator", "from", "to", "osmc_symbol"]) {
       if (props[field] !== null && !text(props[field], 800)) fail();
     }

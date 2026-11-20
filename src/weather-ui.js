@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import htm from "htm";
 import { Cloud, CloudFog, CloudLightning, CloudRain, CloudSnow, CloudSun, CircleHelp, Droplets, ExternalLink, Moon, RotateCcw, Sun, Wind } from "@vitosha/icons";
 import { fetchForecast, weatherDescription, weatherNumber, upcomingHours, sofiaDateTime, WEATHER_TTL_MS } from "./weather.js?v=vitosha-planning-20261005";
-import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-trails-20261119-4";
+import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-polish-20261120";
 
 const html = htm.bind(React.createElement);
 function WeatherIcon({ code, isDay = 1, size = 22, language }) {

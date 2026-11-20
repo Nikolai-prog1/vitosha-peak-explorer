@@ -295,6 +295,8 @@ export const MESSAGES = {
   trailNetworkIwn: ["Международна", "International"],
   trailFrom: ["От", "From"], trailTo: ["До", "To"],
   showInWaymarked: ["Виж в Waymarked Trails", "View in Waymarked Trails"],
+  trailClippedNote: ["Показан е участъкът в Природен парк „Витоша“ и до 300 m около него. Пътеката продължава извън него — целия маршрут виж в Waymarked Trails.", "Only the part within Vitosha Nature Park and 300 m around it is shown. The trail continues beyond it — see the full route in Waymarked Trails."],
+  trailPiecesNote: ["Релацията в OpenStreetMap е от {count} несвързани части, затова линията има прекъсвания.", "The OpenStreetMap relation has {count} disconnected parts, so the line has gaps."],
   markedTrailNote: ["Маркировка по данни от OpenStreetMap, без теренна проверка.", "Markings from OpenStreetMap, without field verification."],
   byMarking: ["По маркировка", "Along marked trails"],
   markedPercent: ["{value}% от подхода", "{value}% of the approach"],

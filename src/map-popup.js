@@ -1,8 +1,8 @@
 import React from "react";
 import htm from "htm";
 import { House, Tent, X } from "@vitosha/icons";
-import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-trails-20261119-4";
-import { hutKindKey } from "./huts.js?v=vitosha-trails-20261119-4";
+import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-polish-20261120";
+import { hutKindKey } from "./huts.js?v=vitosha-polish-20261120";
 import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-polish-20261120";
 import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-trails-20261119-4";
 
@@ -58,8 +58,14 @@ function TrailFacts({ feature, language, t }) {
     ["markedTrailNetwork", props.network ? t(networks[props.network]) : null],
     ["hutOperator", props.operator],
   ];
+  // Explain loose line ends: a cut at the park buffer or a gap in the OSM relation.
+  const notes = [
+    props.clipped ? t("trailClippedNote") : null,
+    props.piece_count > 1 ? t("trailPiecesNote", { count: props.piece_count }) : null,
+  ].filter(Boolean);
   return html`<div className="map-popup-body">
     <dl className="map-popup-facts">${rows.filter(([, value]) => value).map(([label, value]) => html`<div key=${label}><dt>${t(label)}</dt><dd>${value}</dd></div>`)}</dl>
+    ${notes.length ? html`<ul className="map-popup-notes">${notes.map(note => html`<li key=${note}>${note}</li>`)}</ul>` : null}
     <div className="map-popup-actions">
       <a href=${props.wmt_url} target="_blank" rel="noopener noreferrer">${t("showInWaymarked")}</a>
       <a href=${props.osm_url} target="_blank" rel="noopener noreferrer">OpenStreetMap</a>

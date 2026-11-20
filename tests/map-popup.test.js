@@ -50,3 +50,17 @@ test("an approach's marking dots name the trails for assistive technology", asyn
   const expected = route.properties.marked_trails.filter(mark => mark.share >= 0.15).map(mark => mark.ref || "Маркирана пътека");
   assert.equal(label, `Маркирани пътеки: ${expected.join(", ")}`);
 });
+
+test("trail cards explain loose ends from the park cut and from gaps in the OSM relation", () => {
+  const notes = feature => [...render({ kind: "trail", feature }).matchAll(/<ul class="map-popup-notes">(.*?)<\/ul>/gs)].flatMap(match => [...match[1].matchAll(/<li>(.*?)<\/li>/g)].map(item => item[1]));
+  const base = trails.find(trail => !trail.properties.clipped && trail.properties.piece_count === 1);
+  const variant = (clipped, pieceCount) => ({ ...base, properties: { ...base.properties, clipped, piece_count: pieceCount } });
+  assert.deepEqual(notes(variant(false, 1)), []);
+  assert.equal(notes(variant(true, 1)).length, 1);
+  assert.match(notes(variant(true, 1))[0], /300 m/);
+  assert.deepEqual(notes(variant(false, 3)), ["Релацията в OpenStreetMap е от 3 несвързани части, затова линията има прекъсвания."]);
+  assert.equal(notes(variant(true, 2)).length, 2);
+  for (const trail of trails) {
+    assert.equal(notes(trail).length, Number(trail.properties.clipped) + Number(trail.properties.piece_count > 1), trail.properties.id);
+  }
+});
