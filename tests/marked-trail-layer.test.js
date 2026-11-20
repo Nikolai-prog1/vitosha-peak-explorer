@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { Cartesian3, Color, ColorGeometryInstanceAttribute, Event, GeometryInstance, ShowGeometryInstanceAttribute } from "@cesium/core";
 import { ClassificationType, GroundPolylineGeometry, PolylineColorAppearance } from "@cesium/engine";
 import { createMarkedTrailLayer } from "../src/marked-trail-layer.js";
-import { contextualTrailIds } from "../src/trail-display.js";
+import { contextualTrailIds, trailColor } from "../src/trail-display.js";
 
 test("marked trail halos and colours share one pickable batch across visibility and emphasis changes", () => {
   class GroundPolylinePrimitive {
@@ -79,4 +79,9 @@ test("visibility follows the open hut, selected approach or summit and discards 
   assert.deepEqual([...contextualTrailIds({ activeRoute, summitRoutes })], ["trail-1"]);
   assert.deepEqual([...contextualTrailIds({ hutRoutes, activeRoute, summitRoutes })], ["trail-4"]);
   assert.deepEqual([...contextualTrailIds({ hutRoutes: [], activeRoute, summitRoutes })], []);
+});
+
+test("trails without a known OSM colour fall back to a neutral grey", () => {
+  for (const colour of [null, undefined, "", "magenta", "RED"]) assert.equal(trailColor(colour), "#bac2cb");
+  assert.equal(trailColor("red"), "#db4249");
 });

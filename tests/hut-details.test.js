@@ -47,3 +47,26 @@ test("check dates format per language and fall back to the raw text when invalid
   assert.equal(formatCheckedDate("2026-13-45", "bg"), "2026-13-45");
   assert.equal(formatCheckedDate("unknown", "en"), "unknown");
 });
+
+test("missing or empty hut details render no rows, links or dates", () => {
+  for (const details of [undefined, null, {}]) {
+    assert.deepEqual(visibleDetailRows(details, "bg"), []);
+    assert.equal(latestCheckedDate(details), null);
+  }
+  for (const value of [undefined, null, "", "   ", 42, ["https://example.test"]]) {
+    assert.equal(formatWebsiteHref(value), null);
+    assert.equal(formatPhoneHref(value), null);
+    assert.equal(formatEmailHref(value), null);
+  }
+});
+
+test("only absolute web links survive; other schemes and malformed hosts are dropped", () => {
+  for (const value of ["ftp://example.test/hut", "file:///C:/hut.html", "data:text/html,hi", "mailto:hut@example.test",
+    "//example.test/hut", "http://", "https://", "javascript.test:alert(1)", " JavaScript:alert(1) "]) {
+    assert.equal(formatWebsiteHref(value), null, value);
+  }
+  assert.equal(formatWebsiteHref(" http://example.test/a b "), "http://example.test/a%20b");
+  assert.equal(formatEmailHref("hut@example.test; second@example.test"), "mailto:hut@example.test");
+  // A scheme-looking local part stays inside the encoded mailto: address.
+  assert.equal(formatEmailHref("javascript:alert(1)@example.test"), "mailto:javascript%3Aalert(1)@example.test");
+});
