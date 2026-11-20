@@ -71,18 +71,19 @@ test("contact and map links use the same noun labels with a separate source tag"
   const actions = markup.match(/<div class="map-popup-actions">(.*?)<\/div>/s)[1];
   const links = [...actions.matchAll(/<a\b[^>]*>(.*?)<\/a>/gs)].map(match => match[1]);
   assert.deepEqual(links.map(link => link.match(/^<span>([^<]+)<\/span>|^([^<]+)$/).slice(1).find(Boolean)), ["Сайт", "Телефон", "Имейл", "OpenStreetMap"]);
-  for (const link of links.slice(0, 3)) assert.match(link, /^<span>[^<]+<\/span><small class="map-popup-source"[^>]*>(?:OSM|Ръчно)<\/small>$/);
+  for (const link of links.slice(0, 3)) assert.match(link, /^<span>[^<]+<\/span><small class="map-popup-source"[^>]*>(?:OSM|Парк Витоша|БТС)<\/small>$/);
   const trail = render({ kind: "trail", feature: trails[0] }).match(/<div class="map-popup-actions">(.*?)<\/div>/s)[1];
   assert.deepEqual([...trail.matchAll(/<a\b[^>]*>([^<]+)<\/a>/g)].map(match => match[1]), ["Waymarked Trails", "OpenStreetMap"]);
 });
 
-test("a hut the park lists as closed says so first, with its manual source", () => {
+test("a hut the park lists as closed says so first, naming the park as the source", () => {
   const closed = huts.filter(hut => hut.properties.details.status);
   assert.equal(closed.length, 3);
   for (const hut of closed) {
     const markup = render({ kind: "hut", feature: hut });
-    assert.match(markup, /<div class="map-popup-body"><p class="map-popup-status"><strong>Не работи<\/strong> <small class="map-popup-source"[^>]*>Ръчно<\/small><\/p>/);
+    assert.match(markup, /<div class="map-popup-body"><p class="map-popup-status"><strong>Не работи<\/strong> <small class="map-popup-source" title="Дирекция „Природен парк Витоша“, park-vitosha.org · [^"]+">Парк Витоша<\/small><\/p>/);
   }
+  assert.doesNotMatch(huts.map(hut => render({ kind: "hut", feature: hut })).join(""), /Ръчно|Manual/);
   const open = huts.find(hut => !hut.properties.details.status);
   assert.doesNotMatch(render({ kind: "hut", feature: open }), /map-popup-status/);
 });

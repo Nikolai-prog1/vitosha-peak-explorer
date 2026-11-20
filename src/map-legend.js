@@ -6,9 +6,9 @@ import { hutMarkerSvg, peakMarkerSvg, REPORT_MARKER_SVG } from "./map-markers.js
 const html = htm.bind(React.createElement);
 function Icon({ component: Component, size }) { return html`<${Component} size=${size} strokeWidth=${1.9} aria-hidden="true" />`; }
 
-// Summits and huts explain themselves; every other legend entry has a short explanation.
+// Summits and plain shelters explain themselves; every other legend entry has a short explanation.
 const LEGEND_INFO = {
-  selectedSummit: "legendInfoSelectedSummit", hutKindShelter: "legendInfoShelter", modelledApproach: "legendInfoRouted",
+  selectedSummit: "legendInfoSelectedSummit", legendHutOrLodge: "legendInfoHutOrLodge", hutKindShelter: "legendInfoShelter", modelledApproach: "legendInfoRouted",
   approximate: "legendInfoSketch", markedTrail: "legendInfoMarked", personalNote: "legendInfoNote", allMarkedTrailsLayer: "legendInfoAllTrails",
 };
 function LegendInfo({ t, item, openInfo, onInfo }) {
@@ -24,7 +24,7 @@ export function MapLegend({ t, open, onToggle, showHuts, onShowHuts, showAllTrai
   const rows = [
     ["summit", peakMarkerSvg(false)],
     ["selectedSummit", peakMarkerSvg(true, "legend-active-peak")],
-    ["hutKindHut", hutMarkerSvg("hut")],
+    ["legendHutOrLodge", hutMarkerSvg("hut")],
     ["hutKindShelter", hutMarkerSvg("shelter")],
     ["modelledApproach", null, "routed"],
     ["approximate", null, "sketch"],

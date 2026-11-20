@@ -3,7 +3,7 @@ import math
 from pathlib import Path
 from build_vitosha_data import (HUT_APPROACH_MODE, OSM_LICENSE, PARK_SOURCE, PEAK_APPROACH_MODE, ROUTES_PER_PEAK, START_CLUSTER_M,
                                 VIA_TRAIL_SOURCE, haversine_km, read_json)
-from hut_data import HUT_STATUSES, checked_date, valid_detail_value
+from hut_data import HUT_KINDS, HUT_STATUSES, MANUAL_SOURCES, checked_date, valid_detail_value
 from marked_trails import MIN_PARK_KM, MIN_PARK_SHARE, OTHER_WAY_ROLES, TRAIL_COLOURS, TRAIL_NETWORKS
 from park_boundary import PARK_BUFFER_M, ParkBoundary, select_park_relation
 from trail_geometry import VITOSHA_BOUNDS
@@ -62,12 +62,15 @@ for hut in huts:
     validate_point(hut, props.get("id", "hut"))
     assert props["id"] not in hut_ids, f"duplicate hut id {props['id']}"
     assert props.get("name_bg") and props.get("name_en"), f"{props['id']}: missing bilingual name"
-    assert props["kind"] in {"hut", "shelter"}, f"{props['id']}: invalid hut kind"
+    assert props["kind"] in HUT_KINDS, f"{props['id']}: invalid hut kind"
+    kind = props["details"].get("kind")
+    assert (kind is None and props["kind"] != "lodge") or (kind and kind["value"] == props["kind"] and kind["source"] == "manual" and kind["checked"]), f"{props['id']}: unsourced facility kind"
     assert props["osm_type"] in {"node", "way"} and props["osm_url"] == f"https://www.openstreetmap.org/{props['osm_type']}/{props['osm_id']}"
     assert props["elevation_m"] is None or (type(props["elevation_m"]) in (int, float) and 500 <= props["elevation_m"] <= 3000), f"{props['id']}: invalid hut elevation"
     assert isinstance(props["details"], dict)
     for field, detail in props["details"].items():
         assert detail["source"] in {"osm", "manual"} and valid_detail_value(detail["value"]), f"{props['id']}: missing source or invalid value for {field}"
+        assert (detail["source"] == "manual") == (detail.get("ref") in MANUAL_SOURCES), f"{props['id']}: manual {field} without a named source"
         assert detail["checked"] is None or checked_date(detail["checked"]) == detail["checked"], f"{props['id']}: invalid checked date for {field}"
     status = props["details"].get("status")
     assert status is None or (status["value"] in HUT_STATUSES and status["source"] == "manual" and status["checked"]), f"{props['id']}: unsourced status"

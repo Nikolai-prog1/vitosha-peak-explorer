@@ -1,4 +1,4 @@
-import { formatNumber, translate } from "./i18n.js?v=vitosha-huts-20261120";
+import { formatNumber, translate } from "./i18n.js?v=vitosha-huts-20261120-2";
 
 const FACTS = [
   ["capacity_beds", "hutBeds"], ["opening_hours", "hutHours"], ["drinking_water", "hutWater"],
@@ -40,7 +40,7 @@ export function visibleDetailRows(details, language) {
       return status && status !== "yes" ? `${name} · ${knownValue(status, language)}` : name;
     }).join(", ");
     else display = typeof value === "number" ? formatNumber(value, language, 0) : knownValue(value, language);
-    rows.push({ field, label: translate(language, label), display, source: detail.source, checked: detail.checked });
+    rows.push({ field, label: translate(language, label), display, source: detail.source, ref: detail.ref, checked: detail.checked });
   }
   return rows;
 }

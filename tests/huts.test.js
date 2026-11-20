@@ -38,6 +38,8 @@ test("a summit lists three approaches; a hut-only approach joins last while its 
 
 test("the real huts can be sorted consistently", () => {
   assert.ok(huts.some(hut => hutKindKey(hut) === "hutKindShelter"));
+  // The park lists the BNR and Composers houses as tourist-society lodges, not huts.
+  assert.deepEqual(huts.filter(hut => hutKindKey(hut) === "hutKindLodge").map(hut => hut.properties.id).sort(), ["hut-180212595", "hut-180212603"]);
   for (const language of ["bg", "en"]) {
     for (const mode of ["elevation-desc", "name"]) {
       assert.deepEqual(hutsSorted(huts, mode, language), hutsSorted([...huts].reverse(), mode, language));

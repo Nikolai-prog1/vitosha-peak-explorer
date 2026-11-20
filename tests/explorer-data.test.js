@@ -53,13 +53,22 @@ test("schema 3 requires trail geometries, correct provenance and bounded data sh
     data => data.hutRoutes.features[0].properties.marked_trails = [{ trail_id: "trail-0", colour: null, ref: null, share: 0.1 }],
     data => data.hutRoutes.features[0].properties.ranking_mode = "route-relation-count",
   ];
-  const closed = { value: "closed", source: "manual", checked: "2026-11-20" };
+  const closed = { value: "closed", source: "manual", ref: "park", checked: "2026-11-20" };
+  const lodge = data => data.huts.features.find(hut => hut.properties.kind === "lodge");
   const startHut = data => data.huts.features.find(hut => hut.properties.id === data.hutRoutes.features[0].properties.hut_id);
   mutations.push(
     data => startHut(data).properties.details.status = closed,
     data => data.huts.features[0].properties.details.status = { ...closed, value: "renovating" },
     data => data.huts.features[0].properties.details.status = { ...closed, checked: null },
     data => data.huts.features[0].properties.details.status = { ...closed, source: "osm" },
+    // Every manual fact names its source; an OSM fact does not.
+    data => data.huts.features[0].properties.details.status = { ...closed, ref: undefined },
+    data => data.huts.features[0].properties.details.status = { ...closed, ref: "blog" },
+    data => data.huts.features[0].properties.details.website = { value: "https://example.test/", source: "osm", ref: "park", checked: null },
+    // A lodge is a sourced manual kind, never an unsourced label.
+    data => delete lodge(data).properties.details.kind,
+    data => lodge(data).properties.details.kind.value = "hut",
+    data => data.huts.features[0].properties.kind = "hotel",
     // A summit's own approach relabelled as hut-only leaves the summit with two.
     data => data.hutRoutes.features.find(route => route.properties.ranking_mode === "nearest-routable-huts").properties.ranking_mode = "hut-nearest-summit",
   );

@@ -1,18 +1,20 @@
 import React from "react";
 import htm from "htm";
 import { House, Tent, X } from "@vitosha/icons";
-import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-huts-20261120";
-import { hutKindKey } from "./huts.js?v=vitosha-huts-20261120";
-import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-huts-20261120";
+import { formatNumber, placeName, translate } from "./i18n.js?v=vitosha-huts-20261120-2";
+import { hutKindKey } from "./huts.js?v=vitosha-huts-20261120-2";
+import { formatCheckedDate, formatEmailHref, formatPhoneHref, formatWebsiteHref, latestCheckedDate, visibleDetailRows } from "./hut-details.js?v=vitosha-huts-20261120-2";
 import { trailColor, visibleMarkings } from "./trail-display.js?v=vitosha-polish-20261120";
 
 const html = htm.bind(React.createElement);
 export const OSM_COPYRIGHT = "https://www.openstreetmap.org/copyright";
 const networks = { lwn: "trailNetworkLwn", rwn: "trailNetworkRwn", nwn: "trailNetworkNwn", iwn: "trailNetworkIwn" };
 
+// A manual fact names where it was checked; OSM facts carry the OSM tag.
+const MANUAL_SOURCES = { park: ["hutSourcePark", "hutSourceParkFull"], bts: ["hutSourceBts", "hutSourceBtsFull"] };
 function Source({ record, language, t }) {
-  const source = t(record.source === "manual" ? "hutSourceManual" : "hutSourceOsm");
-  return html`<small className="map-popup-source" title=${record.checked ? `${source} · ${formatCheckedDate(record.checked, language)}` : source}>${source}</small>`;
+  const [short, full] = record.source === "manual" ? MANUAL_SOURCES[record.ref].map(key => t(key)) : [t("hutSourceOsm"), "OpenStreetMap"];
+  return html`<small className="map-popup-source" title=${record.checked ? `${full} · ${formatCheckedDate(record.checked, language)}` : full}>${short}</small>`;
 }
 
 function HutFacts({ hut, language, t, approaches, peaks, routes, onApproach }) {
@@ -82,6 +84,7 @@ export function MapPopup({ popup, embedded, popupRef, onClose, onApproach, langu
   const alternateName = props[`name_${otherLanguage}`];
   const date = isHut ? latestCheckedDate(props.details) : null;
   const Icon = props.kind === "shelter" ? Tent : House;
+  const kindSource = isHut ? props.details.kind : null;
   return html`<section ref=${popupRef}
     className=${`map-popup ${embedded ? "map-popup--embedded" : "map-popup--anchored"}`}
     data-kind=${kind}
@@ -91,7 +94,7 @@ export function MapPopup({ popup, embedded, popupRef, onClose, onApproach, langu
       <header className="map-popup-header">
         ${isHut ? html`<span className="map-popup-kind-icon"><${Icon} size=${22} aria-hidden="true"/></span>` : null}
         <div className="map-popup-titles">
-          <span className="map-popup-kind">${t(isHut ? hutKindKey(feature) : "markedTrail")}${!isHut && props.ref && props.ref !== title ? ` · ${props.ref}` : ""}</span>
+          <span className="map-popup-kind">${t(isHut ? hutKindKey(feature) : "markedTrail")}${!isHut && props.ref && props.ref !== title ? ` · ${props.ref}` : ""}${kindSource ? html` <${Source} record=${kindSource} language=${language} t=${t}/>` : null}</span>
           <h2 id="map-popup-title" tabIndex="-1">${title}</h2>
           ${alternateName && alternateName !== title ? html`<p lang=${otherLanguage}>${alternateName}</p>` : null}
         </div>

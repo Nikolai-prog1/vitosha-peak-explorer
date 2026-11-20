@@ -1,7 +1,8 @@
 {
   "schema_version": 1,
   "sources": {
-    "manual-2026-11-20": "Vitosha Nature Park directorate hut list, https://park-vitosha.org/дейности/хижи/ (capacity, phone where OSM has none, operator of Kamen Del, closures)."
+    "park": "Vitosha Nature Park directorate hut list, https://park-vitosha.org/дейности/хижи/ (checked 2026-11-20: capacity, phone where OSM has none, operator of Kamen Del, closures, and the two tourist-society lodges).",
+    "bts": "Bulgarian Tourist Union hut pages, https://www.btsbg.org/hizhi (website links seeded 2026-11-19)."
   },
   "huts": {
     "hut-2885252059": {
@@ -82,6 +83,7 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-boerica",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
@@ -107,16 +109,19 @@
       "notes_bg": {
         "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "notes_en": {
         "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "status": {
         "value": "closed",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -124,11 +129,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-edelvays-vitosha",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 18,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -186,16 +193,19 @@
       "notes_bg": {
         "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "notes_en": {
         "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "status": {
         "value": "closed",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -203,11 +213,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-zvezdica",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 120,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -245,6 +257,7 @@
       "capacity_beds": {
         "value": 40,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -275,6 +288,7 @@
       "operator": {
         "value": "ТД „Камен дел – Бояна 1934“",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -282,11 +296,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-kumata",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 27,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -319,11 +335,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-momina-skala",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 35,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -361,6 +379,7 @@
       "capacity_beds": {
         "value": 60,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -391,6 +410,7 @@
       "phone": {
         "value": "0877 51 40 20",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -440,6 +460,7 @@
       "capacity_beds": {
         "value": 26,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -546,11 +567,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-aleko",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 110,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -583,11 +606,13 @@
       "website": {
         "value": "https://www.btsbg.org/hizhi/hizha-selimica",
         "source": "manual",
+        "ref": "bts",
         "checked": "2026-11-19"
       },
       "capacity_beds": {
         "value": 23,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -651,6 +676,12 @@
         "value": null,
         "source": null,
         "checked": null
+      },
+      "kind": {
+        "value": "lodge",
+        "source": "manual",
+        "ref": "park",
+        "checked": "2026-11-20"
       }
     },
     "hut-180212603": {
@@ -692,6 +723,13 @@
       "phone": {
         "value": "0988 89 03 92",
         "source": "manual",
+        "ref": "park",
+        "checked": "2026-11-20"
+      },
+      "kind": {
+        "value": "lodge",
+        "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -704,6 +742,7 @@
       "capacity_beds": {
         "value": 20,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -734,6 +773,7 @@
       "phone": {
         "value": "0889 554 922",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -746,6 +786,7 @@
       "capacity_beds": {
         "value": 24,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -776,6 +817,7 @@
       "phone": {
         "value": "0897 293 980",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -788,6 +830,7 @@
       "capacity_beds": {
         "value": 27,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -855,6 +898,7 @@
       "phone": {
         "value": "0898 63 39 62",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -887,16 +931,19 @@
       "notes_bg": {
         "value": "Дирекция „Природен парк Витоша“ посочва хижата като неработеща.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "notes_en": {
         "value": "The Vitosha Nature Park directorate lists this hut as not operating.",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "status": {
         "value": "closed",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     },
@@ -909,6 +956,7 @@
       "capacity_beds": {
         "value": 52,
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       },
       "food": {
@@ -939,6 +987,7 @@
       "phone": {
         "value": "0898 465 058",
         "source": "manual",
+        "ref": "park",
         "checked": "2026-11-20"
       }
     }

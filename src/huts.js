@@ -1,4 +1,4 @@
-import { placeName } from "./i18n.js?v=vitosha-huts-20261120";
+import { placeName } from "./i18n.js?v=vitosha-huts-20261120-2";
 
 // A summit's own approaches: its three nearest distinct open trailheads.
 export const PEAK_APPROACH = "nearest-routable-huts";
@@ -42,5 +42,5 @@ export function hutsSorted(huts, mode, language) {
 }
 
 export function hutKindKey(hut) {
-  return hut.properties.kind === "shelter" ? "hutKindShelter" : "hutKindHut";
+  return { shelter: "hutKindShelter", lodge: "hutKindLodge" }[hut.properties.kind] ?? "hutKindHut";
 }

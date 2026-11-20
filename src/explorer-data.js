@@ -1,7 +1,7 @@
 import { requestJson } from "./requests.js?v=vitosha-planning-20261005";
 import { distanceMeters } from "./planning.js?v=vitosha-camera-20261005-2";
 import { TRAIL_COLORS, VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-polish-20261120";
-import { HUT_APPROACH, PEAK_APPROACH } from "./huts.js?v=vitosha-huts-20261120";
+import { HUT_APPROACH, PEAK_APPROACH } from "./huts.js?v=vitosha-huts-20261120-2";
 
 export const EMPTY_EXPLORER_DATA = { peaks: [], huts: [], hutRoutes: [], markedTrails: [], quality: null };
 const FILES = ["peaks.geojson", "huts.geojson", "hut-routes.geojson", "marked-trails.geojson", "data-quality.json"];
@@ -27,12 +27,15 @@ function dateOnly(value) {
     && new Date(value).toISOString().slice(0, 10) === value;
 }
 function validHutDetails(props) {
-  if (!["hut", "shelter"].includes(props.kind) || !["node", "way"].includes(props.osm_type)
+  const kind = props.details?.kind;
+  if (!["hut", "shelter", "lodge"].includes(props.kind) || (kind === undefined ? props.kind === "lodge" : kind?.value !== props.kind || kind.source !== "manual" || !kind.checked)
+    || !["node", "way"].includes(props.osm_type)
     || props.osm_url !== `https://www.openstreetmap.org/${props.osm_type}/${props.osm_id}` || !record(props.details)) fail();
   const status = props.details.status;
   if (status !== undefined && (status?.value !== "closed" || status.source !== "manual" || !status.checked)) fail();
   for (const detail of Object.values(props.details)) {
-    if (!record(detail) || !["osm", "manual"].includes(detail.source) || (detail.checked !== null && !dateOnly(detail.checked))) fail();
+    if (!record(detail) || !["osm", "manual"].includes(detail.source) || (detail.checked !== null && !dateOnly(detail.checked))
+      || (detail.source === "manual") !== ["park", "bts"].includes(detail.ref)) fail();
     const value = detail.value;
     if (!text(value) && typeof value !== "boolean" && !(Number.isSafeInteger(value) && value > 0)
       && !(Array.isArray(value) && value.length > 0 && value.length <= 80 && value.every(item => text(item, 250)))) fail();

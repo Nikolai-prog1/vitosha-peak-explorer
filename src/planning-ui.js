@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import htm from "htm";
 import { CheckCircle2, ChevronDown, ChevronUp, ExternalLink, MapPinned, Mountain, TreePine, X } from "@vitosha/icons";
-import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-huts-20261120";
+import { translate, placeName, formatDate, formatNumber } from "./i18n.js?v=vitosha-huts-20261120-2";
 import { profileGeometry } from "./planning.js?v=vitosha-camera-20261005-2";
 import { VIA_MARKED_TRAILS } from "./trail-display.js?v=vitosha-polish-20261120";
 import { openModalDialog } from "./focus-management.js?v=vitosha-trails-20261119-4";

@@ -21,9 +21,13 @@ OSM_FIELDS = {
     "check_date": ("check_date",),
     "wikidata": ("wikidata",),
 }
-MANUAL_FIELDS = set(OSM_FIELDS) | {"water", "food", "season", "notes_bg", "notes_en", "payment", "status"}
+MANUAL_FIELDS = set(OSM_FIELDS) | {"water", "food", "season", "notes_bg", "notes_en", "payment", "status", "kind"}
 # Operating status is a sourced manual fact; only a confirmed closure is recorded.
 HUT_STATUSES = {"closed"}
+# OSM tags every listed lodge as alpine_hut; a different facility kind needs a sourced manual record.
+HUT_KINDS = {"hut", "shelter", "lodge"}
+# Every manual record names one of the sources listed in hut-details.curated.json.
+MANUAL_SOURCES = {"park", "bts"}
 # The browser rejects the whole dataset outside these bounds (src/explorer-data.js).
 MAX_TEXT = 3000
 MAX_LIST_ITEMS = 80
@@ -85,12 +89,15 @@ def manual_details(entries, hut_id):
         value, checked = record.get("value"), record.get("checked")
         if value is None:
             continue
-        if record.get("source") != "manual" or not valid_detail_value(value) or (checked is not None and checked_date(checked) != checked)                 or (field == "status" and (value not in HUT_STATUSES or checked is None)):
+        if (record.get("source") != "manual" or record.get("ref") not in MANUAL_SOURCES or not valid_detail_value(value)
+                or (checked is not None and checked_date(checked) != checked)
+                or (field == "status" and (value not in HUT_STATUSES or checked is None))
+                or (field == "kind" and (value not in HUT_KINDS or checked is None))):
             raise ValueError(f"{hut_id}: invalid value, source or checked date for {field}")
         name = "drinking_water" if field == "water" else field
         if name in merged:
             raise ValueError(f"{hut_id}: repeated manual hut field {name}")
-        merged[name] = {"value": value, "source": "manual", "checked": checked}
+        merged[name] = {"value": value, "source": "manual", "ref": record["ref"], "checked": checked}
     return merged
 
 
@@ -98,6 +105,8 @@ def enrich_huts(huts, capture, curated):
     manual = curated.get("huts", {})
     if curated.get("schema_version") != 1 or set(manual) != {hut["properties"]["id"] for hut in huts}:
         raise ValueError("hut-details.curated.json must have one record for each configured hut")
+    if set(curated.get("sources", {})) != MANUAL_SOURCES:
+        raise ValueError("hut-details.curated.json must describe every manual source")
     tags_by_key = {(element["type"], element["id"]): element.get("tags", {}) for element in capture["elements"]}
     expected = {(hut["properties"]["source_names"].split()[1], hut["properties"]["osm_id"]) for hut in huts}
     if set(tags_by_key) != expected or len(tags_by_key) != len(capture["elements"]):
@@ -109,6 +118,8 @@ def enrich_huts(huts, capture, curated):
         props["osm_type"] = osm_type
         props["osm_url"] = f"https://www.openstreetmap.org/{osm_type}/{osm_id}"
         props["details"] = osm_details(tags) | manual_details(manual[props["id"]], props["id"])
+        if "kind" in props["details"]:
+            props["kind"] = props["details"]["kind"]["value"]
         if props["elevation_m"] is None and "ele" in tags:
             try:
                 props["elevation_m"] = round(float(tags["ele"].replace(",", ".")))

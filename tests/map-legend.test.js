@@ -16,19 +16,19 @@ const render = language => renderToStaticMarkup(React.createElement(MapLegend, {
   showAllTrails: false, onShowAllTrails() {}, mapReady: true, inert: false,
 }));
 
-test("every legend entry except summits and huts has a collapsed, labelled explanation", () => {
+test("every legend entry except summits has a collapsed, labelled explanation", () => {
   for (const language of ["bg", "en"]) {
     const markup = render(language);
     const buttons = [...markup.matchAll(/<button[^>]*class="legend-info-button"[^>]*>/g)].map(match => match[0]);
     const labels = buttons.map(button => button.match(/aria-label="([^"]+)"/)[1]);
-    const items = ["selectedSummit", "hutKindShelter", "modelledApproach", "approximate", "markedTrail", "personalNote", "allMarkedTrailsLayer"];
+    const items = ["selectedSummit", "legendHutOrLodge", "hutKindShelter", "modelledApproach", "approximate", "markedTrail", "personalNote", "allMarkedTrailsLayer"];
     assert.deepEqual(labels, items.map(item => translate(language, "legendInfoAbout", { item: translate(language, item) }).replaceAll("\"", "&quot;")));
     for (const button of buttons) {
       assert.match(button, /aria-expanded="false"/);
       const id = button.match(/aria-controls="([^"]+)"/)[1];
       assert.match(markup, new RegExp(`<p id="${id}" class="legend-info" hidden="">[^<]+</p>`));
     }
-    for (const plain of ["summit", "hutKindHut", "hutLayer"]) {
+    for (const plain of ["summit", "hutLayer"]) {
       assert.ok(!labels.some(label => label.includes(`„${translate(language, plain)}“`) || label.includes(`“${translate(language, plain)}”`)), plain);
     }
   }
