@@ -2,7 +2,7 @@ import json
 import math
 from pathlib import Path
 from build_vitosha_data import OSM_LICENSE, PARK_SOURCE, VIA_TRAIL_SOURCE, haversine_km, read_json
-from hut_data import checked_date
+from hut_data import checked_date, valid_detail_value
 from marked_trails import MIN_PARK_KM, MIN_PARK_SHARE, OTHER_WAY_ROLES, TRAIL_COLOURS, TRAIL_NETWORKS
 from park_boundary import PARK_BUFFER_M, ParkBoundary, select_park_relation
 from trail_geometry import VITOSHA_BOUNDS
@@ -63,9 +63,10 @@ for hut in huts:
     assert props.get("name_bg") and props.get("name_en"), f"{props['id']}: missing bilingual name"
     assert props["kind"] in {"hut", "shelter"}, f"{props['id']}: invalid hut kind"
     assert props["osm_type"] in {"node", "way"} and props["osm_url"] == f"https://www.openstreetmap.org/{props['osm_type']}/{props['osm_id']}"
+    assert props["elevation_m"] is None or (type(props["elevation_m"]) in (int, float) and 500 <= props["elevation_m"] <= 3000), f"{props['id']}: invalid hut elevation"
     assert isinstance(props["details"], dict)
     for field, detail in props["details"].items():
-        assert detail["source"] in {"osm", "manual"} and detail["value"] is not None, f"{props['id']}: missing source or value for {field}"
+        assert detail["source"] in {"osm", "manual"} and valid_detail_value(detail["value"]), f"{props['id']}: missing source or invalid value for {field}"
         assert detail["checked"] is None or checked_date(detail["checked"]) == detail["checked"], f"{props['id']}: invalid checked date for {field}"
     hut_ids.add(props["id"])
 

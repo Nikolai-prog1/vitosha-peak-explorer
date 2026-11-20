@@ -22,6 +22,22 @@ OSM_FIELDS = {
     "wikidata": ("wikidata",),
 }
 MANUAL_FIELDS = set(OSM_FIELDS) | {"water", "food", "season", "notes_bg", "notes_en", "payment"}
+# The browser rejects the whole dataset outside these bounds (src/explorer-data.js).
+MAX_TEXT = 3000
+MAX_LIST_ITEMS = 80
+MAX_LIST_TEXT = 250
+
+
+def _client_text(value, limit):
+    # JavaScript string lengths count UTF-16 code units.
+    return isinstance(value, str) and bool(value.strip()) and len(value.encode("utf-16-le")) // 2 <= limit
+
+
+def valid_detail_value(value):
+    return (_client_text(value, MAX_TEXT) or isinstance(value, bool)
+            or (type(value) is int and 0 < value <= 2 ** 53 - 1)
+            or (isinstance(value, list) and 0 < len(value) <= MAX_LIST_ITEMS
+                and all(_client_text(item, MAX_LIST_TEXT) for item in value)))
 
 
 def checked_date(value):
@@ -67,10 +83,7 @@ def manual_details(entries, hut_id):
         value, checked = record.get("value"), record.get("checked")
         if value is None:
             continue
-        valid_value = ((isinstance(value, str) and bool(value.strip()))
-                       or isinstance(value, bool) or (type(value) is int and value > 0)
-                       or (isinstance(value, list) and value and all(isinstance(item, str) and item.strip() for item in value)))
-        if record.get("source") != "manual" or not valid_value or (checked is not None and checked_date(checked) != checked):
+        if record.get("source") != "manual" or not valid_detail_value(value) or (checked is not None and checked_date(checked) != checked):
             raise ValueError(f"{hut_id}: invalid value, source or checked date for {field}")
         name = "drinking_water" if field == "water" else field
         if name in merged:
