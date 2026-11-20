@@ -201,17 +201,25 @@
 .v2-facts dd { margin: 2px 0 0; font-weight: 800; font-size: 14px; overflow-wrap: anywhere; }
 
 /* Map controls and readout */
-.v2-map-controls { position: fixed; z-index: 20; right: 16px; bottom: 40px; display: grid; gap: 8px; }
-.v2-map-controls { justify-items: end; }
-.v2-map-controls .v2-icon { width: 44px; height: 44px; background: var(--paper); border: 0; box-shadow: var(--shadow); }
+/* One dock and one light surface for every map control: legend above, then status and buttons in a row. */
+.v2-map-dock {
+  position: fixed; z-index: 20; right: 16px; bottom: 40px; max-width: calc(100vw - 32px);
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none;
+}
+.v2-dock-row { display: flex; align-items: center; gap: 8px; }
+.v2-map-dock .v2-legend, .v2-map-controls { pointer-events: auto; }
+.v2-map-controls { display: flex; align-items: center; gap: 8px; }
+.v2-map-controls .v2-icon { width: 44px; height: 44px; border: 0; border-radius: 999px; color: var(--x-night); background: var(--paper); box-shadow: var(--shadow); }
+.v2-map-controls .v2-icon:hover:not(:disabled) { background: var(--paper-2); }
 .v2-legend {
-  position: fixed; z-index: 20; right: 16px; bottom: 145px; width: max-content; max-width: calc(100vw - 32px);
-  color: var(--ink); background: var(--paper); border-radius: 14px; box-shadow: var(--shadow);
+  width: max-content; max-width: calc(100vw - 32px);
+  color: var(--ink); background: var(--paper); border-radius: 16px; box-shadow: var(--shadow);
   font-size: 13px; line-height: 1.35;
 }
+.v2-legend:not([open]) { border-radius: 999px; }
 .v2-legend > summary {
-  min-height: 42px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 0 12px; list-style: none; border-radius: 14px; cursor: pointer; font-weight: 800;
+  min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 14px 0 16px; list-style: none; border-radius: inherit; cursor: pointer; font-weight: 800;
 }
 .v2-legend > summary::-webkit-details-marker { display: none; }
 .v2-legend[open] > summary svg { transform: rotate(180deg); }
@@ -238,13 +246,15 @@
 .approach-markings ul { display: flex; flex-wrap: wrap; gap: 4px; list-style: none; margin: 0; padding: 0; }
 .approach-markings li { display: inline-flex; gap: 4px; align-items: baseline; padding: 2px 6px; color: var(--ink-2); background: var(--paper-2); border-radius: 5px; }
 .approach-markings i { display: inline-block; width: 8px; height: 8px; flex: 0 0 8px; background: var(--trail-color); border: 1px solid #51535b; border-radius: 50%; }
-.v2-home-button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--ink); color: var(--paper); font: inherit; font-size: 14px; font-weight: 800; box-shadow: var(--shadow); cursor: pointer; }
-.v2-home-button:hover:not(:disabled) { background: #1b2638; }
+.v2-home-button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--paper); color: var(--x-night); font: inherit; font-size: 14px; font-weight: 800; box-shadow: var(--shadow); cursor: pointer; }
+.v2-home-button:hover:not(:disabled) { background: var(--paper-2); }
 .v2-home-button:disabled { opacity: 0.5; cursor: default; }
 .v2-readout {
-  position: fixed; z-index: 15; right: 180px; bottom: 44px; margin: 0; padding: 6px 12px; display: flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 600; color: var(--ink-2); background: rgba(247, 246, 240, 0.86); border-radius: 999px; pointer-events: none;
+  margin: 0; min-height: 36px; padding: 0 14px; display: flex; align-items: center; gap: 6px; max-width: min(46vw, 520px);
+  font-size: 12px; font-weight: 600; color: var(--ink-2); background: var(--paper); border-radius: 999px; box-shadow: var(--shadow);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
 }
+.v2-readout svg { flex: none; color: var(--x-night); }
 .v2 .connection-status { left: 50%; transform: translateX(-50%); }
 .v2 .action-notice { left: auto; right: 16px; top: 84px; }
 
@@ -278,8 +288,9 @@
   .v2-hero-side strong { font-size: 22px; }
   .v2-section, .v2-drawer > summary { padding-left: 18px; padding-right: 18px; }
   .v2-drawer-body { padding: 0 18px 16px; }
-  .v2-map-controls { bottom: auto; top: 98px; right: 10px; }
-  .v2-legend { bottom: auto; top: 98px; right: 62px; max-height: min(40vh, 330px); overflow: auto; }
+  .v2-map-dock { top: 98px; bottom: auto; right: 10px; flex-direction: row; align-items: flex-start; }
+  .v2-map-controls { flex-direction: column; }
+  .v2-legend { max-height: min(40vh, 330px); overflow: auto; }
   .v2-home-button { width: 44px; padding: 0; justify-content: center; }
   .v2-home-button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .v2-readout { display: none; }
@@ -304,8 +315,7 @@
 .v2-sort button[aria-pressed="true"] { background: var(--x-night); border-color: var(--x-night); }
 .v2-hero small { color: var(--x-gold-text); }
 .v2-hero h1 { font: 400 34px/1.05 Georgia, "Times New Roman", serif; letter-spacing: -.02em; }
-.v2-home-button { background: var(--x-night); color: #fbfaf5; }
-.v2-home-button svg { color: var(--x-gold-light); }
+.v2-home-button svg { color: var(--x-gold-text); }
 @media (max-width: 900px) { .v2-hero h1 { font-size: 28px; } }
 
 /* Start page after the X-Alto home page: a night page, a live 3D Черни връх on the right that turns

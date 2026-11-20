@@ -599,13 +599,17 @@ function App() {
     </aside>
 
     ${mapPopup && !popupInPanel ? renderPopup(false) : null}
-    <${MapLegend} t=${t} open=${legendOpen} onToggle=${setLegendOpen} showHuts=${showHuts} onShowHuts=${showHutLayer}
-      showAllTrails=${showAllTrails} onShowAllTrails=${showTrailLayer} mapReady=${mapPhase === "ready"} inert=${showCover}/>
-    <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
-      <button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready" || !selectedPeak} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>
-      <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>
+    <div className="v2-map-dock">
+      <${MapLegend} t=${t} open=${legendOpen} onToggle=${setLegendOpen} showHuts=${showHuts} onShowHuts=${showHutLayer}
+        showAllTrails=${showAllTrails} onShowAllTrails=${showTrailLayer} mapReady=${mapPhase === "ready"} inert=${showCover}/>
+      <div className="v2-dock-row">
+        <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}<${PointerCoordinates} sinkRef=${coordsSinkRef}/> · ${status}</p>
+        <div className="v2-map-controls" inert=${showCover} role="group" aria-label=${t("mapControls")} data-map-occluder>
+          ${selectedPeak ? html`<button type="button" className="v2-icon" title=${t("zoomSummit")} aria-label=${t("zoomSummit")} disabled=${mapPhase !== "ready"} onClick=${() => focusPeak(selectedPeak, true)}><${Icon} component=${LocateFixed}/></button>` : null}
+          <button type="button" className="v2-home-button" title=${t("homeView")} disabled=${mapPhase !== "ready" && !selectedPeak} onClick=${clearSelection}><${Icon} component=${RotateCcw}/><span>${t("homeView")}</span></button>
+        </div>
+      </div>
     </div>
-    <p className="v2-readout" aria-live="off"><${Icon} component=${Navigation} size=${13}/> ${t(mapPhase === "offline" ? "offlinePlanning" : mapPhase === "config-error" ? "configurationUnavailable" : mapPhase === "error" ? "mapUnavailable" : mapStatus)}<${PointerCoordinates} sinkRef=${coordsSinkRef}/> · ${status}</p>
   </div></main>`;
 }
 document.getElementById("boot-loader")?.remove();
